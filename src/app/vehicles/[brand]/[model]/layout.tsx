@@ -1,13 +1,13 @@
 import Link from "next/link";
 
-export default function ModelLayout({
+export default async function ModelLayout({
   children,
   params,
 }: {
   children: React.ReactNode;
-  params: { brand: string; model: string };
+  params: Promise<{ brand: string; model: string }>;
 }) {
-  const { brand, model } = params;
+  const { brand, model } = await params;
   const base = `/vehicles/${brand}/${model}`;
   const tabs = [
     { href: `${base}/features-activation`, label: "FEATURES ACTIVATION" },
@@ -30,6 +30,7 @@ export default function ModelLayout({
     </section>
   );
 }
+
 
 
 

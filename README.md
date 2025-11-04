@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# LR-CHIP Website
+
+Premium website for LR-CHIP - exclusive Land Rover and Jaguar retrofit service.
+
+## Features
+
+- 🎨 Apple-inspired design
+- 📱 Fully responsive (mobile, tablet, desktop)
+- 🛒 Shopping cart functionality
+- 👨‍💼 Admin panel for managing vehicles and services
+- 📋 Order management system
+- 🔒 Secure authentication
+
+## Tech Stack
+
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Zustand (state management)
+- Framer Motion (animations)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <your-repo-url>
+cd lr-chip
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Create `.env` file (optional, for admin password):
+```bash
+cp .env.example .env
+# Edit .env and set ADMIN_PASSWORD
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Run development server:
+```bash
+npm run dev
+```
 
-## Learn More
+5. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+See [DEPLOY.md](./DEPLOY.md) for detailed deployment instructions to Netlify.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+lr-chip/
+├── src/
+│   ├── app/              # Next.js app router pages
+│   ├── components/        # React components
+│   ├── data/             # JSON data files
+│   ├── store/            # Zustand stores
+│   └── middleware.ts     # Auth middleware
+├── public/               # Static assets
+└── netlify.toml          # Netlify configuration
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Admin Panel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Access the admin panel at `/admin/login` (default password can be set in `.env`).
+
+Features:
+- Manage vehicles (add, edit, delete, reorder)
+- Manage services (add, edit, delete)
+- View and manage orders
+- Change order statuses
+
+## License
+
+Private project - All rights reserved.

@@ -1,104 +1,179 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const VehicleCard = ({ model, brand }: { model: typeof landRoverModels[0]; brand: "land-rover" | "jaguar" }) => {
+type Vehicle = {
+  brand: string;
+  value: string;
+  title: string;
+  image: string;
+  years: Array<{ value: string; label: string }>;
+  order?: number;
+};
+
+const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
   const [imgError, setImgError] = useState(false);
+  const [showYearDropdown, setShowYearDropdown] = useState(false);
+  const hasMultipleYears = vehicle.years.length > 1;
   
-  // Extract year range from title (handles spaces and en-dash: "2023+", "2014 - 2022", "2015 +", "2019–2020")
-  const yearMatch = model.title.match(/(\d{4}\s*(?:\+|[\-\u2013]\s*\d{4})?)/);
-  const yearRange = yearMatch ? yearMatch[1] : "";
+  // Extract year range from years array
+  const yearLabels = vehicle.years.map(y => y.label).join(", ");
+  const firstYear = vehicle.years[0]?.label || "";
+  
+  // Extract model name without year (if title contains year info)
+  const modelName = vehicle.title;
 
-  // Extract model name without year
-  const modelName = model.title.replace(/\s*\d{4}\s*(?:\+|[\-\u2013]\s*\d{4})?\s*$/, "").trim();
+  const handleCardClick = (e: React.MouseEvent) => {
+    if (hasMultipleYears) {
+      e.preventDefault();
+      setShowYearDropdown(!showYearDropdown);
+    }
+  };
 
   return (
-    <Link
-      href={`/vehicles/${brand}/${model.slug}/features-activation`}
-      className="group block rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-all duration-200"
-    >
-      <div className="relative h-48 bg-silver/20 overflow-hidden">
-        {!imgError ? (
-          <Image
-            src={model.image}
-            alt={model.title}
-            fill
-            className="object-cover transition-transform duration-200 group-hover:scale-105"
-            sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            unoptimized
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs">
-            {model.title}
-          </div>
-        )}
-        {/* Arrow with year on hover */}
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <div className="flex flex-col items-center">
-            <div className="text-white text-xs font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm">
-              {yearRange}
+    <div className="group relative">
+      <div
+        onClick={handleCardClick}
+        className={`block rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-all duration-200 ${hasMultipleYears ? 'cursor-pointer' : ''}`}
+      >
+        <div className="relative h-48 bg-silver/20 overflow-hidden">
+          {!imgError && vehicle.image ? (
+            <Image
+              src={vehicle.image}
+              alt={vehicle.title}
+              fill
+              className="object-cover transition-transform duration-200 group-hover:scale-105"
+              sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              unoptimized
+              onError={() => setImgError(true)}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs bg-silver/10">
+              {vehicle.title}
             </div>
-            <div className="text-white text-xl mt-1">↓</div>
+          )}
+          {/* Arrow indicator for multiple years */}
+          {hasMultipleYears && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2">
+              <div className="flex flex-col items-center">
+                <div className="text-white text-xs font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm">
+                  {firstYear}
+                </div>
+                <div className={`text-white text-xl mt-1 transition-transform duration-200 ${showYearDropdown ? 'rotate-180' : ''}`}>
+                  ↓
+                </div>
+              </div>
+            </div>
+          )}
+          {/* Single year on hover */}
+          {!hasMultipleYears && firstYear && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <div className="flex flex-col items-center">
+                <div className="text-white text-xs font-medium bg-black/60 px-3 py-1 rounded-full backdrop-blur-sm">
+                  {firstYear}
+                </div>
+                <div className="text-white text-xl mt-1">↓</div>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="p-4">
+          <div className="text-sm font-medium group-hover:text-[var(--accent-gold)] transition-colors duration-200">
+            {modelName}
+          </div>
+          <div className="mt-1 text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">
+            {yearLabels}
           </div>
         </div>
       </div>
-      <div className="p-4">
-        <div className="text-sm font-medium group-hover:text-[var(--accent-gold)] transition-colors duration-200">
-          {modelName}
+
+      {/* Year Dropdown */}
+      {hasMultipleYears && showYearDropdown && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[var(--border-color)] rounded-lg shadow-lg z-10 overflow-hidden">
+          {vehicle.years.map((year, index) => (
+            <Link
+              key={index}
+              href={`/services/${vehicle.brand}/${vehicle.value}/${year.value}`}
+              className="block px-4 py-3 hover:bg-[var(--accent-gold)]/10 hover:text-[var(--accent-gold)] transition-colors text-sm font-medium"
+              onClick={() => setShowYearDropdown(false)}
+            >
+              {year.label}
+            </Link>
+          ))}
         </div>
-        <div className="mt-1 text-xs text-zinc-500 group-hover:text-zinc-400 transition-colors">
-          {yearRange}
-        </div>
-      </div>
-    </Link>
+      )}
+
+      {/* Direct link for single year */}
+      {!hasMultipleYears && vehicle.years[0] && (
+        <Link
+          href={`/services/${vehicle.brand}/${vehicle.value}/${vehicle.years[0].value}`}
+          className="absolute inset-0"
+          aria-label={`Go to services for ${vehicle.title}`}
+        />
+      )}
+    </div>
   );
 };
 
-const landRoverModels = [
-  { title: "New Range Rover Sport 2023+", slug: "new-range-rover-sport-2023-plus", image: "/vehicles/land-rover/new-range-rover-sport-2023plus.jpg" },
-  { title: "New Range Rover 2022+", slug: "new-range-rover-2022-plus", image: "/vehicles/land-rover/new-range-rover-2022plus.jpg" },
-  { title: "New Defender 2020+", slug: "new-defender-2020-plus", image: "/vehicles/land-rover/new-defender-2020plus.jpg" },
-  { title: "Range Rover Velar 2017-2020", slug: "range-rover-velar-2017-plus", image: "/vehicles/land-rover/range-rover-velar-2017-2020.jpg" },
-  { title: "Discovery Sport 2015-2019", slug: "discovery-sport-2015-plus", image: "/vehicles/land-rover/discovery-sport-2015-2019.jpg" },
-  { title: "Discovery 5 2017-2020", slug: "discovery-5-2017-plus", image: "/vehicles/land-rover/discovery-5-2017-2020.jpg" },
-  { title: "New Range Rover Evoque 2019–2020", slug: "range-rover-evoque-2019-plus", image: "/vehicles/land-rover/new-range-rover-evoque-2019–2020.jpg" },
-  { title: "Range Rover Sport 2014-2016", slug: "range-rover-sport-2014-2022", image: "/vehicles/land-rover/range-rover-sport-2014-2016.jpg" },
-  { title: "Range Rover 2013-2021", slug: "range-rover-2013-2021", image: "/vehicles/land-rover/range-rover-2013.jpg" },
-  { title: "Range Rover Evoque 2012-2015", slug: "range-rover-evoque-2012-2015", image: "/vehicles/land-rover/range-rover-evoque-2012-2015.jpg" },
-  { title: "Discovery 4 2010-2016", slug: "discovery-4-2010-2016", image: "/vehicles/land-rover/discovery-4-2010.jpg" },
-  { title: "Range Rover Sport 2010-2013", slug: "range-rover-sport-2010-2013", image: "/vehicles/land-rover/range-rover-sport-2010.jpg" },
-  { title: "Range Rover 2010-2012", slug: "range-rover-2010-2012", image: "/vehicles/land-rover/range-rover-2010.jpg" },
-  { title: "Defender 2007-2016", slug: "defender-2007-2016", image: "/vehicles/land-rover/defender-2007.jpg" },
-  { title: "Freelander 2 2006-2014", slug: "freelander-2-2006-2014", image: "/vehicles/land-rover/freelander-2-2006.jpg" },
-];
-
-const jaguarModels = [
-  { title: "E-Pace 2017-2020", slug: "e-pace-2017-plus", image: "/vehicles/jaguar/e-pace-2017-2020.jpg" },
-  { title: "F-Pace 2016-2020", slug: "f-pace-2016-plus", image: "/vehicles/jaguar/f-pace-2016-2020.jpg" },
-  { title: "F-Type 2014-2020", slug: "f-type-2014-plus", image: "/vehicles/jaguar/f-type-2014-2020.jpg" },
-  { title: "I-Pace 2018-2020", slug: "i-pace-2018-plus", image: "/vehicles/jaguar/i-pace-2018-2020.jpg" },
-  { title: "XE 2015-2020", slug: "xe-2015-plus", image: "/vehicles/jaguar/xe-2015-2020.jpg" },
-  { title: "XF 2009–2015", slug: "xf-2012-2015", image: "/vehicles/jaguar/xf-2009–2015.jpg" },
-  { title: "XF 2016-2020", slug: "xf-2016-plus", image: "/vehicles/jaguar/xf-2016-2020.jpg" },
-  { title: "XJ 2010–2019", slug: "xj-2010-2019", image: "/vehicles/jaguar/xj-2010–2019.jpg" },
-];
-
 export default function VehiclesPage() {
-  const [selectedBrand, setSelectedBrand] = useState<"land-rover" | "jaguar">("land-rover");
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedBrand, setSelectedBrand] = useState<"land-rover" | "jaguar" | "all">("all");
 
-  const models = selectedBrand === "land-rover" ? landRoverModels : jaguarModels;
-  const brandName = selectedBrand === "land-rover" ? "LAND ROVER" : "JAGUAR";
+  useEffect(() => {
+    loadVehicles();
+  }, []);
+
+  const loadVehicles = async () => {
+    try {
+      const res = await fetch("/api/admin/vehicles");
+      const data = await res.json();
+      const vehiclesArray = Array.isArray(data) ? data : [];
+      // Ensure vehicles are sorted by order
+      vehiclesArray.sort((a: Vehicle, b: Vehicle) => (a.order || 0) - (b.order || 0));
+      setVehicles(vehiclesArray);
+    } catch (error) {
+      console.error("Failed to load vehicles:", error);
+      setVehicles([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredVehicles = selectedBrand === "all" 
+    ? vehicles 
+    : vehicles.filter(v => v.brand === selectedBrand);
+
+  const landRoverVehicles = vehicles.filter(v => v.brand === "land-rover");
+  const jaguarVehicles = vehicles.filter(v => v.brand === "jaguar");
+
+  if (loading) {
+    return (
+      <section className="container-padded mx-auto max-w-6xl py-24 text-center">
+        <p>Loading vehicles...</p>
+      </section>
+    );
+  }
 
   return (
-    <section className="container-padded mx-auto max-w-6xl py-16">
-      <div className="flex items-center gap-8">
-        <h1 className="text-4xl font-semibold tracking-tight">Vehicles</h1>
+    <section className="container-padded mx-auto max-w-6xl py-8 sm:py-16 px-4">
+      <div className="flex items-center gap-4 sm:gap-8">
+        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">Vehicles</h1>
       </div>
 
-      <div className="mt-10">
-        <div className="flex gap-6 text-sm">
+      <div className="mt-6 sm:mt-10">
+        <div className="flex gap-3 sm:gap-6 text-xs sm:text-sm flex-wrap">
+          <button
+            onClick={() => setSelectedBrand("all")}
+            className={`px-4 py-2 rounded-full border transition-colors ${
+              selectedBrand === "all"
+                ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
+                : "border-[var(--border-color)] hover:bg-white/5"
+            }`}
+          >
+            ALL ({vehicles.length})
+          </button>
           <button
             onClick={() => setSelectedBrand("land-rover")}
             className={`px-4 py-2 rounded-full border transition-colors ${
@@ -107,7 +182,7 @@ export default function VehiclesPage() {
                 : "border-[var(--border-color)] hover:bg-white/5"
             }`}
           >
-            LAND ROVER
+            LAND ROVER ({landRoverVehicles.length})
           </button>
           <button
             onClick={() => setSelectedBrand("jaguar")}
@@ -117,15 +192,24 @@ export default function VehiclesPage() {
                 : "border-[var(--border-color)] hover:bg-white/5"
             }`}
           >
-            JAGUAR
+            JAGUAR ({jaguarVehicles.length})
           </button>
         </div>
 
-        <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          {models.map((m) => (
-            <VehicleCard key={m.slug} model={m} brand={selectedBrand} />
-          ))}
-        </div>
+        {filteredVehicles.length > 0 ? (
+          <div className="mt-6 sm:mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {filteredVehicles.map((vehicle, index) => (
+              <VehicleCard key={`${vehicle.brand}-${vehicle.value}-${index}`} vehicle={vehicle} />
+            ))}
+          </div>
+        ) : (
+          <div className="mt-6 sm:mt-10 text-center py-8 sm:py-12">
+            <p className="text-zinc-500 mb-4 text-sm sm:text-base">No vehicles found.</p>
+            <p className="text-xs sm:text-sm text-zinc-400">
+              Please add vehicles through the admin panel.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );
