@@ -68,17 +68,17 @@ export default function OrdersAdminPage() {
   }
 
   return (
-    <div className="container-padded mx-auto max-w-6xl py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-semibold">View Orders</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline">← Back to Admin</Link>
+    <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-semibold">View Orders</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
       </div>
 
       {/* Status Filter */}
-      <div className="mb-6 flex gap-3 flex-wrap">
+      <div className="mb-6 flex gap-2 sm:gap-3 flex-wrap">
         <button
           onClick={() => setStatusFilter("all")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
             statusFilter === "all"
               ? "bg-[var(--accent-gold)] text-black"
               : "border border-[var(--border-color)] hover:bg-white/5"
@@ -88,7 +88,7 @@ export default function OrdersAdminPage() {
         </button>
         <button
           onClick={() => setStatusFilter("pending")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
             statusFilter === "pending"
               ? "bg-yellow-100 text-yellow-800"
               : "border border-[var(--border-color)] hover:bg-white/5"
@@ -98,7 +98,7 @@ export default function OrdersAdminPage() {
         </button>
         <button
           onClick={() => setStatusFilter("reviewed")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
             statusFilter === "reviewed"
               ? "bg-blue-100 text-blue-800"
               : "border border-[var(--border-color)] hover:bg-white/5"
@@ -108,7 +108,7 @@ export default function OrdersAdminPage() {
         </button>
         <button
           onClick={() => setStatusFilter("contacted")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
             statusFilter === "contacted"
               ? "bg-green-100 text-green-800"
               : "border border-[var(--border-color)] hover:bg-white/5"
@@ -118,7 +118,7 @@ export default function OrdersAdminPage() {
         </button>
         <button
           onClick={() => setStatusFilter("completed")}
-          className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
             statusFilter === "completed"
               ? "bg-green-100 text-green-800"
               : "border border-[var(--border-color)] hover:bg-white/5"

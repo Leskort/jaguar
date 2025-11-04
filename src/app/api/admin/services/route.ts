@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
+import { getStorageData, saveStorageData } from "@/lib/storage";
 
-const DATA_FILE = join(process.cwd(), "src/data/services.json");
+const STORAGE_KEY = "services";
+const FALLBACK_PATH = "src/data/services.json";
 
 async function getServices() {
   try {
-    const data = await readFile(DATA_FILE, "utf-8");
-    const parsed = JSON.parse(data);
+    const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
     // Only return if it's a valid object with data, otherwise return empty object
-    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && Object.keys(parsed).length > 0) {
-      return parsed;
+    if (data && typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length > 0) {
+      return data;
     }
     return {};
   } catch {
@@ -37,9 +36,10 @@ export async function POST(request: Request) {
     
     services[brand][model][year][category].push(service);
     
-    await writeFile(DATA_FILE, JSON.stringify(services, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
     return NextResponse.json({ success: true });
   } catch (error) {
+    console.error("Error saving service:", error);
     return NextResponse.json({ error: "Failed to save" }, { status: 500 });
   }
 }
@@ -51,12 +51,13 @@ export async function PUT(request: Request) {
     
     if (services[brand]?.[model]?.[year]?.[category]?.[index]) {
       services[brand][model][year][category][index] = service;
-      await writeFile(DATA_FILE, JSON.stringify(services, null, 2));
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
       return NextResponse.json({ success: true });
     }
     
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
   } catch (error) {
+    console.error("Error updating service:", error);
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });
   }
 }
@@ -68,12 +69,13 @@ export async function DELETE(request: Request) {
     
     if (services[brand]?.[model]?.[year]?.[category]?.[index]) {
       services[brand][model][year][category].splice(index, 1);
-      await writeFile(DATA_FILE, JSON.stringify(services, null, 2));
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
       return NextResponse.json({ success: true });
     }
     
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
   } catch (error) {
+    console.error("Error deleting service:", error);
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
   }
 }

@@ -36,11 +36,11 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[var(--space-black)]">
-      <div className="w-full max-w-md p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-white mb-2">Admin Login</h1>
-          <p className="text-zinc-400">Enter password to access admin panel</p>
+    <div className="min-h-screen flex items-center justify-center bg-[var(--space-black)] px-4">
+      <div className="w-full max-w-md p-6 sm:p-8">
+        <div className="text-center mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Admin Login</h1>
+          <p className="text-sm sm:text-base text-zinc-400">Enter password to access admin panel</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -50,7 +50,7 @@ export default function AdminLoginPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              className="w-full h-12 rounded-full border border-white/20 bg-white/10 px-4 text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+              className="w-full h-14 sm:h-12 rounded-full border border-white/20 bg-white/10 px-4 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
               required
               autoFocus
             />
@@ -63,7 +63,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-12 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90 disabled:opacity-50"
+            className="w-full h-14 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90 disabled:opacity-50 text-base sm:text-sm"
           >
             {loading ? "Logging in..." : "Login"}
           </button>

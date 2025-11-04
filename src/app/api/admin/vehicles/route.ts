@@ -1,13 +1,18 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
+import { getStorageData, saveStorageData } from "@/lib/storage";
 
-const DATA_FILE = join(process.cwd(), "src/data/vehicles.json");
+const STORAGE_KEY = "vehicles";
+const FALLBACK_PATH = "src/data/vehicles.json";
 
 async function getVehicles() {
   try {
-    const data = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(data);
+    const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
+    if (data && Array.isArray(data) && data.length > 0) {
+      return data;
+    }
+    // Если файла нет, возвращаем дефолтные данные
+    const { vehiclesData } = await import("@/data/vehicles");
+    return vehiclesData;
   } catch {
     // Если файла нет, возвращаем дефолтные данные
     const { vehiclesData } = await import("@/data/vehicles");
@@ -35,7 +40,7 @@ export async function POST(request: Request) {
     const newVehicle = { ...vehicle, order: vehicles.length };
     const updated = [...vehicles, newVehicle];
     
-    await writeFile(DATA_FILE, JSON.stringify(updated, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, updated);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save" }, { status: 500 });
@@ -50,7 +55,7 @@ export async function PUT(request: Request) {
     const existingOrder = vehicles[index]?.order !== undefined ? vehicles[index].order : index;
     vehicles[index] = { ...vehicle, order: existingOrder };
     
-    await writeFile(DATA_FILE, JSON.stringify(vehicles, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, vehicles);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to update" }, { status: 500 });
@@ -75,7 +80,7 @@ export async function PATCH(request: Request) {
       vehicle.order = index;
     });
     
-    await writeFile(DATA_FILE, JSON.stringify(vehicles, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, vehicles);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to reorder" }, { status: 500 });
@@ -93,7 +98,7 @@ export async function DELETE(request: Request) {
       vehicle.order = idx;
     });
     
-    await writeFile(DATA_FILE, JSON.stringify(vehicles, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, vehicles);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete" }, { status: 500 });

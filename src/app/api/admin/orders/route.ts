@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server";
-import { readFile, writeFile } from "fs/promises";
-import { join } from "path";
+import { getStorageData, saveStorageData } from "@/lib/storage";
 
-const DATA_FILE = join(process.cwd(), "src/data/orders.json");
+const STORAGE_KEY = "orders";
+const FALLBACK_PATH = "src/data/orders.json";
 
 async function getOrders() {
   try {
-    const data = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(data);
+    const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
+    if (data && Array.isArray(data)) {
+      return data;
+    }
+    return [];
   } catch {
     return [];
   }
@@ -32,7 +35,7 @@ export async function POST(request: Request) {
     
     orders.push(newOrder);
     
-    await writeFile(DATA_FILE, JSON.stringify(orders, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, orders);
     return NextResponse.json({ success: true, orderId: newOrder.id });
   } catch (error) {
     return NextResponse.json({ error: "Failed to save order" }, { status: 500 });
@@ -60,7 +63,7 @@ export async function PUT(request: Request) {
       updatedAt: new Date().toISOString(),
     };
     
-    await writeFile(DATA_FILE, JSON.stringify(orders, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, orders);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to update order" }, { status: 500 });

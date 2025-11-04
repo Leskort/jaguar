@@ -160,17 +160,17 @@ export default function VehiclesAdminPage() {
   }
 
   return (
-    <div className="container-padded mx-auto max-w-6xl py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-semibold">Manage Vehicles</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline">← Back to Admin</Link>
+    <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-semibold">Manage Vehicles</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
       </div>
 
-      <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
-        <div className="flex gap-3">
+      <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div className="flex gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
           <button
             onClick={() => setSelectedBrand("all")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
               selectedBrand === "all"
                 ? "bg-[var(--accent-gold)] text-black"
                 : "border border-[var(--border-color)] hover:bg-white/5"
@@ -180,7 +180,7 @@ export default function VehiclesAdminPage() {
           </button>
           <button
             onClick={() => setSelectedBrand("land-rover")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
               selectedBrand === "land-rover"
                 ? "bg-[var(--accent-gold)] text-black"
                 : "border border-[var(--border-color)] hover:bg-white/5"
@@ -190,7 +190,7 @@ export default function VehiclesAdminPage() {
           </button>
           <button
             onClick={() => setSelectedBrand("jaguar")}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
               selectedBrand === "jaguar"
                 ? "bg-[var(--accent-gold)] text-black"
                 : "border border-[var(--border-color)] hover:bg-white/5"
@@ -211,17 +211,17 @@ export default function VehiclesAdminPage() {
               years: [{ value: "", label: "" }],
             });
           }}
-          className="px-6 py-3 rounded-full bg-[var(--accent-gold)] text-black font-medium"
+          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
         >
           + Add Vehicle
         </button>
       </div>
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-6">
-          <h2 className="text-xl font-semibold mb-4">{editingIndex !== null ? "Edit" : "Add"} Vehicle</h2>
+        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">{editingIndex !== null ? "Edit" : "Add"} Vehicle</h2>
           
-          <div className="grid gap-4">
+          <div className="grid gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium mb-2">Brand</label>
               <select
@@ -230,7 +230,7 @@ export default function VehiclesAdminPage() {
                   setFormData({ ...formData, brand: e.target.value, image: "" });
                   loadImages(e.target.value);
                 }}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 required
               >
                 <option value="land-rover">Land Rover</option>
@@ -244,7 +244,7 @@ export default function VehiclesAdminPage() {
                 type="text"
                 value={formData.value}
                 onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 placeholder="discovery-5-l462"
                 required
               />
@@ -256,7 +256,7 @@ export default function VehiclesAdminPage() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 placeholder="DISCOVERY 5 / L462"
                 required
               />
@@ -271,7 +271,7 @@ export default function VehiclesAdminPage() {
                   <select
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                    className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                     required
                   >
                     <option value="">-- Select an image --</option>

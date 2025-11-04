@@ -268,17 +268,17 @@ export default function ServicesAdminPage() {
   }
 
   return (
-    <div className="container-padded mx-auto max-w-6xl py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-semibold">Manage Services</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline">← Back to Admin</Link>
+    <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+        <h1 className="text-2xl sm:text-3xl font-semibold">Manage Services</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
       </div>
 
       {/* View Mode Toggle */}
-      <div className="mb-6 flex gap-4 items-center">
+      <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={() => setViewMode("all")}
-          className={`px-4 py-2 rounded border ${
+          className={`px-4 py-3 sm:py-2 rounded border text-sm sm:text-base ${
             viewMode === "all"
               ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
               : "border-[var(--border-color)]"
@@ -288,7 +288,7 @@ export default function ServicesAdminPage() {
         </button>
         <button
           onClick={() => setViewMode("filtered")}
-          className={`px-4 py-2 rounded border ${
+          className={`px-4 py-3 sm:py-2 rounded border text-sm sm:text-base ${
             viewMode === "filtered"
               ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
               : "border-[var(--border-color)]"
@@ -302,14 +302,14 @@ export default function ServicesAdminPage() {
       {viewMode === "all" && (
         <div className="space-y-6">
           {/* Filters */}
-          <div className="flex gap-4 flex-wrap items-center">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <select
               value={filterBrand}
               onChange={(e) => {
                 setFilterBrand(e.target.value as "all" | "land-rover" | "jaguar");
                 setFilterModel("all");
               }}
-              className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
               <option value="all">All Brands</option>
               <option value="land-rover">Land Rover</option>
@@ -319,7 +319,7 @@ export default function ServicesAdminPage() {
             <select
               value={filterModel}
               onChange={(e) => setFilterModel(e.target.value)}
-              className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
               disabled={filterBrand === "all"}
             >
               <option value="all">All Models</option>
@@ -338,12 +338,12 @@ export default function ServicesAdminPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by title..."
-              className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent flex-1 min-w-[200px]"
+              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent flex-1 text-base sm:text-sm"
             />
           </div>
 
-          {/* Services Table */}
-          <div className="rounded-2xl border border-[var(--border-color)] overflow-hidden">
+          {/* Services Table - Desktop / Cards - Mobile */}
+          <div className="hidden md:block rounded-2xl border border-[var(--border-color)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-zinc-50 dark:bg-zinc-900">
@@ -463,6 +463,96 @@ export default function ServicesAdminPage() {
               </table>
             </div>
           </div>
+
+          {/* Mobile Cards View */}
+          <div className="md:hidden space-y-4">
+            {filteredAllServices.length === 0 ? (
+              <div className="text-center py-8 text-zinc-500">
+                {allServices.length === 0
+                  ? "No services found. Add services using the 'Add/Edit Services' view."
+                  : "No services match your filters."}
+              </div>
+            ) : (
+              filteredAllServices.map((service) => (
+                <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}`} className="rounded-2xl border border-[var(--border-color)] p-4 space-y-3">
+                  <div>
+                    <div className="font-medium text-base mb-1">{service.title}</div>
+                    {service.description && (
+                      <div className="text-sm text-zinc-500 line-clamp-2">
+                        {service.description}
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <span className="text-sm px-2 py-1 rounded bg-zinc-100 dark:bg-zinc-800">
+                      {service.brand.replace("-", " ")} / {getVehicleTitle(service.brand, service.model)} / {service.year}
+                    </span>
+                    <span className="text-sm px-2 py-1 rounded bg-zinc-100 dark:bg-zinc-800">
+                      {categoryLabels[service.category] || service.category}
+                    </span>
+                    {service.status === "in-stock" && (
+                      <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        IN STOCK
+                      </span>
+                    )}
+                    {service.status === "unavailable" && (
+                      <span className="text-xs px-2 py-1 rounded bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200">
+                        UNAVAILABLE
+                      </span>
+                    )}
+                    {service.status === "coming-soon" && (
+                      <span className="text-xs px-2 py-1 rounded bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+                        COMING SOON
+                      </span>
+                    )}
+                  </div>
+                  <div className="text-lg font-semibold">{service.price}</div>
+                  <div className="flex gap-2 pt-2">
+                    <button
+                      onClick={() => {
+                        setSelectedBrand(service.brand);
+                        setSelectedModel(service.model);
+                        setSelectedYear(service.year);
+                        setSelectedCategory(service.category);
+                        setFormData(service);
+                        setEditingIndex(service.index);
+                        setShowAddForm(true);
+                        setViewMode("filtered");
+                      }}
+                      className="flex-1 px-4 py-3 rounded border border-[var(--border-color)] hover:bg-zinc-50 transition-colors text-sm font-medium"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={async () => {
+                        if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
+                        
+                        try {
+                          await fetch("/api/admin/services", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                              brand: service.brand,
+                              model: service.model,
+                              year: service.year,
+                              category: service.category,
+                              index: service.index,
+                            }),
+                          });
+                          await loadServices();
+                        } catch (error) {
+                          alert("Failed to delete service");
+                        }
+                      }}
+                      className="flex-1 px-4 py-3 rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       )}
 
@@ -470,7 +560,7 @@ export default function ServicesAdminPage() {
       {viewMode === "filtered" && (
         <>
 
-      <div className="mb-6 flex gap-4 flex-wrap">
+      <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
         <select
           value={selectedBrand}
           onChange={(e) => {
@@ -478,7 +568,7 @@ export default function ServicesAdminPage() {
             setSelectedModel("");
             setSelectedYear("");
           }}
-          className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
         >
           <option value="land-rover">Land Rover</option>
           <option value="jaguar">Jaguar</option>
@@ -490,7 +580,7 @@ export default function ServicesAdminPage() {
             setSelectedModel(e.target.value);
             setSelectedYear("");
           }}
-          className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
           disabled={availableVehicles.length === 0}
         >
           <option value="">Select Model</option>
@@ -509,7 +599,7 @@ export default function ServicesAdminPage() {
             const newCategories = newYearData ? Object.keys(newYearData) : [];
             setSelectedCategory(newCategories[0] || "features-activation");
           }}
-          className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
           disabled={availableYears.length === 0}
         >
           <option value="">Select Year</option>
@@ -523,7 +613,7 @@ export default function ServicesAdminPage() {
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
         >
           <option value="">Select Category</option>
           <option value="features-activation">Features Activation</option>
@@ -546,7 +636,7 @@ export default function ServicesAdminPage() {
                 status: "in-stock",
               });
             }}
-            className="px-6 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium"
+            className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
           >
             + Add Service
           </button>
@@ -560,19 +650,19 @@ export default function ServicesAdminPage() {
       )}
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-6">
-          <h2 className="text-xl font-semibold mb-4">
+        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">
             {editingIndex !== null ? "Edit" : "Add"} Service to {selectedBrand} / {selectedModel} / {selectedYear} / {selectedCategory}
           </h2>
 
-          <div className="grid gap-4">
+          <div className="grid gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium mb-2">Title</label>
               <input
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 placeholder="DYNAMIC MODE"
                 required
               />
@@ -587,7 +677,7 @@ export default function ServicesAdminPage() {
                   <select
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                    className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                   >
                     <option value="">-- Select an image (optional) --</option>
                     {availableImages.map((imgPath) => {
@@ -647,7 +737,7 @@ export default function ServicesAdminPage() {
                       type="text"
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                      className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                       placeholder="/services/features-activation/image.jpg"
                     />
                     {formData.image && (
@@ -685,7 +775,7 @@ export default function ServicesAdminPage() {
                 type="text"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 placeholder="£150"
                 required
               />
@@ -696,7 +786,7 @@ export default function ServicesAdminPage() {
               <select
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
                 required
               >
                 <option value="No">No</option>
@@ -715,7 +805,7 @@ export default function ServicesAdminPage() {
                     status: value === "" ? undefined : value as "in-stock" | "unavailable" | "coming-soon"
                   });
                 }}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
               >
                 <option value="">No Status</option>
                 <option value="in-stock">IN STOCK</option>

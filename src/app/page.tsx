@@ -178,18 +178,83 @@ function TopOrdersSection() {
   const scrollLeft = () => {
     const container = document.getElementById('top-orders-carousel');
     if (container) {
-      const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
-      const gap = 16; // gap-4 = 16px
-      container.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+      const cards = container.querySelectorAll('.carousel-card');
+      if (cards.length === 0) return;
+      
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      
+      // Find the card that is currently closest to center
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      // Scroll to previous card
+      if (closestIndex > 0) {
+        const prevCard = cards[closestIndex - 1] as HTMLElement;
+        const cardRect = prevCard.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2 - containerRect.left;
+        const scrollTarget = container.scrollLeft + cardCenter - containerRect.width / 2;
+        
+        container.scrollTo({
+          left: Math.max(0, scrollTarget),
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
   const scrollRight = () => {
     const container = document.getElementById('top-orders-carousel');
     if (container) {
-      const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
-      const gap = 16; // gap-4 = 16px
-      container.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+      const cards = container.querySelectorAll('.carousel-card');
+      if (cards.length === 0) return;
+      
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      
+      // Find the card that is currently closest to center
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      // Determine next card index
+      // If we're at index 0 (first card), go to index 1 (second card)
+      // Otherwise go to the next card
+      const nextIndex = closestIndex === 0 ? 1 : closestIndex + 1;
+      
+      // Scroll to the target card
+      if (nextIndex < cards.length) {
+        const nextCard = cards[nextIndex] as HTMLElement;
+        const cardRect = nextCard.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2 - containerRect.left;
+        const scrollTarget = container.scrollLeft + cardCenter - containerRect.width / 2;
+        
+        container.scrollTo({
+          left: Math.max(0, scrollTarget),
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
@@ -747,8 +812,8 @@ export default function Home() {
                 className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
               >
                 Call us
-              </a>
-              <a
+          </a>
+          <a
                 href="https://wa.me/447840000321"
                 className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
               >
