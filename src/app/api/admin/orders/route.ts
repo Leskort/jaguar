@@ -82,7 +82,7 @@ export async function DELETE(request: Request) {
     const orders = await getOrders();
     const filteredOrders = orders.filter((order: any) => order.id !== orderId);
     
-    await writeFile(DATA_FILE, JSON.stringify(filteredOrders, null, 2));
+    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, filteredOrders);
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json({ error: "Failed to delete order" }, { status: 500 });

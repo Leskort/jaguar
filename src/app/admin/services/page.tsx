@@ -205,7 +205,14 @@ export default function ServicesAdminPage() {
       if (editingIndex !== null) {
         // Update existing service
         // Remove index from serviceData if it exists (it's a client-side field)
-        const { index: _, ...cleanServiceData } = serviceData;
+        const cleanServiceData: ServiceOption = {
+          title: serviceData.title,
+          image: serviceData.image,
+          price: serviceData.price,
+          requirements: serviceData.requirements,
+          description: serviceData.description,
+          status: serviceData.status,
+        };
         
         console.log("=== CLIENT: Updating service ===");
         console.log("Editing index:", editingIndex, "Type:", typeof editingIndex);
