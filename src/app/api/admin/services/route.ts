@@ -7,11 +7,15 @@ const DATA_FILE = join(process.cwd(), "src/data/services.json");
 async function getServices() {
   try {
     const data = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(data);
+    const parsed = JSON.parse(data);
+    // Only return if it's a valid object with data, otherwise return empty object
+    if (parsed && typeof parsed === 'object' && !Array.isArray(parsed) && Object.keys(parsed).length > 0) {
+      return parsed;
+    }
+    return {};
   } catch {
-    // Если файла нет, возвращаем дефолтные данные
-    const { servicesData } = await import("@/data/services");
-    return servicesData;
+    // Return empty object if file doesn't exist or is invalid
+    return {};
   }
 }
 

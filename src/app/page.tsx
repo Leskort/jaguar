@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
@@ -9,6 +10,15 @@ type Vehicle = {
   title: string;
   image: string;
   years: Array<{ value: string; label: string }>;
+};
+
+type ServiceOption = {
+  title: string;
+  image: string;
+  price: string;
+  requirements: string;
+  description: string;
+  status?: "in-stock" | "unavailable" | "coming-soon";
 };
 
 function VehicleSelector() {
@@ -44,62 +54,240 @@ function VehicleSelector() {
   };
 
   return (
-    <form onSubmit={handleGoToServices} className="flex flex-col md:flex-row gap-3">
-      <select
-        value={selectedBrand}
-        onChange={(e) => {
-          setSelectedBrand(e.target.value);
-          setSelectedModel("");
-          setSelectedYear("");
-        }}
-        className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
-        required
-      >
-        <option value="land-rover">LAND ROVER</option>
-        <option value="jaguar">JAGUAR</option>
-      </select>
+    <div className="space-y-4">
+      <div className="text-sm font-medium">Jaguar Land Rover — select model</div>
+      <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3">
+        <select
+          value={selectedBrand}
+          onChange={(e) => {
+            setSelectedBrand(e.target.value);
+            setSelectedModel("");
+            setSelectedYear("");
+          }}
+          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          required
+        >
+          <option value="land-rover">Land Rover</option>
+          <option value="jaguar">Jaguar</option>
+        </select>
 
-      <select
-        value={selectedModel}
-        onChange={(e) => {
-          setSelectedModel(e.target.value);
-          setSelectedYear("");
-        }}
-        className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
-        required
-        disabled={availableModels.length === 0}
-      >
-        <option value="">Select Model</option>
-        {availableModels.map((vehicle) => (
-          <option key={vehicle.value} value={vehicle.value}>
-            {vehicle.title}
-          </option>
+        <select
+          value={selectedModel}
+          onChange={(e) => {
+            setSelectedModel(e.target.value);
+            setSelectedYear("");
+          }}
+          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          required
+          disabled={availableModels.length === 0}
+        >
+          <option value="">Select Model</option>
+          {availableModels.map((vehicle) => (
+            <option key={vehicle.value} value={vehicle.value}>
+              {vehicle.title}
+            </option>
+          ))}
+        </select>
+
+        <select
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          required
+          disabled={availableYears.length === 0}
+        >
+          <option value="">Select Year</option>
+          {availableYears.map((year, index) => (
+            <option key={index} value={year.value}>
+              {year.label}
+            </option>
+          ))}
+        </select>
+
+        <button
+          type="submit"
+          disabled={!selectedBrand || !selectedModel || !selectedYear}
+          className="h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-sm font-medium md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Go to services
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function TopOrdersSection() {
+  const [topServices, setTopServices] = useState<Array<ServiceOption & { brand: string; model: string; year: string; category: string }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    loadTopServices();
+  }, []);
+
+  const loadTopServices = async () => {
+    try {
+      const res = await fetch("/api/admin/services");
+      const data = await res.json();
+      
+      // Collect all services from all brands, models, years, and categories
+      const allServices: Array<ServiceOption & { brand: string; model: string; year: string; category: string }> = [];
+      
+      // Only process if data is an object (not empty array or null)
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        for (const brand in data) {
+          if (data[brand] && typeof data[brand] === 'object') {
+            for (const model in data[brand]) {
+              if (data[brand][model] && typeof data[brand][model] === 'object') {
+                for (const year in data[brand][model]) {
+                  if (data[brand][model][year] && typeof data[brand][model][year] === 'object') {
+                    for (const category in data[brand][model][year]) {
+                      const services = data[brand][model][year][category];
+                      if (Array.isArray(services) && services.length > 0) {
+                        services.forEach((service: ServiceOption) => {
+                          // Only add if service has required fields
+                          if (service && service.title && service.image) {
+                            allServices.push({
+                              ...service,
+                              brand,
+                              model,
+                              year,
+                              category,
+                            });
+                          }
+                        });
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      // Only show services that were actually added (no limit, show all)
+      setTopServices(allServices);
+    } catch (error) {
+      console.error("Failed to load top services:", error);
+      setTopServices([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const nextSlide = () => {
+    if (topServices.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % Math.ceil(topServices.length / 3));
+  };
+
+  const prevSlide = () => {
+    if (topServices.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + Math.ceil(topServices.length / 3)) % Math.ceil(topServices.length / 3));
+  };
+
+  if (loading) {
+    return (
+      <div className="relative">
+        <div className="flex gap-6 overflow-hidden">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden flex-shrink-0">
+              <div className="h-48 bg-silver/20 animate-pulse" />
+              <div className="p-4">
+                <div className="h-4 bg-silver/20 rounded animate-pulse mb-3" />
+                <div className="flex gap-2">
+                  <div className="flex-1 h-8 bg-silver/20 rounded animate-pulse" />
+                  <div className="flex-1 h-8 bg-silver/20 rounded animate-pulse" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (topServices.length === 0) {
+    return (
+      <div className="text-center py-12 text-zinc-500">
+        <p>No services available yet. Services will appear here once added in the admin panel.</p>
+      </div>
+    );
+  }
+
+  const visibleServices = topServices.slice(currentIndex * 3, currentIndex * 3 + 3);
+  const totalSlides = Math.ceil(topServices.length / 3);
+
+  return (
+    <div className="relative">
+      {/* Carousel */}
+      <div className="flex gap-6 overflow-hidden">
+        {visibleServices.map((service, index) => (
+          <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} className="min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow flex-shrink-0">
+            <div className="relative h-48 bg-silver/20">
+              {service.image ? (
+                <Image
+                  src={service.image}
+                  alt={service.title}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs">
+                  {service.title}
+                </div>
+              )}
+              {service.status === "in-stock" && (
+                <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-3 py-1 rounded text-xs font-bold">
+                  IN STOCK
+                </div>
+              )}
+            </div>
+            <div className="p-4">
+              <h3 className="font-medium mb-3 text-sm">{service.title}</h3>
+              <div className="flex gap-2">
+                <Link
+                  href="/vehicles"
+                  className="flex-1 h-8 px-4 rounded bg-[var(--accent-gold)] text-black text-sm font-medium inline-flex items-center justify-center"
+                >
+                  Add to cart
+                </Link>
+                <Link
+                  href="/vehicles"
+                  className="flex-1 h-8 px-4 rounded border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+                >
+                  Details
+                </Link>
+              </div>
+            </div>
+          </div>
         ))}
-      </select>
+      </div>
 
-      <select
-        value={selectedYear}
-        onChange={(e) => setSelectedYear(e.target.value)}
-        className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
-        required
-        disabled={availableYears.length === 0}
-      >
-        <option value="">Select Year</option>
-        {availableYears.map((year, index) => (
-          <option key={index} value={year.value}>
-            {year.label}
-          </option>
-        ))}
-      </select>
-
-      <button
-        type="submit"
-        disabled={!selectedBrand || !selectedModel || !selectedYear}
-        className="h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-sm font-medium md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
-      >
-        GO TO SERVICES
-      </button>
-    </form>
+      {/* Navigation arrows */}
+      {totalSlides > 1 && (
+        <>
+          <button
+            onClick={prevSlide}
+            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 transition-colors"
+            aria-label="Previous"
+          >
+            ←
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 transition-colors"
+            aria-label="Next"
+          >
+            →
+          </button>
+        </>
+      )}
+    </div>
   );
 }
 
@@ -122,14 +310,14 @@ export default function Home() {
         customerName: formData.name,
         vehicleVIN: formData.vin,
         contact: formData.contact,
-        items: [], // Empty for general inquiries
+        items: [],
         total: "£0",
         vehicle: {
           brand: "",
           model: "",
           year: "",
         },
-        type: "general-inquiry", // Mark as general inquiry from homepage
+        type: "general-inquiry",
       };
 
       const res = await fetch("/api/admin/orders", {
@@ -139,7 +327,7 @@ export default function Home() {
       });
 
       if (res.ok) {
-        alert("Request submitted successfully! We will contact you soon.");
+        alert("Thank you for your request. We will contact you soon.");
         setOfferOpen(false);
         setFormData({ name: "", vin: "", contact: "" });
       } else {
@@ -158,73 +346,153 @@ export default function Home() {
       <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white">
         <div className="absolute inset-0 opacity-30 bg-[url('/window.svg')] bg-cover bg-center pointer-events-none" />
         <div className="relative z-10 container-padded mx-auto max-w-6xl py-12 sm:py-20 px-4">
-          <div className="text-[10px] sm:text-xs tracking-[0.2em]">LOOKING FOR A COMPANY TO RETROFIT</div>
-          <h1 className="mt-2 text-[clamp(28px,4.5vw,48px)] font-semibold leading-tight max-w-3xl">
-            LAND ROVER, JAGUAR?
+          <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-tight max-w-4xl mb-4">
+            Chip tuning for Land Rover and Jaguar. Unlock the true potential of your vehicle.
           </h1>
-          <p className="mt-4 max-w-2xl text-sm sm:text-base text-zinc-300">
-            We offer a full range of retrofits, upgrades, and feature activations for JLR vehicles. Genuine parts, factory-level quality.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-3 sm:gap-4">
-            <button onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} className="h-10 px-4 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-xs sm:text-sm font-medium inline-flex items-center">GET AN OFFER</button>
-            <Link href="/contact" className="h-10 px-4 sm:px-5 rounded-full border border-white/20 text-xs sm:text-sm inline-flex items-center">CONTACTS</Link>
+          <div className="space-y-2 text-base sm:text-lg text-zinc-300 max-w-3xl mb-8">
+            <p>Increase power and torque.</p>
+            <p>Improve throttle response and overall performance.</p>
+            <p>Optimize fuel consumption.</p>
           </div>
-          <div className="mt-8 sm:mt-10 text-center text-2xl">↓</div>
+          <div className="flex flex-wrap gap-3 sm:gap-4">
+            <button 
+              onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} 
+              className="h-10 px-5 rounded-full bg-[var(--accent-gold)] text-black text-sm font-medium inline-flex items-center"
+            >
+              GET AN OFFER
+            </button>
+            <Link 
+              href="/contact"
+              className="h-10 px-5 rounded-full border border-white/20 text-sm inline-flex items-center"
+            >
+              CONTACTS
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* CATEGORY TILES */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-10 px-4">
-        <h2 className="sr-only">Categories</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          {["Features activation","Retrofits","Power upgrade","Accessories"].map((t) => (
-            <div key={t} className="rounded-xl border border-[var(--border-color)] p-3 text-center text-xs sm:text-sm">
-              {t}
-            </div>
+      {/* SERVICES */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Services</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: "Retrofits",
+              description: "Factory options — installation for specific model and year.",
+              link: "/retrofits"
+            },
+            {
+              title: "Features activation",
+              description: "Activation of hidden features and software options.",
+              link: "/features-activation"
+            },
+            {
+              title: "Power upgrade",
+              description: "Individual chip tuning for JLR.",
+              link: "/power-upgrade"
+            },
+            {
+              title: "Accessories",
+              description: "Original accessories and kits.",
+              link: "/accessories"
+            }
+          ].map((service) => (
+            <Link
+              key={service.title}
+              href={service.link}
+              className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow block"
+            >
+              <h3 className="text-lg font-semibold mb-3">{service.title}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{service.description}</p>
+              <span className="text-sm text-[var(--accent-gold)] hover:underline">
+                Go to services
+              </span>
+            </Link>
           ))}
         </div>
       </section>
 
       {/* VEHICLE SELECTOR */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-10 px-4">
+      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-12 px-4">
         <VehicleSelector />
       </section>
 
-      {/* GALLERY STRIP */}
-      <section className="container-padded mx-auto max-w-[100vw] overflow-hidden py-4 sm:py-6 px-4">
-        <div className="flex gap-3 overflow-x-auto no-scrollbar">
-          {Array.from({ length: 12 }).map((_, i) => (
-            <div key={i} className="min-w-[200px] sm:min-w-[260px] aspect-video rounded-xl bg-silver/20 flex-shrink-0" />
+      {/* TOP ORDERS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Top orders</h2>
+        <TopOrdersSection />
+      </section>
+
+      {/* OUR WORKS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl sm:text-3xl font-semibold">Our works</h2>
+          <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
+            See all
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-video rounded-xl bg-silver/20" />
           ))}
         </div>
       </section>
 
-      {/* INFO CARDS */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-12 px-4">
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <article key={i} className="rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-medium">Why choose LR-CHIP</h3>
-              <p className="mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">Factory-grade diagnostics, coding, and genuine part installation.</p>
-              <button className="mt-4 text-xs sm:text-sm underline">More</button>
+      {/* LATEST ARTICLES */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl sm:text-3xl font-semibold">Latest articles</h2>
+          <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
+            See more
+          </Link>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              title: "DEFENDER 11.4″ PiVi Pro display retrofit",
+              description: "Large display with high brightness and screen area."
+            },
+            {
+              title: "DISCOVERY 5 2022MY+ — eight systems in 2 days",
+              description: "Upgrades on EVA 2.0 platform with PiVi Pro."
+            },
+            {
+              title: "Range Rover 2020MY: HUD and ACC",
+              description: "Features of Head‑Up Display and adaptive cruise retrofitting."
+            }
+          ].map((article) => (
+            <article key={article.title} className="rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow">
+              <div className="h-48 bg-silver/20" />
+              <div className="p-4 sm:p-6">
+                <h3 className="font-semibold mb-2">{article.title}</h3>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{article.description}</p>
+                <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
+                  Read
+                </Link>
+              </div>
             </article>
           ))}
         </div>
       </section>
 
-      {/* CONTACT FORM SHORT */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-12 px-4">
-        <div className="rounded-2xl border border-[var(--border-color)] p-4 sm:p-6 grid md:grid-cols-[1fr,360px] gap-4 sm:gap-6">
-          <div>
-            <h3 className="text-lg sm:text-xl font-semibold">LR-CHIP RETROFITTING SPECIALIST</h3>
-            <p className="mt-3 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400 max-w-2xl">Leave a request and we will get back to you with options and pricing for your specific VIN.</p>
-          </div>
-          <form onSubmit={handleOfferSubmit} className="grid gap-3">
+      {/* CONTACT FORM */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">LR‑CHIP retrofitting specialist</h2>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+            Any factory system can be installed, if it matches the year of manufacture and model.
+          </p>
+          <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
+            <input
+              type="hidden"
+              name="honeypot"
+              value=""
+            />
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-xs sm:text-sm"
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
               placeholder="Your name"
               required
             />
@@ -232,7 +500,7 @@ export default function Home() {
               type="text"
               value={formData.vin}
               onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-              className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-xs sm:text-sm"
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
               placeholder="Vehicle VIN number"
               required
             />
@@ -240,93 +508,290 @@ export default function Home() {
               type="text"
               value={formData.contact}
               onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-xs sm:text-sm"
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
               placeholder="Mobile number or email address"
               required
             />
             <button
               type="submit"
               disabled={submitting}
-              className="h-10 rounded-full bg-[var(--accent-gold)] text-black text-xs sm:text-sm font-medium disabled:opacity-50"
+              className="h-12 rounded-md bg-[var(--accent-gold)] text-black text-sm font-medium disabled:opacity-50"
             >
-              {submitting ? "Submitting..." : "GET AN OFFER"}
+              {submitting ? "Submitting..." : "Get a list of services"}
             </button>
           </form>
         </div>
       </section>
 
-      {/* MORE GALLERIES */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-10 px-4">
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="aspect-video rounded-xl bg-silver/20" />
-          ))}
-        </div>
-      </section>
-
-      {/* TEAM */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-12 px-4">
-        <h3 className="text-lg sm:text-xl font-semibold">Our team</h3>
-        <div className="mt-4 sm:mt-6 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="text-center">
-              <div className="mx-auto h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-silver/20" />
-              <div className="mt-2 text-xs sm:text-sm">Specialist</div>
+      {/* FEW FACTS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Few facts about us</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+          {[
+            "1‑year warranty for all retrofit systems",
+            "Only genuine parts and equipment",
+            "Specializing exclusively in Land Rover, Jaguar vehicles",
+            "8+ years experience, 1400+ JLR vehicles",
+            "600+ posts in Instagram with JLR upgrades"
+          ].map((fact, i) => (
+            <div key={i} className="text-sm text-zinc-600 dark:text-zinc-400">
+              * {fact}
             </div>
           ))}
         </div>
       </section>
 
-      {/* FINAL CTA */}
-      <section className="container-padded mx-auto max-w-6xl py-8 sm:py-12 px-4">
-        <div className="flex items-center justify-center">
-          <button onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} className="h-10 sm:h-12 px-6 sm:px-8 rounded-full bg-[var(--accent-gold)] text-black text-sm sm:text-base font-medium">GET AN OFFER</button>
+      {/* CONTACTS UK */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">Contacts in the UK</h2>
+        <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+          <p>Unit 29 Integra:ME, Parkwood Industrial Estate, Bircholt Road, Maidstone, ME15 9GQ</p>
+          <p>
+            <a href="tel:+447840000321" className="hover:text-[var(--accent-gold)]">+44 784 0000 321</a>
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold mb-3">Schedule</h3>
+          <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+            <li>* Mon–Fri 10:00–19:00</li>
+            <li>* Sat — working by agreement</li>
+            <li>* Sun — day off</li>
+          </ul>
         </div>
       </section>
 
-            {/* OFFER MODAL */}
-            {offerOpen && (
-              <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                <div className="absolute inset-0 bg-black/60" onClick={() => setOfferOpen(false)} />
-                <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white text-black p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                  <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-500 hover:text-black text-xl" onClick={() => setOfferOpen(false)}>✕</button>
-                  <h3 className="text-lg sm:text-xl font-semibold pr-8">Get an offer</h3>
-                  <form onSubmit={handleOfferSubmit} className="mt-4 sm:mt-6 grid gap-3">
-                    <input
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
-                      placeholder="YOUR NAME"
-                      required
-                    />
-                    <input
-                      type="text"
-                      value={formData.vin}
-                      onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-                      className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
-                      placeholder="VEHICLE VIN NUMBER"
-                      required
-                    />
-                    <input
-                      type="text"
-                      value={formData.contact}
-                      onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                      className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
-                      placeholder="MOBILE NUMBER OR EMAIL ADDRESS"
-                      required
-                    />
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="h-10 sm:h-12 rounded-md bg-[#ffd000] text-black text-sm sm:text-base font-medium disabled:opacity-50"
-                    >
-                      {submitting ? "Submitting..." : "GET AN OFFER"}
-                    </button>
-                  </form>
-                </div>
-              </div>
-            )}
+      {/* TEAM */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Our team</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+          {[
+            { name: "Jenya (UK Branch)", role: "Certified Master Technician", details: "JLR Level‑4, 7+ years" },
+            { name: "Jenya (UK, UA)", role: "Retrofitting Specialist", details: "8+ years with JLR" },
+            { name: "Chief Electrician", role: "Car security systems", details: "10+ years, JLR 7+ years" },
+            { name: "Serhiy (UA)", role: "Chief Technician", details: "Dealer 5 yrs, JLR 10+ yrs" },
+            { name: "Ihor (UA)", role: "Parts Specialist", details: "JLR 4+ years" }
+          ].map((member, i) => (
+            <div key={i} className="text-center">
+              <div className="mx-auto h-24 w-24 sm:h-32 sm:w-32 rounded-full bg-silver/20 mb-4" />
+              <div className="font-medium text-sm mb-1">{member.name}</div>
+              <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{member.role}</div>
+              <div className="text-xs text-zinc-500">{member.details}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* WHY CHOOSE */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Why choose chip tuning from LR-Chip?</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            {
+              title: "Power and torque",
+              description: "Up to 30% increase in power and torque. Lively response, dynamic acceleration and confidence when overtaking."
+            },
+            {
+              title: "Fuel savings",
+              description: "Up to 15% reduction in fuel consumption through optimization of mixture formation and boost maps."
+            },
+            {
+              title: "Safety and reliability",
+              description: "We work within safe factory limits. Engine life is not affected."
+            },
+            {
+              title: "Comfort and ease",
+              description: "On request — correct shutdown of EGR and DPF, optimization of transmission logic for smoother shifts."
+            }
+          ].map((item) => (
+            <div key={item.title} className="rounded-2xl border border-[var(--border-color)] p-6">
+              <h3 className="font-semibold mb-3">{item.title}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* PROCESS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Chip tuning process — fast and professional</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {[
+            { num: "1", title: "Diagnostics", desc: "Free computer check of systems and errors." },
+            { num: "2", title: "Reading/Setup", desc: "We read the original ECU software and create an individual profile for your engine and driving style." },
+            { num: "3", title: "Flashing", desc: "We upload the optimized calibration to the control unit." },
+            { num: "4", title: "Test drive and result", desc: "Control measurements, adaptations and demonstration of changes." }
+          ].map((step) => (
+            <div key={step.num} className="rounded-2xl border border-[var(--border-color)] p-6">
+              <div className="text-2xl font-bold text-[var(--accent-gold)] mb-2">{step.num}.</div>
+              <h3 className="font-semibold mb-2">{step.title}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{step.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* MODELS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">We work with all Land Rover and Jaguar models</h2>
+        <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
+          <p><strong>Land Rover:</strong> Range Rover, Range Rover Sport, Velar, Evoque, Discovery, Defender and more.</p>
+          <p><strong>Jaguar:</strong> F-Pace, E-Pace, XE, XF, XJ, F-Type and more.</p>
+          <p><strong>Engines:</strong> Petrol and diesel, including modern hybrids (PHEV).</p>
+        </div>
+      </section>
+
+      {/* EXPERTISE */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">LR-Chip — expertise you can trust</h2>
+        <div className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
+          {[
+            "**Narrow specialization:** We work exclusively with Land Rover and Jaguar — we know their ECU nuances.",
+            "**Individual maps:** No 'universal boxes' — personal calibration for your vehicle's condition.",
+            "**Professional tools:** Alientech, Magic Motorsport and certified software.",
+            "**Guarantees and confidentiality:** Written warranty on work and data security.",
+            "**Free return to stock:** When selling the vehicle, we will restore factory settings at no extra charge."
+          ].map((item, i) => (
+            <div key={i}>* {item}</div>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Frequently asked questions (FAQ)</h2>
+        <div className="space-y-6">
+          {[
+            {
+              q: "Does chip tuning void the factory warranty?",
+              a: "Chip tuning may affect dealer warranty if the malfunction is directly related to software changes. We work within safe limits and provide our own warranty on work."
+            },
+            {
+              q: "Is the remap visible during dealer diagnostics?",
+              a: "Our methods minimize detectability during standard dealer diagnostics. However, specialized checks may detect software changes."
+            },
+            {
+              q: "How long does the process take?",
+              a: "Usually 2–4 hours, depending on the model, ECU type and selected options (EGR/DPF/transmission)."
+            },
+            {
+              q: "Is it harmful to the engine and transmission?",
+              a: "No, with proper calibration we maintain temperature and load limits, which does not reduce the life of the units."
+            }
+          ].map((faq, i) => (
+            <details key={i} className="rounded-xl border border-[var(--border-color)] p-4">
+              <summary className="font-semibold cursor-pointer">{faq.q}</summary>
+              <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{faq.a}</p>
+            </details>
+          ))}
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Ready to transform your Land Rover or Jaguar?</h2>
+          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+            Contact us today for a free consultation and accurate cost estimate.
+          </p>
+          <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
+            <input
+              type="hidden"
+              name="honeypot"
+              value=""
+            />
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              placeholder="Name"
+              required
+            />
+            <input
+              type="text"
+              value={formData.contact}
+              onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              placeholder="Phone"
+              required
+            />
+            <input
+              type="text"
+              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              placeholder="Vehicle model"
+            />
+            <textarea
+              className="h-24 rounded-md border border-[var(--border-color)] px-4 py-3 bg-transparent text-sm resize-none"
+              placeholder="Comment"
+            />
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button
+                type="submit"
+                disabled={submitting}
+                className="flex-1 h-12 rounded-md bg-[var(--accent-gold)] text-black text-sm font-medium disabled:opacity-50"
+              >
+                {submitting ? "Submitting..." : "Submit request"}
+              </button>
+              <a
+                href="tel:+447840000321"
+                className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+              >
+                Call us
+              </a>
+              <a
+                href="https://wa.me/447840000321"
+                className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+              >
+                WhatsApp
+              </a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      {/* OFFER MODAL */}
+      {offerOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setOfferOpen(false)} />
+          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white text-black p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-500 hover:text-black text-xl" onClick={() => setOfferOpen(false)}>✕</button>
+            <h3 className="text-lg sm:text-xl font-semibold pr-8">Get an offer</h3>
+            <form onSubmit={handleOfferSubmit} className="mt-4 sm:mt-6 grid gap-3">
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                placeholder="YOUR NAME"
+                required
+              />
+              <input
+                type="text"
+                value={formData.vin}
+                onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
+                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                placeholder="VEHICLE VIN NUMBER"
+                required
+              />
+              <input
+                type="text"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                placeholder="MOBILE NUMBER OR EMAIL ADDRESS"
+                required
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="h-10 sm:h-12 rounded-md bg-[#ffd000] text-black text-sm sm:text-base font-medium disabled:opacity-50"
+              >
+                {submitting ? "Submitting..." : "GET AN OFFER"}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* COOKIE BAR */}
       {!cookieAccepted && (

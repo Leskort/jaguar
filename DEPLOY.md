@@ -46,9 +46,10 @@ git push -u origin main
    - Выберите репозиторий `lr-chip`
 
 3. **Настройте сборку:**
-   - **Build command:** `npm run build`
-   - **Publish directory:** `.next`
+   - **Build command:** `npm run build` (или оставьте пустым, так как указано в `netlify.toml`)
+   - **Publish directory:** Оставьте пустым или установите `.next` (плагин Next.js автоматически определит)
    - Netlify автоматически использует `netlify.toml` для настроек
+   - **Node version:** Убедитесь, что установлена версия 20 (указано в `netlify.toml`)
 
 4. **Добавьте переменные окружения (если нужно):**
    - В настройках сайта → Environment variables
