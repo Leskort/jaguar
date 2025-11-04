@@ -192,13 +192,15 @@ export default function ServicesAdminPage() {
         image: formData.image || "",
       };
       
-      console.log("Saving service with data:", {
-        brand: selectedBrand,
-        model: selectedModel,
-        year: selectedYear,
-        category: selectedCategory,
-        service: serviceData,
-      });
+      if (process.env.NODE_ENV === "development") {
+        console.log("Saving service with data:", {
+          brand: selectedBrand,
+          model: selectedModel,
+          year: selectedYear,
+          category: selectedCategory,
+          service: serviceData,
+        });
+      }
 
       if (editingIndex !== null) {
         // Update existing service
@@ -216,8 +218,10 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || "Failed to update service");
+          const errorData = await response.json();
+          const errorMsg = errorData.message || errorData.error || "Failed to update service";
+          console.error("Server error response:", errorData);
+          throw new Error(errorMsg);
         }
       } else {
         // Add new service
@@ -234,8 +238,10 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          const error = await response.json();
-          throw new Error(error.error || "Failed to save service");
+          const errorData = await response.json();
+          const errorMsg = errorData.message || errorData.error || "Failed to save service";
+          console.error("Server error response:", errorData);
+          throw new Error(errorMsg);
         }
       }
       
@@ -253,7 +259,9 @@ export default function ServicesAdminPage() {
       alert("Service saved successfully!");
     } catch (error) {
       console.error("Error saving service:", error);
-      alert(`Failed to save service: ${error instanceof Error ? error.message : "Unknown error"}`);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error";
+      console.error("Full error details:", error);
+      alert(`Failed to save service: ${errorMessage}\n\nCheck the browser console and Netlify logs for more details.`);
     } finally {
       setSaving(false);
     }

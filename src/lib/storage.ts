@@ -10,21 +10,61 @@ import { join } from "path";
 const isNetlify = 
   typeof process.env.NETLIFY !== "undefined" || 
   typeof process.env.NETLIFY_DEV !== "undefined" ||
-  typeof process.env.NETLIFY_SITE_ID !== "undefined";
+  typeof process.env.NETLIFY_SITE_ID !== "undefined" ||
+  typeof process.env.NETLIFY_FUNCTION_NAME !== "undefined";
 
 /**
  * Get Netlify Blobs store (if available)
  */
 async function getNetlifyStore() {
-  if (!isNetlify) return null;
+  if (!isNetlify) {
+    return null;
+  }
   
   try {
-    // Use Netlify Blobs runtime API
+    // Import Netlify Blobs dynamically
+    const netlifyBlobs = await import("@netlify/blobs");
+    
+    // Check available methods
+    const availableMethods = Object.keys(netlifyBlobs);
+    console.log("Available Netlify Blobs methods:", availableMethods);
+    
+    // Try getStore first (most common)
     // @ts-ignore - Netlify runtime API
-    const { getStore } = await import("@netlify/blobs");
-    return getStore({ name: "lr-chip-data", consistency: "strong" });
+    if (netlifyBlobs.getStore) {
+      try {
+        // @ts-ignore
+        const store = netlifyBlobs.getStore({ name: "lr-chip-data" });
+        if (store) {
+          console.log("Store created successfully with getStore");
+          return store;
+        }
+      } catch (e) {
+        console.error("getStore failed:", e);
+      }
+    }
+    
+    // Try getBlobStore (alternative API)
+    // @ts-ignore
+    if (netlifyBlobs.getBlobStore) {
+      try {
+        // @ts-ignore
+        const store = netlifyBlobs.getBlobStore({ name: "lr-chip-data" });
+        if (store) {
+          console.log("Store created successfully with getBlobStore");
+          return store;
+        }
+      } catch (e) {
+        console.error("getBlobStore failed:", e);
+      }
+    }
+    
+    console.error("No valid Blobs store method found");
+    return null;
   } catch (error) {
-    console.error("Netlify Blobs not available:", error);
+    console.error("Failed to initialize Netlify Blobs:", error);
+    console.error("Error:", error instanceof Error ? error.message : String(error));
+    console.error("Stack:", error instanceof Error ? error.stack : undefined);
     return null;
   }
 }
@@ -37,12 +77,15 @@ export async function getStorageData(key: string, fallbackPath: string): Promise
   if (isNetlify) {
     try {
       const store = await getNetlifyStore();
-      if (store) {
+      if (store && typeof store.get === 'function') {
         const data = await store.get(key, { type: "json" });
-        if (data !== null) return data;
+        if (data !== null && data !== undefined) {
+          return data;
+        }
       }
     } catch (error) {
       console.error("Error reading from Netlify Blobs:", error);
+      console.error("Error details:", error instanceof Error ? error.message : String(error));
       // Fall through to file system
     }
   }
@@ -66,23 +109,35 @@ export async function saveStorageData(key: string, fallbackPath: string, data: a
   if (isNetlify) {
     try {
       const store = await getNetlifyStore();
-      if (store) {
-        await store.set(key, JSON.stringify(data, null, 2));
+      if (store && typeof store.set === 'function') {
+        const jsonData = JSON.stringify(data, null, 2);
+        await store.set(key, jsonData);
         return; // Success, exit early
+      } else {
+        throw new Error("Netlify Blobs store not available or set method missing");
       }
     } catch (error) {
       console.error("Error writing to Netlify Blobs:", error);
-      // Fall through to file system
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      const errorStack = error instanceof Error ? error.stack : undefined;
+      console.error("Error stack:", errorStack);
+      // Always throw error to prevent silent failures
+      throw new Error(`Failed to save to Netlify Blobs: ${errorMsg}`);
     }
   }
 
-  // Fallback to file system (for local development)
-  try {
-    const filePath = join(process.cwd(), fallbackPath);
-    await writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
-  } catch (error) {
-    console.error("Error writing to file system:", error);
-    throw new Error("Failed to save data");
+  // Fallback to file system (for local development only)
+  if (!process.env.NETLIFY || process.env.NETLIFY_DEV) {
+    try {
+      const filePath = join(process.cwd(), fallbackPath);
+      await writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+    } catch (error) {
+      console.error("Error writing to file system:", error);
+      throw new Error(`Failed to save data: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  } else {
+    // On Netlify production, if Blobs failed, throw error
+    throw new Error("Failed to save data: Netlify Blobs not available and file system is read-only");
   }
 }
 

@@ -40,7 +40,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error saving service:", error);
-    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Error message:", errorMessage);
+    console.error("Error stack:", errorStack);
+    return NextResponse.json({ 
+      error: "Failed to save",
+      message: errorMessage,
+      details: process.env.NODE_ENV === "development" ? { errorMessage, errorStack } : undefined
+    }, { status: 500 });
   }
 }
 
