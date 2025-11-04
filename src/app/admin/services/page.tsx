@@ -42,6 +42,8 @@ export default function ServicesAdminPage() {
   const [filterBrand, setFilterBrand] = useState<"all" | "land-rover" | "jaguar">("all");
   const [filterModel, setFilterModel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [availableImages, setAvailableImages] = useState<string[]>([]);
+  const [loadingImages, setLoadingImages] = useState(false);
 
   const [formData, setFormData] = useState<ServiceOption>({
     title: "",
@@ -56,6 +58,12 @@ export default function ServicesAdminPage() {
     loadServices();
     loadVehicles();
   }, []);
+
+  useEffect(() => {
+    if (selectedCategory && showAddForm) {
+      loadImages(selectedCategory);
+    }
+  }, [selectedCategory, showAddForm]);
 
   const loadServices = async () => {
     try {
@@ -76,6 +84,20 @@ export default function ServicesAdminPage() {
       setVehicles(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Failed to load vehicles:", error);
+    }
+  };
+
+  const loadImages = async (category: string) => {
+    setLoadingImages(true);
+    try {
+      const res = await fetch(`/api/admin/service-images?category=${category}`);
+      const data = await res.json();
+      setAvailableImages(data.images || []);
+    } catch (error) {
+      console.error("Failed to load images:", error);
+      setAvailableImages([]);
+    } finally {
+      setLoadingImages(false);
     }
   };
 
@@ -521,15 +543,50 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Image URL</label>
-              <input
-                type="text"
-                value={formData.image}
-                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
-                placeholder="/services/dynamic-mode.jpg"
-                required
-              />
+              <label className="block text-sm font-medium mb-2">Select Image</label>
+              {loadingImages ? (
+                <div className="text-sm text-zinc-500">Loading images...</div>
+              ) : availableImages.length > 0 ? (
+                <div className="space-y-3">
+                  <select
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                    className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                  >
+                    <option value="">-- Select an image --</option>
+                    {availableImages.map((imgPath) => {
+                      const fileName = imgPath.split("/").pop() || imgPath;
+                      return (
+                        <option key={imgPath} value={imgPath}>
+                          {fileName}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  {formData.image && (
+                    <div className="mt-2">
+                      <div className="text-xs text-zinc-500 mb-2">Preview:</div>
+                      <div className="relative w-full h-48 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/10">
+                        <img
+                          src={formData.image}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = "none";
+                          }}
+                        />
+                      </div>
+                      <div className="mt-1 text-xs text-zinc-400">{formData.image}</div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="text-sm text-zinc-500">
+                  No images found in <code className="text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">public/services/{selectedCategory}/</code>. 
+                  <br />
+                  Please upload images to that folder first.
+                </div>
+              )}
             </div>
 
             <div>

@@ -119,7 +119,6 @@ function VehicleSelector() {
 function TopOrdersSection() {
   const [topServices, setTopServices] = useState<Array<ServiceOption & { brand: string; model: string; year: string; category: string }>>([]);
   const [loading, setLoading] = useState(true);
-  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
     loadTopServices();
@@ -145,8 +144,8 @@ function TopOrdersSection() {
                       const services = data[brand][model][year][category];
                       if (Array.isArray(services) && services.length > 0) {
                         services.forEach((service: ServiceOption) => {
-                          // Only add if service has required fields
-                          if (service && service.title && service.image) {
+                          // Only add if service has title
+                          if (service && service.title) {
                             allServices.push({
                               ...service,
                               brand,
@@ -176,22 +175,30 @@ function TopOrdersSection() {
     }
   };
 
-  const nextSlide = () => {
-    if (topServices.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % Math.ceil(topServices.length / 3));
+  const scrollLeft = () => {
+    const container = document.getElementById('top-orders-carousel');
+    if (container) {
+      const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
+      const gap = 16; // gap-4 = 16px
+      container.scrollBy({ left: -(cardWidth + gap), behavior: 'smooth' });
+    }
   };
 
-  const prevSlide = () => {
-    if (topServices.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + Math.ceil(topServices.length / 3)) % Math.ceil(topServices.length / 3));
+  const scrollRight = () => {
+    const container = document.getElementById('top-orders-carousel');
+    if (container) {
+      const cardWidth = container.querySelector('.carousel-card')?.clientWidth || 0;
+      const gap = 16; // gap-4 = 16px
+      container.scrollBy({ left: cardWidth + gap, behavior: 'smooth' });
+    }
   };
 
   if (loading) {
     return (
       <div className="relative">
-        <div className="flex gap-6 overflow-hidden">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div key={i} className="min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden flex-shrink-0">
+        <div id="top-orders-carousel" className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[calc((100vw-85vw-3rem)/2)] sm:px-0">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden flex-shrink-0 snap-center">
               <div className="h-48 bg-silver/20 animate-pulse" />
               <div className="p-4">
                 <div className="h-4 bg-silver/20 rounded animate-pulse mb-3" />
@@ -210,55 +217,56 @@ function TopOrdersSection() {
   if (topServices.length === 0) {
     return (
       <div className="text-center py-12 text-zinc-500">
-        <p>No services available yet. Services will appear here once added in the admin panel.</p>
+        <p className="text-sm sm:text-base">No services available yet. Services will appear here once added in the admin panel.</p>
       </div>
     );
   }
 
-  const visibleServices = topServices.slice(currentIndex * 3, currentIndex * 3 + 3);
-  const totalSlides = Math.ceil(topServices.length / 3);
-
   return (
-    <div className="relative">
+    <div className="relative w-full">
       {/* Carousel */}
-      <div className="flex gap-6 overflow-hidden">
-        {visibleServices.map((service, index) => (
-          <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} className="min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow flex-shrink-0">
-            <div className="relative h-48 bg-silver/20">
+      <div id="top-orders-carousel" className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 px-[calc((100vw-85vw-3rem)/2)] sm:px-0">
+        {topServices.map((service, index) => (
+          <div 
+            key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
+            className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div className="relative h-48 sm:h-56 bg-silver/20">
               {service.image ? (
                 <Image
                   src={service.image}
                   alt={service.title}
                   fill
                   className="object-cover"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   unoptimized
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs">
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
                   {service.title}
                 </div>
               )}
               {service.status === "in-stock" && (
-                <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-3 py-1 rounded text-xs font-bold">
+                <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-2 sm:px-3 py-1 rounded text-[10px] sm:text-xs font-bold">
                   IN STOCK
                 </div>
               )}
             </div>
-            <div className="p-4">
-              <h3 className="font-medium mb-3 text-sm">{service.title}</h3>
-              <div className="flex gap-2">
+            <div className="p-3 sm:p-4">
+              <h3 className="font-medium mb-2 sm:mb-3 text-xs sm:text-sm line-clamp-2">{service.title}</h3>
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-8 px-4 rounded bg-[var(--accent-gold)] text-black text-sm font-medium inline-flex items-center justify-center"
+                  className="flex-1 h-8 sm:h-9 px-3 sm:px-4 rounded bg-[var(--accent-gold)] text-black text-xs sm:text-sm font-medium inline-flex items-center justify-center"
                 >
                   Add to cart
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-8 px-4 rounded border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+                  className="flex-1 h-8 sm:h-9 px-3 sm:px-4 rounded border border-[var(--border-color)] text-xs sm:text-sm inline-flex items-center justify-center"
                 >
                   Details
                 </Link>
@@ -269,21 +277,21 @@ function TopOrdersSection() {
       </div>
 
       {/* Navigation arrows */}
-      {totalSlides > 1 && (
+      {topServices.length > 0 && (
         <>
           <button
-            onClick={prevSlide}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 transition-colors"
+            onClick={scrollLeft}
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 transition-colors z-10"
             aria-label="Previous"
           >
-            ←
+            <span className="text-xl">←</span>
           </button>
           <button
-            onClick={nextSlide}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 transition-colors"
+            onClick={scrollRight}
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 transition-colors z-10"
             aria-label="Next"
           >
-            →
+            <span className="text-xl">→</span>
           </button>
         </>
       )}
@@ -420,7 +428,9 @@ export default function Home() {
       {/* TOP ORDERS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Top orders</h2>
-        <TopOrdersSection />
+        <div className="relative">
+          <TopOrdersSection />
+        </div>
       </section>
 
       {/* OUR WORKS */}
@@ -795,12 +805,26 @@ export default function Home() {
 
       {/* COOKIE BAR */}
       {!cookieAccepted && (
-        <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90">
+        <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-[10px] sm:text-xs flex-1">This website stores cookies on your computer to provide more personalized services to you.</div>
-            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium" onClick={() => setCookieAccepted(true)}>Accept</button>
+            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={() => setCookieAccepted(true)}>Accept</button>
           </div>
         </div>
+      )}
+      
+      {/* Add padding to main content when cookie bar is visible */}
+      {!cookieAccepted && (
+        <style jsx global>{`
+          main {
+            padding-bottom: 60px;
+          }
+          @media (min-width: 640px) {
+            main {
+              padding-bottom: 0;
+            }
+          }
+        `}</style>
       )}
     </div>
   );
