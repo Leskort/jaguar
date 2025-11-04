@@ -220,33 +220,49 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          let errorData;
+          let errorData: any = {};
+          let errorText = "";
+          
           try {
-            errorData = await response.json();
+            // Try to get response as text first
+            errorText = await response.text();
+            console.error("Raw error response text:", errorText);
+            
+            // Try to parse as JSON
+            try {
+              errorData = JSON.parse(errorText);
+            } catch (parseError) {
+              console.error("Failed to parse error as JSON, using raw text");
+              errorData = { error: errorText || `HTTP ${response.status}: ${response.statusText}` };
+            }
           } catch (e) {
+            console.error("Failed to read error response:", e);
             errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
           }
           
           const errorMsg = errorData.message || errorData.error || `Failed to update service (HTTP ${response.status})`;
-          console.error("Server error response:", errorData);
-          console.error("Full error response:", {
-            status: response.status,
-            statusText: response.statusText,
-            body: errorData
-          });
-          console.error("Request was:", {
+          console.error("=== SERVER ERROR DETAILS ===");
+          console.error("Status:", response.status, response.statusText);
+          console.error("Error data:", errorData);
+          console.error("Error text:", errorText);
+          console.error("Request details:", {
             brand: selectedBrand,
             model: selectedModel,
             year: selectedYear,
             category: selectedCategory,
             index: editingIndex,
-            service: serviceData
+            serviceTitle: serviceData?.title
           });
+          console.error("============================");
           
           // Include details in error message if available
-          const fullErrorMsg = errorData.details 
-            ? `${errorMsg}\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`
-            : errorMsg;
+          let fullErrorMsg = errorMsg;
+          if (errorData.details) {
+            fullErrorMsg += `\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`;
+          }
+          if (errorText && errorText !== errorMsg) {
+            fullErrorMsg += `\n\nRaw response: ${errorText.substring(0, 200)}`;
+          }
           
           throw new Error(fullErrorMsg);
         }
@@ -265,25 +281,41 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          let errorData;
+          let errorData: any = {};
+          let errorText = "";
+          
           try {
-            errorData = await response.json();
+            // Try to get response as text first
+            errorText = await response.text();
+            console.error("Raw error response text:", errorText);
+            
+            // Try to parse as JSON
+            try {
+              errorData = JSON.parse(errorText);
+            } catch (parseError) {
+              console.error("Failed to parse error as JSON, using raw text");
+              errorData = { error: errorText || `HTTP ${response.status}: ${response.statusText}` };
+            }
           } catch (e) {
+            console.error("Failed to read error response:", e);
             errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
           }
           
           const errorMsg = errorData.message || errorData.error || `Failed to save service (HTTP ${response.status})`;
-          console.error("Server error response:", errorData);
-          console.error("Full error response:", {
-            status: response.status,
-            statusText: response.statusText,
-            body: errorData
-          });
+          console.error("=== SERVER ERROR DETAILS ===");
+          console.error("Status:", response.status, response.statusText);
+          console.error("Error data:", errorData);
+          console.error("Error text:", errorText);
+          console.error("============================");
           
           // Include details in error message if available
-          const fullErrorMsg = errorData.details 
-            ? `${errorMsg}\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`
-            : errorMsg;
+          let fullErrorMsg = errorMsg;
+          if (errorData.details) {
+            fullErrorMsg += `\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`;
+          }
+          if (errorText && errorText !== errorMsg) {
+            fullErrorMsg += `\n\nRaw response: ${errorText.substring(0, 200)}`;
+          }
           
           throw new Error(fullErrorMsg);
         }

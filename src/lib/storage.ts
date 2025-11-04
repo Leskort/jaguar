@@ -15,6 +15,7 @@ const isNetlify =
 
 /**
  * Get Netlify Blobs store (if available)
+ * IMPORTANT: This should be called from within the request handler, not at module level
  */
 async function getNetlifyStore() {
   if (!isNetlify) {
@@ -22,45 +23,25 @@ async function getNetlifyStore() {
   }
   
   try {
-    // Import Netlify Blobs dynamically
-    const netlifyBlobs = await import("@netlify/blobs");
+    // Import Netlify Blobs dynamically - must be done inside request handler
+    const { getStore } = await import("@netlify/blobs");
     
-    // Check available methods
-    const availableMethods = Object.keys(netlifyBlobs);
-    console.log("Available Netlify Blobs methods:", availableMethods);
+    if (!getStore) {
+      console.error("getStore not found in @netlify/blobs");
+      return null;
+    }
     
-    // Try getStore first (most common)
+    // Call getStore directly - this must happen inside the request handler context
     // @ts-ignore - Netlify runtime API
-    if (netlifyBlobs.getStore) {
-      try {
-        // @ts-ignore
-        const store = netlifyBlobs.getStore({ name: "lr-chip-data" });
-        if (store) {
-          console.log("Store created successfully with getStore");
-          return store;
-        }
-      } catch (e) {
-        console.error("getStore failed:", e);
-      }
+    const store = getStore({ name: "lr-chip-data" });
+    
+    if (!store) {
+      console.error("getStore returned null");
+      return null;
     }
     
-    // Try getBlobStore (alternative API)
-    // @ts-ignore
-    if (netlifyBlobs.getBlobStore) {
-      try {
-        // @ts-ignore
-        const store = netlifyBlobs.getBlobStore({ name: "lr-chip-data" });
-        if (store) {
-          console.log("Store created successfully with getBlobStore");
-          return store;
-        }
-      } catch (e) {
-        console.error("getBlobStore failed:", e);
-      }
-    }
-    
-    console.error("No valid Blobs store method found");
-    return null;
+    console.log("Store created successfully");
+    return store;
   } catch (error) {
     console.error("Failed to initialize Netlify Blobs:", error);
     console.error("Error:", error instanceof Error ? error.message : String(error));
@@ -73,19 +54,30 @@ async function getNetlifyStore() {
  * Get data from storage (Blobs on Netlify, file system locally)
  */
 export async function getStorageData(key: string, fallbackPath: string): Promise<any> {
+  console.log(`[getStorageData] Loading ${key} from storage...`);
+  console.log(`[getStorageData] isNetlify: ${isNetlify}`);
+  
   // Try Netlify Blobs first
   if (isNetlify) {
     try {
+      console.log("[getStorageData] Getting Netlify Blobs store...");
       const store = await getNetlifyStore();
+      
       if (store && typeof store.get === 'function') {
+        console.log("[getStorageData] Calling store.get()...");
         const data = await store.get(key, { type: "json" });
         if (data !== null && data !== undefined) {
+          console.log(`[getStorageData] Successfully loaded ${key} from Netlify Blobs`);
           return data;
+        } else {
+          console.log(`[getStorageData] Key ${key} not found in Blobs, returning null`);
         }
+      } else {
+        console.warn("[getStorageData] Store not available or get method missing");
       }
     } catch (error) {
-      console.error("Error reading from Netlify Blobs:", error);
-      console.error("Error details:", error instanceof Error ? error.message : String(error));
+      console.error("[getStorageData] Error reading from Netlify Blobs:", error);
+      console.error("[getStorageData] Error details:", error instanceof Error ? error.message : String(error));
       // Fall through to file system
     }
   }
@@ -105,40 +97,46 @@ export async function getStorageData(key: string, fallbackPath: string): Promise
  * Save data to storage (Blobs on Netlify, file system locally)
  */
 export async function saveStorageData(key: string, fallbackPath: string, data: any): Promise<void> {
-  console.log(`Attempting to save ${key} to storage...`);
-  console.log(`isNetlify: ${isNetlify}, NETLIFY env: ${process.env.NETLIFY}, NETLIFY_DEV: ${process.env.NETLIFY_DEV}`);
+  console.log(`[saveStorageData] Attempting to save ${key} to storage...`);
+  console.log(`[saveStorageData] isNetlify: ${isNetlify}`);
+  console.log(`[saveStorageData] NETLIFY=${process.env.NETLIFY}, NETLIFY_DEV=${process.env.NETLIFY_DEV}, NETLIFY_SITE_ID=${process.env.NETLIFY_SITE_ID}`);
   
   // Try Netlify Blobs first
   if (isNetlify) {
     try {
-      console.log("Getting Netlify Blobs store...");
+      console.log("[saveStorageData] Getting Netlify Blobs store...");
       const store = await getNetlifyStore();
       
       if (!store) {
-        console.error("Store is null - Blobs store not created");
-        throw new Error("Netlify Blobs store could not be created. Check logs for initialization errors.");
+        const errorMsg = "Netlify Blobs store could not be created. Check logs for initialization errors.";
+        console.error(`[saveStorageData] ${errorMsg}`);
+        throw new Error(errorMsg);
       }
       
-      console.log("Store obtained, checking for set method...");
+      console.log("[saveStorageData] Store obtained, checking for set method...");
+      console.log("[saveStorageData] Store type:", typeof store);
+      console.log("[saveStorageData] Store methods:", Object.keys(store));
+      
       if (typeof store.set !== 'function') {
-        console.error("Store methods:", Object.keys(store));
-        throw new Error(`Netlify Blobs store set method not available. Available methods: ${Object.keys(store).join(', ')}`);
+        const errorMsg = `Netlify Blobs store set method not available. Available methods: ${Object.keys(store).join(', ')}`;
+        console.error(`[saveStorageData] ${errorMsg}`);
+        throw new Error(errorMsg);
       }
       
-      console.log("Serializing data to JSON...");
+      console.log("[saveStorageData] Serializing data to JSON...");
       const jsonData = JSON.stringify(data, null, 2);
-      console.log(`Data size: ${jsonData.length} characters`);
+      console.log(`[saveStorageData] Data size: ${jsonData.length} characters`);
       
-      console.log("Calling store.set()...");
+      console.log("[saveStorageData] Calling store.set()...");
       await store.set(key, jsonData);
-      console.log(`Successfully saved ${key} to Netlify Blobs`);
+      console.log(`[saveStorageData] Successfully saved ${key} to Netlify Blobs`);
       return; // Success, exit early
     } catch (error) {
-      console.error("Error writing to Netlify Blobs:", error);
+      console.error("[saveStorageData] Error writing to Netlify Blobs:", error);
       const errorMsg = error instanceof Error ? error.message : String(error);
       const errorStack = error instanceof Error ? error.stack : undefined;
-      console.error("Error type:", error?.constructor?.name);
-      console.error("Error stack:", errorStack);
+      console.error("[saveStorageData] Error type:", error?.constructor?.name);
+      console.error("[saveStorageData] Error stack:", errorStack);
       
       // Provide more detailed error message
       let detailedError = `Failed to save to Netlify Blobs: ${errorMsg}`;
