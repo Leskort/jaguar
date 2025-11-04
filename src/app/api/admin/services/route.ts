@@ -69,20 +69,28 @@ export async function POST(request: Request) {
 
 export async function PUT(request: Request) {
   try {
-    const { brand, model, year, category, index, service } = await request.json();
-    console.log("PUT request received:", { brand, model, year, category, index, serviceTitle: service?.title });
+    const requestBody = await request.json();
+    const { brand, model, year, category, index, service } = requestBody;
+    
+    console.log("=== PUT REQUEST ===");
+    console.log("Request body:", JSON.stringify(requestBody, null, 2));
+    console.log("Extracted values:", { brand, model, year, category, index, serviceTitle: service?.title });
+    console.log("Index type:", typeof index, "Index value:", index);
     
     // Validate input
-    if (typeof index !== 'number' || index < 0) {
-      console.error("Invalid index:", index);
+    if (typeof index !== 'number' || index < 0 || !Number.isInteger(index)) {
+      console.error("Invalid index:", { index, type: typeof index });
       return NextResponse.json({ 
         error: "Invalid index",
-        message: `Index must be a non-negative number, got: ${index}`
+        message: `Index must be a non-negative integer, got: ${index} (type: ${typeof index})`
       }, { status: 400 });
     }
     
+    console.log("Loading services from storage...");
     const services = await getServices();
-    console.log("Current services structure:", {
+    console.log("Services loaded:", {
+      hasData: !!services && typeof services === 'object',
+      brands: Object.keys(services || {}),
       hasBrand: !!services[brand],
       hasModel: !!services[brand]?.[model],
       hasYear: !!services[brand]?.[model]?.[year],
@@ -92,12 +100,28 @@ export async function PUT(request: Request) {
     });
     
     // Ensure structure exists
-    if (!services[brand]) services[brand] = {};
-    if (!services[brand][model]) services[brand][model] = {};
-    if (!services[brand][model][year]) services[brand][model][year] = {};
-    if (!services[brand][model][year][category]) services[brand][model][year][category] = [];
+    if (!services[brand]) {
+      console.log(`Creating brand structure: ${brand}`);
+      services[brand] = {};
+    }
+    if (!services[brand][model]) {
+      console.log(`Creating model structure: ${model}`);
+      services[brand][model] = {};
+    }
+    if (!services[brand][model][year]) {
+      console.log(`Creating year structure: ${year}`);
+      services[brand][model][year] = {};
+    }
+    if (!services[brand][model][year][category]) {
+      console.log(`Creating category structure: ${category}`);
+      services[brand][model][year][category] = [];
+    }
     
     const categoryArray = services[brand][model][year][category];
+    console.log("Category array:", {
+      length: categoryArray.length,
+      items: categoryArray.map((item: any, i: number) => ({ index: i, title: item?.title }))
+    });
     
     // Check if index is valid
     if (index >= categoryArray.length) {
@@ -108,36 +132,48 @@ export async function PUT(request: Request) {
       });
       return NextResponse.json({ 
         error: "Index out of bounds",
-        message: `Index ${index} is out of bounds. Array has ${categoryArray.length} items.`
+        message: `Index ${index} is out of bounds. Array has ${categoryArray.length} items. Available indexes: 0-${categoryArray.length - 1}`
       }, { status: 400 });
     }
     
     // Update the service
+    console.log(`Updating service at index ${index}...`);
+    const oldService = categoryArray[index];
+    console.log("Old service:", oldService?.title);
     categoryArray[index] = service;
+    console.log("New service:", service.title);
     console.log("Service updated in memory, saving to storage...");
     
     try {
       await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
-      console.log("Service saved successfully to storage");
+      console.log("✅ Service saved successfully to storage");
       return NextResponse.json({ success: true });
     } catch (saveError) {
-      console.error("Error saving to storage:", saveError);
+      console.error("❌ Error saving to storage:", saveError);
       const saveErrorMessage = saveError instanceof Error ? saveError.message : String(saveError);
+      const saveErrorStack = saveError instanceof Error ? saveError.stack : undefined;
+      console.error("Save error stack:", saveErrorStack);
       return NextResponse.json({ 
         error: "Failed to save to storage",
-        message: saveErrorMessage
+        message: saveErrorMessage,
+        stack: process.env.NODE_ENV === "development" ? saveErrorStack : undefined
       }, { status: 500 });
     }
   } catch (error) {
-    console.error("Error updating service:", error);
+    console.error("❌ Error in PUT handler:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Error type:", error?.constructor?.name);
     console.error("Error message:", errorMessage);
     console.error("Error stack:", errorStack);
     return NextResponse.json({ 
       error: "Failed to update",
       message: errorMessage,
-      details: process.env.NODE_ENV === "development" ? { errorMessage, errorStack } : undefined
+      details: {
+        errorMessage,
+        errorStack: process.env.NODE_ENV === "development" ? errorStack : undefined,
+        errorType: error?.constructor?.name
+      }
     }, { status: 500 });
   }
 }

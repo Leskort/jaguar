@@ -204,8 +204,21 @@ export default function ServicesAdminPage() {
 
       if (editingIndex !== null) {
         // Update existing service
-        console.log("Updating service with index:", editingIndex);
-        console.log("Service data:", serviceData);
+        // Remove index from serviceData if it exists (it's a client-side field)
+        const { index: _, ...cleanServiceData } = serviceData;
+        
+        console.log("=== CLIENT: Updating service ===");
+        console.log("Editing index:", editingIndex, "Type:", typeof editingIndex);
+        console.log("Service data (cleaned):", cleanServiceData);
+        console.log("Request payload:", {
+          brand: selectedBrand,
+          model: selectedModel,
+          year: selectedYear,
+          category: selectedCategory,
+          index: editingIndex,
+          service: cleanServiceData
+        });
+        
         const response = await fetch("/api/admin/services", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -215,7 +228,7 @@ export default function ServicesAdminPage() {
             year: selectedYear,
             category: selectedCategory,
             index: editingIndex,
-            service: serviceData,
+            service: cleanServiceData,
           }),
         });
         
