@@ -220,17 +220,35 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          const errorData = await response.json();
-          const errorMsg = errorData.message || errorData.error || "Failed to update service";
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+          }
+          
+          const errorMsg = errorData.message || errorData.error || `Failed to update service (HTTP ${response.status})`;
           console.error("Server error response:", errorData);
+          console.error("Full error response:", {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorData
+          });
           console.error("Request was:", {
             brand: selectedBrand,
             model: selectedModel,
             year: selectedYear,
             category: selectedCategory,
             index: editingIndex,
+            service: serviceData
           });
-          throw new Error(errorMsg);
+          
+          // Include details in error message if available
+          const fullErrorMsg = errorData.details 
+            ? `${errorMsg}\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`
+            : errorMsg;
+          
+          throw new Error(fullErrorMsg);
         }
       } else {
         // Add new service
@@ -247,10 +265,27 @@ export default function ServicesAdminPage() {
         });
         
         if (!response.ok) {
-          const errorData = await response.json();
-          const errorMsg = errorData.message || errorData.error || "Failed to save service";
+          let errorData;
+          try {
+            errorData = await response.json();
+          } catch (e) {
+            errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+          }
+          
+          const errorMsg = errorData.message || errorData.error || `Failed to save service (HTTP ${response.status})`;
           console.error("Server error response:", errorData);
-          throw new Error(errorMsg);
+          console.error("Full error response:", {
+            status: response.status,
+            statusText: response.statusText,
+            body: errorData
+          });
+          
+          // Include details in error message if available
+          const fullErrorMsg = errorData.details 
+            ? `${errorMsg}\n\nDetails: ${JSON.stringify(errorData.details, null, 2)}`
+            : errorMsg;
+          
+          throw new Error(fullErrorMsg);
         }
       }
       
@@ -270,7 +305,15 @@ export default function ServicesAdminPage() {
       console.error("Error saving service:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
       console.error("Full error details:", error);
-      alert(`Failed to save service: ${errorMessage}\n\nCheck the browser console and Netlify logs for more details.`);
+      
+      // Try to get more details from the error
+      let detailedMessage = errorMessage;
+      if (error instanceof Error && error.message) {
+        detailedMessage = error.message;
+      }
+      
+      // Show detailed error to user
+      alert(`Failed to save service!\n\nError: ${detailedMessage}\n\nPlease check:\n1. Browser console (F12) for more details\n2. Netlify Functions logs for server-side errors\n\nIf the problem persists, the error details are in the browser console.`);
     } finally {
       setSaving(false);
     }
