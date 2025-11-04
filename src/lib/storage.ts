@@ -64,12 +64,13 @@ async function getNetlifyStore() {
       console.warn("[getNetlifyStore] getStore not found in exports");
     }
     
-    // Try getBlobStore (alternative API)
-    if (netlifyBlobs.getBlobStore) {
-      console.log("[getNetlifyStore] Trying getBlobStore API...");
+    // Try alternative API if available (only if getStore doesn't work)
+    // Note: getBlobStore may not exist in all versions
+    if (!netlifyBlobs.getStore && (netlifyBlobs as any).getBlobStore) {
+      console.log("[getNetlifyStore] Trying getBlobStore API (alternative)...");
       try {
-        // @ts-ignore
-        const store = netlifyBlobs.getBlobStore({ name: "lr-chip-data" });
+        // @ts-ignore - alternative API
+        const store = (netlifyBlobs as any).getBlobStore({ name: "lr-chip-data" });
         if (store) {
           console.log("[getNetlifyStore] ✅ Store created successfully with getBlobStore");
           console.log("[getNetlifyStore] Store methods:", Object.keys(store));
@@ -81,8 +82,6 @@ async function getNetlifyStore() {
         console.error("[getNetlifyStore] getBlobStore failed:", e);
         console.error("[getNetlifyStore] Error details:", e instanceof Error ? e.message : String(e));
       }
-    } else {
-      console.warn("[getNetlifyStore] getBlobStore not found in exports");
     }
     
     console.error("[getNetlifyStore] ❌ No valid Blobs API found");
