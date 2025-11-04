@@ -26,7 +26,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { brand, model, year, category, service } = await request.json();
+    console.log("POST request received:", { brand, model, year, category, serviceTitle: service?.title });
+    
     const services = await getServices();
+    console.log("Current services loaded, adding new service...");
     
     // Ensure structure exists
     if (!services[brand]) services[brand] = {};
@@ -35,9 +38,21 @@ export async function POST(request: Request) {
     if (!services[brand][model][year][category]) services[brand][model][year][category] = [];
     
     services[brand][model][year][category].push(service);
+    console.log(`Service added to array. New length: ${services[brand][model][year][category].length}`);
+    console.log("Saving to storage...");
     
-    await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
-    return NextResponse.json({ success: true });
+    try {
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
+      console.log("Service saved successfully to storage");
+      return NextResponse.json({ success: true });
+    } catch (saveError) {
+      console.error("Error saving to storage:", saveError);
+      const saveErrorMessage = saveError instanceof Error ? saveError.message : String(saveError);
+      return NextResponse.json({ 
+        error: "Failed to save to storage",
+        message: saveErrorMessage
+      }, { status: 500 });
+    }
   } catch (error) {
     console.error("Error saving service:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
@@ -55,18 +70,75 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const { brand, model, year, category, index, service } = await request.json();
-    const services = await getServices();
+    console.log("PUT request received:", { brand, model, year, category, index, serviceTitle: service?.title });
     
-    if (services[brand]?.[model]?.[year]?.[category]?.[index]) {
-      services[brand][model][year][category][index] = service;
-      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
-      return NextResponse.json({ success: true });
+    // Validate input
+    if (typeof index !== 'number' || index < 0) {
+      console.error("Invalid index:", index);
+      return NextResponse.json({ 
+        error: "Invalid index",
+        message: `Index must be a non-negative number, got: ${index}`
+      }, { status: 400 });
     }
     
-    return NextResponse.json({ error: "Service not found" }, { status: 404 });
+    const services = await getServices();
+    console.log("Current services structure:", {
+      hasBrand: !!services[brand],
+      hasModel: !!services[brand]?.[model],
+      hasYear: !!services[brand]?.[model]?.[year],
+      hasCategory: !!services[brand]?.[model]?.[year]?.[category],
+      categoryLength: services[brand]?.[model]?.[year]?.[category]?.length,
+      requestedIndex: index
+    });
+    
+    // Ensure structure exists
+    if (!services[brand]) services[brand] = {};
+    if (!services[brand][model]) services[brand][model] = {};
+    if (!services[brand][model][year]) services[brand][model][year] = {};
+    if (!services[brand][model][year][category]) services[brand][model][year][category] = [];
+    
+    const categoryArray = services[brand][model][year][category];
+    
+    // Check if index is valid
+    if (index >= categoryArray.length) {
+      console.error("Index out of bounds:", {
+        index,
+        arrayLength: categoryArray.length,
+        availableIndexes: Array.from({ length: categoryArray.length }, (_, i) => i)
+      });
+      return NextResponse.json({ 
+        error: "Index out of bounds",
+        message: `Index ${index} is out of bounds. Array has ${categoryArray.length} items.`
+      }, { status: 400 });
+    }
+    
+    // Update the service
+    categoryArray[index] = service;
+    console.log("Service updated in memory, saving to storage...");
+    
+    try {
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
+      console.log("Service saved successfully to storage");
+      return NextResponse.json({ success: true });
+    } catch (saveError) {
+      console.error("Error saving to storage:", saveError);
+      const saveErrorMessage = saveError instanceof Error ? saveError.message : String(saveError);
+      return NextResponse.json({ 
+        error: "Failed to save to storage",
+        message: saveErrorMessage
+      }, { status: 500 });
+    }
   } catch (error) {
     console.error("Error updating service:", error);
-    return NextResponse.json({ error: "Failed to update" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error("Error message:", errorMessage);
+    console.error("Error stack:", errorStack);
+    return NextResponse.json({ 
+      error: "Failed to update",
+      message: errorMessage,
+      details: process.env.NODE_ENV === "development" ? { errorMessage, errorStack } : undefined
+    }, { status: 500 });
   }
 }
 
@@ -84,7 +156,11 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
   } catch (error) {
     console.error("Error deleting service:", error);
-    return NextResponse.json({ error: "Failed to delete" }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ 
+      error: "Failed to delete",
+      message: errorMessage
+    }, { status: 500 });
   }
 }
 

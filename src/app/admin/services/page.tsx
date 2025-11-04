@@ -204,6 +204,8 @@ export default function ServicesAdminPage() {
 
       if (editingIndex !== null) {
         // Update existing service
+        console.log("Updating service with index:", editingIndex);
+        console.log("Service data:", serviceData);
         const response = await fetch("/api/admin/services", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -221,6 +223,13 @@ export default function ServicesAdminPage() {
           const errorData = await response.json();
           const errorMsg = errorData.message || errorData.error || "Failed to update service";
           console.error("Server error response:", errorData);
+          console.error("Request was:", {
+            brand: selectedBrand,
+            model: selectedModel,
+            year: selectedYear,
+            category: selectedCategory,
+            index: editingIndex,
+          });
           throw new Error(errorMsg);
         }
       } else {
