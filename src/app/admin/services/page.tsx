@@ -174,12 +174,35 @@ export default function ServicesAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that image is selected if availableImages exist
+    if (availableImages.length > 0 && !formData.image) {
+      if (!confirm("No image selected. Do you want to continue without an image?")) {
+        return;
+      }
+    }
+    
     setSaving(true);
 
     try {
+      // Prepare service data
+      const serviceData = {
+        ...formData,
+        // Ensure image path is properly formatted
+        image: formData.image || "",
+      };
+      
+      console.log("Saving service with data:", {
+        brand: selectedBrand,
+        model: selectedModel,
+        year: selectedYear,
+        category: selectedCategory,
+        service: serviceData,
+      });
+
       if (editingIndex !== null) {
         // Update existing service
-        await fetch("/api/admin/services", {
+        const response = await fetch("/api/admin/services", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -188,12 +211,17 @@ export default function ServicesAdminPage() {
             year: selectedYear,
             category: selectedCategory,
             index: editingIndex,
-            service: formData,
+            service: serviceData,
           }),
         });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Failed to update service");
+        }
       } else {
         // Add new service
-        await fetch("/api/admin/services", {
+        const response = await fetch("/api/admin/services", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -201,10 +229,16 @@ export default function ServicesAdminPage() {
             model: selectedModel,
             year: selectedYear,
             category: selectedCategory,
-            service: formData,
+            service: serviceData,
           }),
         });
+        
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Failed to save service");
+        }
       }
+      
       await loadServices();
       setFormData({
         title: "",
@@ -216,8 +250,10 @@ export default function ServicesAdminPage() {
       });
       setShowAddForm(false);
       setEditingIndex(null);
+      alert("Service saved successfully!");
     } catch (error) {
-      alert("Failed to save service");
+      console.error("Error saving service:", error);
+      alert(`Failed to save service: ${error instanceof Error ? error.message : "Unknown error"}`);
     } finally {
       setSaving(false);
     }
@@ -553,7 +589,7 @@ export default function ServicesAdminPage() {
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                     className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
                   >
-                    <option value="">-- Select an image --</option>
+                    <option value="">-- Select an image (optional) --</option>
                     {availableImages.map((imgPath) => {
                       const fileName = imgPath.split("/").pop() || imgPath;
                       return (
@@ -572,19 +608,73 @@ export default function ServicesAdminPage() {
                           alt="Preview"
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).style.display = "none";
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = "none";
+                            const parent = target.parentElement;
+                            if (parent) {
+                              const errorMsg = document.createElement("div");
+                              errorMsg.className = "absolute inset-0 flex items-center justify-center text-red-500 text-xs px-2 text-center";
+                              errorMsg.textContent = `Image not found: ${formData.image}`;
+                              parent.appendChild(errorMsg);
+                            }
                           }}
                         />
                       </div>
-                      <div className="mt-1 text-xs text-zinc-400">{formData.image}</div>
+                      <div className="mt-1 text-xs text-zinc-400 break-all">{formData.image}</div>
+                      {formData.image && !formData.image.startsWith(`/services/${selectedCategory}/`) && (
+                        <div className="mt-1 text-xs text-yellow-600 dark:text-yellow-400">
+                          ⚠️ Warning: This image path doesn't match the selected category. Please select an image from the dropdown above.
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {!formData.image && editingIndex !== null && (
+                    <div className="text-xs text-zinc-500 mt-2">
+                      Current service has no image. You can leave this empty or select an image from the dropdown.
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="text-sm text-zinc-500">
-                  No images found in <code className="text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">public/services/{selectedCategory}/</code>. 
-                  <br />
-                  Please upload images to that folder first.
+                <div className="space-y-3">
+                  <div className="text-sm text-zinc-500">
+                    No images found in <code className="text-xs bg-zinc-100 dark:bg-zinc-800 px-1 py-0.5 rounded">public/services/{selectedCategory}/</code>. 
+                    <br />
+                    Please upload images to that folder first.
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Or enter image path manually:</label>
+                    <input
+                      type="text"
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      className="w-full h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                      placeholder="/services/features-activation/image.jpg"
+                    />
+                    {formData.image && (
+                      <div className="mt-2">
+                        <div className="text-xs text-zinc-500 mb-2">Preview:</div>
+                        <div className="relative w-full h-48 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/10">
+                          <img
+                            src={formData.image}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = "none";
+                              const parent = target.parentElement;
+                              if (parent && !parent.querySelector(".error-msg")) {
+                                const errorMsg = document.createElement("div");
+                                errorMsg.className = "error-msg absolute inset-0 flex items-center justify-center text-red-500 text-xs px-2 text-center";
+                                errorMsg.textContent = `Image not found: ${formData.image}`;
+                                parent.appendChild(errorMsg);
+                              }
+                            }}
+                          />
+                        </div>
+                        <div className="mt-1 text-xs text-zinc-400 break-all">{formData.image}</div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               )}
             </div>

@@ -21,6 +21,7 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
   const items = useCartStore((state) => state.items);
+  const [imgError, setImgError] = useState(false);
 
   const itemId = `${brand}-${model}-${year}-${option.title}`;
   const alreadyInCart = items.some((item) => item.id === itemId);
@@ -46,17 +47,29 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
 
   const status = option.status;
   const isUnavailable = status === "unavailable" || status === "coming-soon";
+  
+  // Validate image path
+  const imagePath = option.image && option.image.trim() !== "" && !option.image.includes(".фв") 
+    ? option.image 
+    : null;
 
   return (
     <div className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col">
       <div className="relative h-40 w-full bg-silver/20">
-        <Image 
-          src={option.image} 
-          alt={option.title} 
-          fill 
-          className={`object-cover ${isUnavailable ? 'grayscale opacity-60' : ''}`}
-          unoptimized 
-        />
+        {imagePath && !imgError ? (
+          <Image 
+            src={imagePath} 
+            alt={option.title} 
+            fill 
+            className={`object-cover ${isUnavailable ? 'grayscale opacity-60' : ''}`}
+            unoptimized 
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
+            {option.title}
+          </div>
+        )}
         {/* Status Badge */}
         {status === "in-stock" && (
           <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-3 py-1 rounded text-xs font-bold">

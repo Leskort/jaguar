@@ -5,17 +5,15 @@
         "power-upgrade": [
           {
             "title": "2.2L TD4 122HP CHIP-TUNING STAGE 1",
-            "image": "/services/defender-chip-tuning.jpg",
+            "image": "/services/power-upgrade/2.2L-TD4-122hp-chip-tuning-Stage-1-367x218.jpg",
             "price": "£400",
             "requirements": "Yes",
-            "description": "Power upgrade chip-tuning for 2.2L TD4 engine, increasing power output to 122HP."
-          },
-          {
-            "title": "портрет ",
-            "image": ".фв",
-            "price": "400",
-            "requirements": "Yes",
-            "description": "dasda"
+            "description": "Power upgrade chip-tuning for 2.2L TD4 engine, increasing power output to 122HP.",
+            "brand": "land-rover",
+            "model": "DEFENDER-l316",
+            "year": "2007-2016",
+            "category": "power-upgrade",
+            "index": 0
           }
         ]
       }
@@ -25,35 +23,40 @@
         "features-activation": [
           {
             "title": "VIDEO IN MOTION INCONTROL TOUCH PLUS (GEN 2.1)",
-            "image": "/services/video-in-motion.jpg",
+            "image": "/services/features-activation/Video-in-motion-InControl-Touch-Plus-GEN-2.jpg",
             "price": "£100",
             "requirements": "Yes",
-            "description": "Enable video playback on InControl Touch Plus system while driving."
+            "description": "Enable video playback on InControl Touch Plus system while driving.",
+            "brand": "land-rover",
+            "model": "DISCOVERY4-l319",
+            "year": "2010-2016",
+            "category": "features-activation",
+            "index": 0
           },
           {
             "title": "NAVIGATION UPDATE TOUCH PLUS (GEN 2.1)",
-            "image": "/services/navigation-update.jpg",
+            "image": "/services/features-activation/Navigation-update-Touch-Plus-GEN-2.jpg",
             "price": "£250",
             "requirements": "Yes",
             "description": "Update navigation maps and software for InControl Touch Plus system."
           },
           {
             "title": "BLUETOOTH/HANDS-FREE ACTIVATION",
-            "image": "/services/bluetooth.jpg",
+            "image": "/services/features-activation/BluetoothHands-free-activation.jpg",
             "price": "£100",
             "requirements": "No",
             "description": "Activate Bluetooth and hands-free calling functionality."
           },
           {
             "title": "ELECTRONIC MODULES SOFTWARE UPDATE",
-            "image": "/services/software-update.jpg",
+            "image": "/services/features-activation/Electronic-modules-software-update-19.jpg",
             "price": "£20-150",
             "requirements": "No",
             "description": "Update software for various electronic modules in the vehicle."
           },
           {
             "title": "START/STOP SYSTEM DEACTIVATION",
-            "image": "/services/start-stop.jpg",
+            "image": "",
             "price": "£100",
             "requirements": "No",
             "description": "Permanently disable the start/stop system."
@@ -62,42 +65,42 @@
         "retrofits": [
           {
             "title": "ADAPTIVE CRUISE CONTROL",
-            "image": "/services/adaptive-cruise-control.jpg",
+            "image": "/services/retrofits/Adaptive-Cruise-Control.jpg",
             "price": "£1750",
             "requirements": "Yes",
             "description": "Install adaptive cruise control system with stop & go functionality."
           },
           {
             "title": "INTERACTIVE DRIVER DISPLAY (TFT CLUSTER) FROM RANGE ROVER L322",
-            "image": "/services/tft-cluster.jpg",
+            "image": "/services/retrofits/Interactive-Driver-Display-TFT-cluster-from-Range-Rover-L322.jpg",
             "price": "£1300",
             "requirements": "Yes",
             "description": "Retrofit full-color TFT instrument cluster from Range Rover L322."
           },
           {
             "title": "APPLE CARPLAY AND ANDROID AUTO TOUCH PLUS (GEN 2.1)",
-            "image": "/services/carplay-android-retrofit.jpg",
+            "image": "/services/retrofits/Apple-CarPlay-and-Android-Auto-Touch-Plus-GEN-2.jpg",
             "price": "£700",
             "requirements": "Yes",
             "description": "Install Apple CarPlay and Android Auto compatibility for InControl Touch Plus Gen 2.1."
           },
           {
             "title": "ADAPTIVE XENON HEADLIGHTS WITH LED SIGNATURE",
-            "image": "/services/adaptive-xenon.jpg",
+            "image": "/services/retrofits/Adaptive-Xenon-headlights-with-LED-signature-4.jpg",
             "price": "£3600",
             "requirements": "Yes",
             "description": "Retrofit adaptive xenon headlights with LED signature lighting."
           },
           {
             "title": "BLIND SPOT MONITORING",
-            "image": "/services/blind-spot-retrofit.jpg",
+            "image": "/services/retrofits/Blind-Spot-Monitoring.jpg",
             "price": "£1200",
             "requirements": "Yes",
             "description": "Install blind spot monitoring system with warning indicators."
           },
           {
             "title": "AUTO HIGH BEAM ASSIST (AHBA) CAMERA",
-            "image": "/services/ahba-camera.jpg",
+            "image": "",
             "price": "£800",
             "requirements": "Yes",
             "description": "Retrofit auto high beam assist system with camera module."
@@ -110,56 +113,56 @@
         "features-activation": [
           {
             "title": "DYNAMIC MODE",
-            "image": "/services/dynamic-mode.jpg",
+            "image": "/services/features-activation/Dynamic-Mode-11.jpg",
             "price": "£150",
             "requirements": "No",
             "description": "Factory dynamic program activation for enhanced driving experience."
           },
           {
             "title": "CONFIGURABLE DYNAMIC",
-            "image": "/services/configurable-dynamic.jpg",
+            "image": "/services/features-activation/Configurable-Dynamic-1.jpg",
             "price": "£50",
             "requirements": "Yes",
             "description": "Customize dynamic mode settings including gear shift, steering, and suspension."
           },
           {
             "title": "AUTO HIGH BEAM ASSIST (AHBA)",
-            "image": "/services/ahba.jpg",
+            "image": "/services/features-activation/Auto-High-Beam-Assist-AHBA-7.jpg",
             "price": "£150",
             "requirements": "Yes",
             "description": "Automatic high beam assist system activation."
           },
           {
             "title": "LANE KEEP ASSIST (LKA)",
-            "image": "/services/lka.jpg",
+            "image": "/services/features-activation/Lane-Keep-Assist-2.jpg",
             "price": "£150",
             "requirements": "Yes",
             "description": "Lane keeping assistance system activation."
           },
           {
             "title": "TRAFFIC SIGN RECOGNITION AND DRIVER DROWSY MONITOR (TSR + DDM)",
-            "image": "/services/tsr-ddm.jpg",
+            "image": "/services/features-activation/Traffic-Sign-Recognition-and-Driver-Drowsy-Monitor-TSR-DDM-2.jpg",
             "price": "£200",
             "requirements": "Yes",
             "description": "Traffic sign recognition and driver drowsiness monitoring system."
           },
           {
             "title": "APPLE CARPLAY AND ANDROID AUTO PACK ACTIVATION",
-            "image": "/services/carplay-android.jpg",
+            "image": "/services/features-activation/Apple-CarPlay-and-Android-Auto-Pack-activation-4.jpg",
             "price": "£300",
             "requirements": "Yes",
             "description": "Enable Apple CarPlay and Android Auto connectivity."
           },
           {
             "title": "REVERSE TRAFFIC DETECTION (BLIND SPOT SYSTEM)",
-            "image": "/services/reverse-traffic.jpg",
+            "image": "/services/features-activation/Reverse-Traffic-Detection-Blind-Spot-System-5.jpg",
             "price": "£200",
             "requirements": "Yes",
             "description": "Reverse traffic detection system activation."
           },
           {
             "title": "BLIND SPOT ASSIST (BLIND SPOT SYSTEM)",
-            "image": "/services/blind-spot.jpg",
+            "image": "/services/features-activation/Blind-Spot-Assist-Blind-Spot-System-6.jpg",
             "price": "£200",
             "requirements": "Yes",
             "description": "Blind spot monitoring and assist system activation."
@@ -169,44 +172,13 @@
     },
     "discovery-5-l462": {
       "2017-2020": {
-        "features-activation": [
-          {
-            "title": "вахта ",
-            "image": "ваы",
-            "price": "1120",
-            "requirements": "Yes",
-            "description": "фвф"
-          }
-        ],
-        "retrofits": [
-          {
-            "title": "gfd",
-            "image": "dsa",
-            "price": "160",
-            "requirements": "Yes",
-            "description": "wqdq"
-          }
-        ]
+        "features-activation": [],
+        "retrofits": []
       }
     },
     "defender-l316": {
       "2007-2016": {
-        "features-activation": [
-          {
-            "title": "ad",
-            "image": "we",
-            "price": "127",
-            "requirements": "Yes",
-            "description": "dwadw"
-          },
-          {
-            "title": "dasf",
-            "image": "asf",
-            "price": "1232",
-            "requirements": "Yes",
-            "description": "dwq"
-          }
-        ]
+        "features-activation": []
       }
     }
   },
@@ -216,7 +188,7 @@
         "features-activation": [
           {
             "title": "Meridian™ Surround System Upgrade",
-            "image": "/services/meridian.jpg",
+            "image": "",
             "price": "£800",
             "requirements": "Yes",
             "description": "Upgrade audio system to Meridian 825W."
