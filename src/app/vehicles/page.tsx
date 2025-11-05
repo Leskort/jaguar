@@ -173,10 +173,10 @@ export default function VehiclesPage() {
         <div className="flex gap-3 sm:gap-6 text-xs sm:text-sm flex-wrap">
           <button
             onClick={() => setSelectedBrand("all")}
-            className={`px-4 py-2 rounded-full border transition-colors ${
+            className={`px-4 sm:px-4 py-2.5 sm:py-2 rounded-full border-2 transition-colors min-h-[44px] sm:min-h-0 text-sm sm:text-xs font-semibold ${
               selectedBrand === "all"
-                ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
-                : "border-[var(--border-color)] hover:bg-white/5"
+                ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] shadow-lg"
+                : "border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
             }`}
           >
             ALL ({vehicles.length})
@@ -188,10 +188,10 @@ export default function VehiclesPage() {
               <button
                 key={brand}
                 onClick={() => setSelectedBrand(brand)}
-                className={`px-4 py-2 rounded-full border transition-colors ${
+                className={`px-4 sm:px-4 py-2.5 sm:py-2 rounded-full border-2 transition-colors min-h-[44px] sm:min-h-0 text-sm sm:text-xs font-semibold ${
                   selectedBrand === brand
-                    ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
-                    : "border-[var(--border-color)] hover:bg-white/5"
+                    ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)] shadow-lg"
+                    : "border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
                 }`}
               >
                 {displayName.toUpperCase()} ({brandVehicles.length})

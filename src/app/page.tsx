@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Vehicle = {
   brand: string;
@@ -23,6 +24,7 @@ type ServiceOption = {
 
 function VehicleSelector() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
@@ -96,7 +98,7 @@ function VehicleSelector() {
 
   return (
     <div className="space-y-4">
-      <div className="text-sm font-medium">Select Vehicle Model</div>
+      <div className="text-sm font-medium">{t('selectVehicleModel')}</div>
       <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3">
         <select
           value={selectedBrand}
@@ -107,10 +109,10 @@ function VehicleSelector() {
             setSelectedModel("");
             setSelectedYear("");
           }}
-          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0"
           required
         >
-          <option value="">Select Brand</option>
+          <option value="">{t('selectBrand')}</option>
           {allBrands.map(brand => {
             const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
             return (
@@ -125,12 +127,12 @@ function VehicleSelector() {
             setSelectedModel(e.target.value);
             setSelectedYear("");
           }}
-          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
           required
           disabled={!selectedBrand || availableModels.length === 0}
           key={selectedBrand} // Force re-render when brand changes
         >
-          <option value="">Select Model</option>
+          <option value="">{t('selectModel')}</option>
           {availableModels.map((vehicle) => (
             <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
               {vehicle.title}
@@ -141,12 +143,12 @@ function VehicleSelector() {
         <select
           value={selectedYear}
           onChange={(e) => setSelectedYear(e.target.value)}
-          className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
+          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
           required
           disabled={!selectedModel || availableYears.length === 0}
           key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
         >
-          <option value="">Select Year</option>
+          <option value="">{t('selectYear')}</option>
           {availableYears.map((year, index) => (
             <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
               {year.label}
@@ -157,9 +159,9 @@ function VehicleSelector() {
         <button
           type="submit"
           disabled={!selectedBrand || !selectedModel || !selectedYear}
-          className="h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-sm font-medium md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-12 sm:h-10 px-6 sm:px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
         >
-          Go to services
+          {t('goToServices')}
         </button>
       </form>
     </div>
@@ -375,13 +377,13 @@ function TopOrdersSection() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-8 sm:h-9 px-3 sm:px-4 rounded bg-[var(--accent-gold)] text-black text-xs sm:text-sm font-medium inline-flex items-center justify-center"
+                  className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full bg-[var(--accent-gold)] text-black text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg active:scale-95 transition-all"
                 >
                   Add to cart
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-8 sm:h-9 px-3 sm:px-4 rounded border border-[var(--border-color)] text-xs sm:text-sm inline-flex items-center justify-center"
+                  className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
                 >
                   Details
                 </Link>
@@ -396,14 +398,14 @@ function TopOrdersSection() {
         <>
           <button
             onClick={scrollLeft}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 transition-colors z-10"
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
             aria-label="Previous"
           >
             <span className="text-xl">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-[var(--border-color)] shadow-lg flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 transition-colors z-10"
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
             aria-label="Next"
           >
             <span className="text-xl">→</span>
@@ -415,6 +417,7 @@ function TopOrdersSection() {
 }
 
 export default function Home() {
+  const { t } = useLanguage();
   const [offerOpen, setOfferOpen] = useState(false);
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [formData, setFormData] = useState({
@@ -450,14 +453,17 @@ export default function Home() {
       });
 
       if (res.ok) {
-        alert("Thank you for your request. We will contact you soon.");
         setOfferOpen(false);
         setFormData({ name: "", vin: "", contact: "" });
+        // Show success message and redirect to home page
+        alert(t('requestSubmitted'));
+        // Already on home page, just refresh or show message
+        window.location.reload();
       } else {
-        alert("Failed to submit request. Please try again.");
+        alert(t('failedToSubmitRequest'));
       }
     } catch (error) {
-      alert("Failed to submit request. Please try again.");
+      alert(t('failedToSubmitRequest'));
     } finally {
       setSubmitting(false);
     }
@@ -480,13 +486,13 @@ export default function Home() {
           <div className="flex flex-wrap gap-3 sm:gap-4">
             <button 
               onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} 
-              className="h-10 px-5 rounded-full bg-[var(--accent-gold)] text-black text-sm font-medium inline-flex items-center"
+              className="h-12 sm:h-10 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
               GET AN OFFER
             </button>
             <Link 
               href="/contact"
-              className="h-10 px-5 rounded-full border border-white/20 text-sm inline-flex items-center"
+              className="h-12 sm:h-10 px-6 sm:px-5 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 hover:bg-white/20 active:scale-95 transition-all"
             >
               CONTACTS
             </Link>
@@ -617,32 +623,32 @@ export default function Home() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
-              placeholder="Your name"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+              placeholder={t('yourName')}
               required
             />
             <input
               type="text"
               value={formData.vin}
               onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
-              placeholder="Vehicle VIN number"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+              placeholder={t('vehicleVINNumber')}
               required
             />
             <input
               type="text"
               value={formData.contact}
               onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
-              placeholder="Mobile number or email address"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+              placeholder={t('mobileNumberOrEmail')}
               required
             />
             <button
               type="submit"
               disabled={submitting}
-              className="h-12 rounded-md bg-[var(--accent-gold)] text-black text-sm font-medium disabled:opacity-50"
+              className="h-12 sm:h-12 rounded-md bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
-              {submitting ? "Submitting..." : "Get a list of services"}
+              {submitting ? t('submitting') : t('getAListOfServices')}
             </button>
           </form>
         </div>
@@ -828,7 +834,7 @@ export default function Home() {
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
               placeholder="Name"
               required
             />
@@ -836,36 +842,36 @@ export default function Home() {
               type="text"
               value={formData.contact}
               onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
               placeholder="Phone"
               required
             />
             <input
               type="text"
-              className="h-12 rounded-md border border-[var(--border-color)] px-4 bg-transparent text-sm"
+              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
               placeholder="Vehicle model"
             />
             <textarea
-              className="h-24 rounded-md border border-[var(--border-color)] px-4 py-3 bg-transparent text-sm resize-none"
+              className="h-24 sm:h-24 rounded-md border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[100px] focus:border-[var(--accent-gold)] focus:outline-none resize-none"
               placeholder="Comment"
             />
             <div className="flex flex-col sm:flex-row gap-3">
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex-1 h-12 rounded-md bg-[var(--accent-gold)] text-black text-sm font-medium disabled:opacity-50"
+                className="flex-1 h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
                 {submitting ? "Submitting..." : "Submit request"}
               </button>
               <a
                 href="tel:+447840000321"
-                className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+                className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
               >
                 Call us
           </a>
           <a
                 href="https://wa.me/447840000321"
-                className="flex-1 h-12 rounded-md border border-[var(--border-color)] text-sm inline-flex items-center justify-center"
+                className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
               >
                 WhatsApp
               </a>
@@ -886,7 +892,7 @@ export default function Home() {
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="YOUR NAME"
                 required
               />
@@ -894,7 +900,7 @@ export default function Home() {
                 type="text"
                 value={formData.vin}
                 onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="VEHICLE VIN NUMBER"
                 required
               />
@@ -902,7 +908,7 @@ export default function Home() {
                 type="text"
                 value={formData.contact}
                 onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                className="h-10 sm:h-12 rounded-md border border-zinc-200 px-4 text-xs sm:text-sm"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="MOBILE NUMBER OR EMAIL ADDRESS"
                 required
               />

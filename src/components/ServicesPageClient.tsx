@@ -1,6 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/cart";
+import { useLanguage } from "@/contexts/LanguageContext";
 import ServiceCard from "./ServiceCard";
 import Link from "next/link";
 
@@ -20,14 +22,16 @@ type ServicesPageClientProps = {
   categoriesData: Record<string, ServiceOption[]>;
 };
 
-const categoryLabels: Record<string, string> = {
-  "features-activation": "FEATURES ACTIVATION",
-  "retrofits": "RETROFITS",
-  "power-upgrade": "POWER UPGRADE",
-  "accessories": "ACCESSORIES",
-};
-
 export default function ServicesPageClient({ brand, model, year, categoriesData }: ServicesPageClientProps) {
+  const router = useRouter();
+  const { t } = useLanguage();
+  
+  const categoryLabels: Record<string, string> = {
+    "features-activation": t('featuresActivation'),
+    "retrofits": t('retrofits'),
+    "power-upgrade": t('powerUpgrade'),
+    "accessories": t('accessories'),
+  };
   // Get available categories from data - only those with at least one service
   const availableCategories = Object.keys(categoriesData).filter(
     catKey => categoriesData[catKey] && Array.isArray(categoriesData[catKey]) && categoriesData[catKey].length > 0
@@ -91,16 +95,18 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
       });
 
       if (res.ok) {
-        alert("Order submitted successfully! We will contact you soon.");
         clearCart();
         setShowOrderForm(false);
         setShowCart(false);
         setOrderFormData({ name: "", vin: "", contact: "" });
+        // Show success message and redirect to home page
+        alert(t('orderSubmitted'));
+        router.push("/");
       } else {
-        alert("Failed to submit order. Please try again.");
+        alert(t('failedToSubmitOrder'));
       }
     } catch (error) {
-      alert("Failed to submit order. Please try again.");
+      alert(t('failedToSubmitOrder'));
     } finally {
       setSubmitting(false);
     }
@@ -115,15 +121,15 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
 
       {/* Category Tabs + Cart */}
       <div className="flex items-center justify-between mb-8">
-        <div className="flex gap-3 flex-wrap">
+        <div className="flex gap-2 sm:gap-3 flex-wrap">
           {availableCategories.map((catKey) => (
             <button
               key={catKey}
               onClick={() => setActiveCategory(catKey)}
-              className={`px-4 py-2 rounded-full text-xs font-medium transition-colors ${
+              className={`px-4 sm:px-5 py-2.5 sm:py-2 rounded-full text-sm sm:text-xs font-semibold transition-colors min-h-[44px] sm:min-h-0 ${
                 activeCategory === catKey
-                  ? "bg-[var(--accent-gold)] text-black"
-                  : "border border-[var(--border-color)] hover:bg-white/5"
+                  ? "bg-[var(--accent-gold)] text-black shadow-lg"
+                  : "border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
               }`}
             >
               {categoryLabels[catKey] || catKey.toUpperCase()}
@@ -133,19 +139,19 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
         {/* Cart Icon */}
         <button
           onClick={() => setShowCart(true)}
-          className="flex items-center gap-2 hover:opacity-80"
+          className="flex items-center gap-2 sm:gap-3 hover:opacity-80 active:opacity-60 transition-opacity min-h-[44px] px-2 sm:px-0"
         >
           <div className="relative">
-            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-700">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-zinc-700 dark:text-zinc-300 sm:w-8 sm:h-8">
               <path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H16.55C17.3 13 17.96 12.59 18.3 11.97L21.88 6H5.21L4.27 4H1V2ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z" fill="currentColor"/>
             </svg>
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-black text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-black text-xs sm:text-[10px] font-bold rounded-full w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center border-2 border-white dark:border-[var(--space-black)]">
                 {itemCount}
               </span>
             )}
           </div>
-          <span className="text-sm font-medium">ADDED</span>
+          <span className="text-base sm:text-sm font-semibold">{t('added')}</span>
         </button>
       </div>
 
@@ -166,7 +172,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
         <div className="sticky bottom-0 bg-white border-t border-[var(--border-color)] py-6 mt-8">
           <div className="flex items-center justify-between">
             <div className="text-right">
-              <div className="text-sm text-zinc-500 mb-1">TOTAL</div>
+              <div className="text-sm text-zinc-500 mb-1">{t('total')}</div>
               <div className="text-2xl font-semibold">{totalPrice}</div>
             </div>
             <button
@@ -174,9 +180,9 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                 setShowCart(false);
                 setShowOrderForm(true);
               }}
-              className="px-8 py-4 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90"
+              className="px-8 py-4 sm:py-3 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
             >
-              GET AN OFFER
+              {t('getAnOffer')}
             </button>
           </div>
         </div>
@@ -233,18 +239,18 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                   <div className="flex gap-3">
                     <button
                       onClick={clearCart}
-                      className="flex-1 px-4 py-2 rounded border border-[var(--border-color)] hover:bg-zinc-50"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900 text-sm sm:text-sm font-semibold min-h-[44px] sm:min-h-0 transition-colors"
                     >
-                      Clear Cart
+                      {t('clearCart')}
                     </button>
                     <button
                       onClick={() => {
                         setShowCart(false);
                         setShowOrderForm(true);
                       }}
-                      className="flex-1 px-4 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-sm sm:text-sm"
                     >
-                      GET AN OFFER
+                      {t('getAnOffer')}
                     </button>
                   </div>
                 </div>
@@ -266,34 +272,34 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
             >
               ✕
             </button>
-            <h3 className="text-xl font-semibold mb-6">Get an offer</h3>
+            <h3 className="text-xl font-semibold mb-6">{t('getAnOfferTitle')}</h3>
             <form onSubmit={handleOrderSubmit} className="grid gap-3">
               <input
                 type="text"
                 value={orderFormData.name}
                 onChange={(e) => setOrderFormData({ ...orderFormData, name: e.target.value })}
-                className="h-12 rounded-md border border-zinc-200 px-4 text-sm"
-                placeholder="YOUR NAME"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('yourName')}
                 required
               />
               <input
                 type="text"
                 value={orderFormData.vin}
                 onChange={(e) => setOrderFormData({ ...orderFormData, vin: e.target.value })}
-                className="h-12 rounded-md border border-zinc-200 px-4 text-sm"
-                placeholder="VEHICLE VIN NUMBER"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('vehicleVINNumber')}
                 required
               />
               <input
                 type="text"
                 value={orderFormData.contact}
                 onChange={(e) => setOrderFormData({ ...orderFormData, contact: e.target.value })}
-                className="h-12 rounded-md border border-zinc-200 px-4 text-sm"
-                placeholder="MOBILE NUMBER OR EMAIL ADDRESS"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('mobileNumberOrEmail')}
                 required
               />
               <div className="mt-2 p-4 bg-zinc-50 rounded-lg">
-                <div className="text-sm text-zinc-600 mb-2">Order Summary:</div>
+                <div className="text-sm text-zinc-600 mb-2">{t('orderSummary')}:</div>
                 <div className="text-xs text-zinc-500 space-y-1">
                   {items.map((item) => (
                     <div key={item.id}>
@@ -309,9 +315,9 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-12 rounded-md bg-[#ffd000] text-black font-medium disabled:opacity-50"
+                className="w-full h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
               >
-                {submitting ? "Submitting..." : "GET AN OFFER"}
+                {submitting ? t('submitting') : t('getAnOffer')}
               </button>
             </form>
           </div>

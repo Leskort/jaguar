@@ -1,9 +1,12 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   return (
     <>
@@ -51,29 +54,32 @@ export default function MobileMenu() {
                   className="text-sm font-medium hover:text-[var(--accent-gold)] transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  VEHICLES
+                  {t('vehicles')}
                 </Link>
                 <Link
                   href="/our-works"
                   className="text-sm font-medium hover:text-[var(--accent-gold)] transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  OUR WORKS
+                  {t('ourWorks')}
                 </Link>
                 <Link
                   href="/car-projects"
                   className="text-sm font-medium hover:text-[var(--accent-gold)] transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  CAR PROJECTS
+                  {t('carProjects')}
                 </Link>
                 <Link
                   href="/contact"
                   className="text-sm font-medium hover:text-[var(--accent-gold)] transition-colors py-2"
                   onClick={() => setIsOpen(false)}
                 >
-                  CONTACTS
+                  {t('contacts')}
                 </Link>
+                <div className="border-t border-[var(--border-color)] pt-4 mt-2">
+                  <LanguageSwitcher />
+                </div>
                 <div className="border-t border-[var(--border-color)] pt-4 mt-2">
                   <div className="flex flex-col gap-2">
                     <a
