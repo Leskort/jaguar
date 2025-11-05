@@ -47,6 +47,15 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
   const clearCart = useCartStore((state) => state.clearCart);
   const checkAndClearForNewVehicle = useCartStore((state) => state.checkAndClearForNewVehicle);
 
+  // Update active category when categoriesData changes
+  useEffect(() => {
+    if (availableCategories.length > 0 && !availableCategories.includes(activeCategory)) {
+      setActiveCategory(availableCategories[0]);
+    } else if (availableCategories.length > 0 && !activeCategory) {
+      setActiveCategory(availableCategories[0]);
+    }
+  }, [availableCategories, activeCategory]);
+
   // Check and clear cart if vehicle changed
   useEffect(() => {
     checkAndClearForNewVehicle(brand, model, year);

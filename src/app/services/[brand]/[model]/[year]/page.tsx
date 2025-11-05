@@ -1,6 +1,5 @@
 import ServicesPageClient from '@/components/ServicesPageClient';
-import { readFile } from 'fs/promises';
-import { join } from 'path';
+import { getStorageData } from '@/lib/storage';
 
 type ServiceOption = {
   title: string;
@@ -12,14 +11,20 @@ type ServiceOption = {
 };
 
 async function getServices() {
-  const DATA_FILE = join(process.cwd(), "src/data/services.json");
+  const STORAGE_KEY = "services";
+  const FALLBACK_PATH = "src/data/services.json";
+  
   try {
-    const data = await readFile(DATA_FILE, "utf-8");
-    return JSON.parse(data);
-  } catch {
-    // Fallback to static data if file doesn't exist
-    const { servicesData } = await import('@/data/services');
-    return servicesData;
+    const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
+    // Only return if it's a valid object with data, otherwise return empty object
+    if (data && typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length > 0) {
+      return data;
+    }
+    return {};
+  } catch (error) {
+    console.error("Failed to load services:", error);
+    // Return empty object if loading fails
+    return {};
   }
 }
 
