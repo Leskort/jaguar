@@ -43,6 +43,8 @@ export default function ServicesAdminPage() {
   const [viewMode, setViewMode] = useState<"all" | "filtered">("all");
   const [filterBrand, setFilterBrand] = useState<string>("all");
   const [filterModel, setFilterModel] = useState<string>("all");
+  const [filterYear, setFilterYear] = useState<string>("all");
+  const [filterCategory, setFilterCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [availableImages, setAvailableImages] = useState<string[]>([]);
   const [loadingImages, setLoadingImages] = useState(false);
@@ -161,10 +163,16 @@ export default function ServicesAdminPage() {
 
   const allServices = getAllServices();
 
+  // Get unique years and categories from all services
+  const availableYears = Array.from(new Set(allServices.map(s => s.year))).sort();
+  const availableCategories = Array.from(new Set(allServices.map(s => s.category))).sort();
+
   // Filter all services
   const filteredAllServices = allServices.filter((service) => {
     if (filterBrand !== "all" && service.brand !== filterBrand) return false;
     if (filterModel !== "all" && service.model !== filterModel) return false;
+    if (filterYear !== "all" && service.year !== filterYear) return false;
+    if (filterCategory !== "all" && service.category !== filterCategory) return false;
     if (searchQuery && !service.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
     return true;
   });
@@ -468,6 +476,37 @@ export default function ServicesAdminPage() {
                       {vehicle.title}
                     </option>
                   ))}
+            </select>
+
+            <select
+              value={filterYear}
+              onChange={(e) => setFilterYear(e.target.value)}
+              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+            >
+              <option value="all">All Years</option>
+              {availableYears.map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+
+            <select
+              value={filterCategory}
+              onChange={(e) => setFilterCategory(e.target.value)}
+              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+            >
+              <option value="all">All Categories</option>
+              {availableCategories.map((category) => {
+                const categoryLabels: Record<string, string> = {
+                  "features-activation": "FEATURES ACTIVATION",
+                  "retrofits": "RETROFITS",
+                  "power-upgrade": "POWER UPGRADE",
+                  "accessories": "ACCESSORIES",
+                };
+                const displayName = categoryLabels[category] || category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                return (
+                  <option key={category} value={category}>{displayName}</option>
+                );
+              })}
             </select>
 
             <input
