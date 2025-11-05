@@ -163,9 +163,9 @@ export default function ServicesAdminPage() {
 
   const allServices = getAllServices();
 
-  // Get unique years and categories from all services
-  const availableYears = Array.from(new Set(allServices.map(s => s.year))).sort();
-  const availableCategories = Array.from(new Set(allServices.map(s => s.category))).sort();
+  // Get unique years and categories from all services for filters
+  const filterYears = Array.from(new Set(allServices.map(s => s.year))).sort();
+  const filterCategories = Array.from(new Set(allServices.map(s => s.category))).sort();
 
   // Filter all services
   const filteredAllServices = allServices.filter((service) => {
@@ -484,7 +484,7 @@ export default function ServicesAdminPage() {
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
               <option value="all">All Years</option>
-              {availableYears.map((year) => (
+              {filterYears.map((year) => (
                 <option key={year} value={year}>{year}</option>
               ))}
             </select>
@@ -495,7 +495,7 @@ export default function ServicesAdminPage() {
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
               <option value="all">All Categories</option>
-              {availableCategories.map((category) => {
+              {filterCategories.map((category) => {
                 const categoryLabels: Record<string, string> = {
                   "features-activation": "FEATURES ACTIVATION",
                   "retrofits": "RETROFITS",
