@@ -88,6 +88,36 @@ export default function ServicesAdminPage() {
     }
   }, [selectedCategory, showAddForm]);
 
+  // Clear selectedModel and selectedYear when selectedBrand changes
+  useEffect(() => {
+    if (selectedBrand) {
+      const availableVehiclesForBrand = vehicles.filter(v => v.brand === selectedBrand);
+      const modelExists = availableVehiclesForBrand.some(v => v.value === selectedModel);
+      if (!modelExists) {
+        setSelectedModel("");
+        setSelectedYear("");
+      }
+    } else {
+      setSelectedModel("");
+      setSelectedYear("");
+    }
+  }, [selectedBrand, vehicles]);
+
+  // Clear selectedYear when selectedModel changes
+  useEffect(() => {
+    if (selectedModel) {
+      const availableVehiclesForBrand = vehicles.filter(v => v.brand === selectedBrand);
+      const selectedVehicle = availableVehiclesForBrand.find(v => v.value === selectedModel);
+      const availableYears = selectedVehicle?.years || [];
+      const yearExists = availableYears.some(y => y.value === selectedYear);
+      if (!yearExists) {
+        setSelectedYear("");
+      }
+    } else {
+      setSelectedYear("");
+    }
+  }, [selectedModel, selectedBrand, vehicles]);
+
   const loadServices = async (showLoading = true) => {
     try {
       if (showLoading) {
@@ -148,13 +178,28 @@ export default function ServicesAdminPage() {
   };
 
   // Get available models from vehicles (not from services)
-  const availableVehicles = vehicles.filter(v => v.brand === selectedBrand);
-  const selectedVehicle = availableVehicles.find(v => v.value === selectedModel);
+  // Normalize selectedBrand for comparison
+  const normalizedSelectedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+  const availableVehicles = vehicles.filter(v => {
+    const normalizedVehicleBrand = v.brand?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+    return normalizedVehicleBrand === normalizedSelectedBrand;
+  });
+  
+  // Normalize selectedModel for comparison
+  const normalizedSelectedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  const selectedVehicle = availableVehicles.find(v => {
+    const normalizedVehicleValue = v.value?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
+    return normalizedVehicleValue === normalizedSelectedModel || v.value === selectedModel;
+  });
   const availableYears = selectedVehicle?.years || [];
 
-  // Get services data for selected vehicle
-  const brandData = services[selectedBrand];
-  const modelData = brandData?.[selectedModel];
+  // Get services data for selected vehicle (with normalized lookup)
+  const normalizedBrandForServices = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+  const normalizedModelForServices = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  
+  // Try to find services with normalized keys first, then try original keys
+  let brandData = services[normalizedBrandForServices] || services[selectedBrand];
+  let modelData = brandData?.[normalizedModelForServices] || brandData?.[selectedModel];
   const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
   const availableCategories = yearData ? Object.keys(yearData) : [];
 
@@ -197,23 +242,39 @@ export default function ServicesAdminPage() {
 
   const allServices = getAllServices();
 
-  // Filter services by brand and model first to get available years and categories
+  // Filter services by brand and model first to get available years and categories (with normalized comparison)
   let servicesForFilters = allServices;
   if (filterBrand !== "all") {
-    servicesForFilters = servicesForFilters.filter(s => s.brand === filterBrand);
+    servicesForFilters = servicesForFilters.filter(s => {
+      const normalizedServiceBrand = s.brand?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+      const normalizedFilterBrand = filterBrand.trim().toLowerCase().replace(/\s+/g, '-');
+      return normalizedServiceBrand === normalizedFilterBrand || s.brand === filterBrand;
+    });
   }
   if (filterModel !== "all") {
-    servicesForFilters = servicesForFilters.filter(s => s.model === filterModel);
+    servicesForFilters = servicesForFilters.filter(s => {
+      const normalizedServiceModel = s.model?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
+      const normalizedFilterModel = filterModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      return normalizedServiceModel === normalizedFilterModel || s.model === filterModel;
+    });
   }
 
   // Get unique years and categories from filtered services (based on selected brand/model)
   const filterYears = Array.from(new Set(servicesForFilters.map(s => s.year))).sort();
   const filterCategories = Array.from(new Set(servicesForFilters.map(s => s.category))).sort();
 
-  // Filter all services
+  // Filter all services with normalized comparison
   const filteredAllServices = allServices.filter((service) => {
-    if (filterBrand !== "all" && service.brand !== filterBrand) return false;
-    if (filterModel !== "all" && service.model !== filterModel) return false;
+    if (filterBrand !== "all") {
+      const normalizedServiceBrand = service.brand?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+      const normalizedFilterBrand = filterBrand.trim().toLowerCase().replace(/\s+/g, '-');
+      if (normalizedServiceBrand !== normalizedFilterBrand && service.brand !== filterBrand) return false;
+    }
+    if (filterModel !== "all") {
+      const normalizedServiceModel = service.model?.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') || '';
+      const normalizedFilterModel = filterModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      if (normalizedServiceModel !== normalizedFilterModel && service.model !== filterModel) return false;
+    }
     if (filterYear !== "all" && service.year !== filterYear) return false;
     if (filterCategory !== "all" && service.category !== filterCategory) return false;
     if (searchQuery && !service.title.toLowerCase().includes(searchQuery.toLowerCase())) return false;
@@ -514,6 +575,7 @@ export default function ServicesAdminPage() {
             </select>
 
             <select
+              key={`filter-model-${filterBrand}`}
               value={filterModel}
               onChange={(e) => {
                 setFilterModel(e.target.value);
@@ -526,7 +588,11 @@ export default function ServicesAdminPage() {
               <option value="all">{t('allModels')}</option>
               {filterBrand !== "all" &&
                 vehicles
-                  .filter((v) => v.brand === filterBrand)
+                  .filter((v) => {
+                    const normalizedVehicleBrand = v.brand?.trim().toLowerCase().replace(/\s+/g, '-') || '';
+                    const normalizedFilterBrand = filterBrand.trim().toLowerCase().replace(/\s+/g, '-');
+                    return normalizedVehicleBrand === normalizedFilterBrand || v.brand === filterBrand;
+                  })
                   .map((vehicle) => (
                     <option key={vehicle.value} value={vehicle.value}>
                       {vehicle.title}
@@ -535,9 +601,11 @@ export default function ServicesAdminPage() {
             </select>
 
             <select
+              key={`filter-year-${filterBrand}-${filterModel}`}
               value={filterYear}
               onChange={(e) => setFilterYear(e.target.value)}
               className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
+              disabled={filterBrand === "all" && filterModel === "all"}
             >
               <option value="all">{t('allYears')}</option>
               {filterYears.map((year) => (
@@ -944,6 +1012,7 @@ export default function ServicesAdminPage() {
         </select>
 
         <select
+          key={`model-${selectedBrand}`}
           value={selectedModel}
           onChange={(e) => {
             setSelectedModel(e.target.value);
@@ -961,6 +1030,7 @@ export default function ServicesAdminPage() {
         </select>
 
         <select
+          key={`year-${selectedBrand}-${selectedModel}`}
           value={selectedYear}
           onChange={(e) => {
             setSelectedYear(e.target.value);
@@ -1234,7 +1304,7 @@ export default function ServicesAdminPage() {
       )}
 
       {/* Display existing services for selected vehicle */}
-      {yearData && selectedCategory && yearData[selectedCategory] && (
+      {yearData && selectedCategory && yearData[selectedCategory] && yearData[selectedCategory].length > 0 && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">
             {t('existingServices')} ({yearData[selectedCategory].length})
