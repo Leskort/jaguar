@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Vehicle = {
   brand: string;
@@ -13,6 +14,7 @@ type Vehicle = {
 };
 
 export default function VehiclesAdminPage() {
+  const { t } = useLanguage();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0); // Force re-render key
@@ -128,8 +130,8 @@ export default function VehiclesAdminPage() {
     e.preventDefault();
     
     // Validate brand is set
-    if (!formData.brand || formData.brand.trim() === "") {
-      alert("Please select or enter a brand");
+      if (!formData.brand || formData.brand.trim() === "") {
+      alert(t('pleaseSelectOrEnterBrand'));
       return;
     }
     
@@ -229,7 +231,7 @@ export default function VehiclesAdminPage() {
   };
 
   const handleDelete = async (index: number) => {
-    if (!confirm("Are you sure you want to delete this vehicle?")) return;
+    if (!confirm(t('areYouSureDeleteVehicle'))) return;
 
     try {
       const response = await fetch("/api/admin/vehicles", {
@@ -266,7 +268,7 @@ export default function VehiclesAdminPage() {
   if (loading) {
     return (
       <div className="container-padded mx-auto max-w-6xl py-12">
-        <p>Loading...</p>
+        <p>{t('loading')}</p>
       </div>
     );
   }
@@ -274,8 +276,8 @@ export default function VehiclesAdminPage() {
   return (
     <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-semibold">Manage Vehicles</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
+        <h1 className="text-2xl sm:text-3xl font-semibold">{t('manageVehicles')}</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">{t('backToAdmin')}</Link>
       </div>
 
       <div className="mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -288,7 +290,7 @@ export default function VehiclesAdminPage() {
                 : "border border-[var(--border-color)] hover:bg-white/5"
             }`}
           >
-            ALL ({vehicles.length})
+            {t('all')} ({vehicles.length})
           </button>
           {Array.from(new Set(vehicles.map(v => v.brand)))
             .sort((a, b) => {
@@ -331,17 +333,17 @@ export default function VehiclesAdminPage() {
           }}
           className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
         >
-          + Add Vehicle
+          + {t('addVehicle')}
         </button>
       </div>
 
       {showAddForm && (
         <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4">{editingIndex !== null ? "Edit" : "Add"} Vehicle</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-4">{editingIndex !== null ? t('editVehicle') : t('addVehicle')}</h2>
           
           <div className="grid gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Brand</label>
+              <label className="block text-sm font-medium mb-2">{t('brand')}</label>
               <div className="flex flex-col sm:flex-row gap-2">
                 <select
                   value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? formData.brand : ""}
@@ -390,7 +392,7 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Model Slug (e.g., discovery-5-l462)</label>
+              <label className="block text-sm font-medium mb-2">{t('vehicleValue')} (e.g., discovery-5-l462)</label>
               <input
                 type="text"
                 value={formData.value}
@@ -402,7 +404,7 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Display Title (e.g., DISCOVERY 5 / L462)</label>
+              <label className="block text-sm font-medium mb-2">{t('vehicleTitle')} (e.g., DISCOVERY 5 / L462)</label>
               <input
                 type="text"
                 value={formData.title}
@@ -414,9 +416,9 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Select Image</label>
+              <label className="block text-sm font-medium mb-2">{t('selectImage')}</label>
               {loadingImages ? (
-                <div className="text-sm text-zinc-500">Loading images...</div>
+                <div className="text-sm text-zinc-500">{t('loadingImages')}</div>
               ) : availableImages.length > 0 ? (
                 <div className="space-y-3">
                   <select
@@ -460,7 +462,7 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Years</label>
+              <label className="block text-sm font-medium mb-2">{t('years')}</label>
               {formData.years.map((year, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <input
@@ -485,7 +487,7 @@ export default function VehiclesAdminPage() {
                       onClick={() => handleRemoveYear(index)}
                       className="px-4 py-2 rounded border border-red-300 text-red-600 hover:bg-red-50"
                     >
-                      Remove
+                      {t('removeYear')}
                     </button>
                   )}
                 </div>
@@ -495,7 +497,7 @@ export default function VehiclesAdminPage() {
                 onClick={handleAddYear}
                 className="mt-2 text-sm text-[var(--accent-gold)] hover:underline"
               >
-                + Add Year
+                + {t('addYear')}
               </button>
             </div>
 
@@ -505,7 +507,7 @@ export default function VehiclesAdminPage() {
                 disabled={saving}
                 className="px-6 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50"
               >
-                {saving ? "Saving..." : editingIndex !== null ? "Update" : "Add"} Vehicle
+                {saving ? t('saving') : editingIndex !== null ? t('save') : t('addVehicle')}
               </button>
               <button
                 type="button"
@@ -515,7 +517,7 @@ export default function VehiclesAdminPage() {
                 }}
                 className="px-6 py-2 rounded border border-[var(--border-color)]"
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </div>
@@ -561,7 +563,7 @@ export default function VehiclesAdminPage() {
                                   onClick={() => handleMove(globalIndex, "up")}
                                   disabled={globalIndex === 0 || vehicles[globalIndex - 1]?.brand !== brand}
                                   className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                  title="Move up"
+                                  title={t('moveUp')}
                                 >
                                   ↑
                                 </button>
@@ -569,7 +571,7 @@ export default function VehiclesAdminPage() {
                                   onClick={() => handleMove(globalIndex, "down")}
                                   disabled={globalIndex === vehicles.length - 1 || vehicles[globalIndex + 1]?.brand !== brand}
                                   className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                  title="Move down"
+                                  title={t('moveDown')}
                                 >
                                   ↓
                                 </button>
@@ -610,7 +612,7 @@ export default function VehiclesAdminPage() {
                                 onClick={() => handleDelete(globalIndex)}
                                 className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
                               >
-                                Delete
+                                {t('delete')}
                               </button>
                             </div>
                           </div>

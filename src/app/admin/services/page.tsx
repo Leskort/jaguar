@@ -435,7 +435,7 @@ export default function ServicesAdminPage() {
   if (loading) {
     return (
       <div className="container-padded mx-auto max-w-6xl py-12">
-        <p>Loading...</p>
+        <p>{t('loading')}</p>
       </div>
     );
   }
@@ -443,8 +443,8 @@ export default function ServicesAdminPage() {
   return (
     <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-semibold">Manage Services</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
+        <h1 className="text-2xl sm:text-3xl font-semibold">{t('manageServices')}</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">{t('backToAdmin')}</Link>
       </div>
 
       {/* View Mode Toggle */}
@@ -457,7 +457,7 @@ export default function ServicesAdminPage() {
               : "border-[var(--border-color)]"
           }`}
         >
-          All Services ({allServices.length})
+          {t('allServices')} ({allServices.length})
         </button>
         <button
           onClick={() => setViewMode("filtered")}
@@ -467,7 +467,7 @@ export default function ServicesAdminPage() {
               : "border-[var(--border-color)]"
           }`}
         >
-          Add/Edit Services
+          {t('addEditServices')}
         </button>
       </div>
 
@@ -486,7 +486,7 @@ export default function ServicesAdminPage() {
               }}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
-              <option value="all">All Brands</option>
+              <option value="all">{t('allBrands')}</option>
               {Array.from(new Set(vehicles.map(v => v.brand)))
                 .sort((a, b) => {
                   // Sort: land-rover first, jaguar second, then alphabetically
@@ -515,7 +515,7 @@ export default function ServicesAdminPage() {
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
               disabled={filterBrand === "all"}
             >
-              <option value="all">All Models</option>
+              <option value="all">{t('allModels')}</option>
               {filterBrand !== "all" &&
                 vehicles
                   .filter((v) => v.brand === filterBrand)
@@ -531,7 +531,7 @@ export default function ServicesAdminPage() {
               onChange={(e) => setFilterYear(e.target.value)}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
-              <option value="all">All Years</option>
+              <option value="all">{t('allYears')}</option>
               {filterYears.map((year) => (
                 <option key={year} value={year}>{year}</option>
               ))}
@@ -542,7 +542,7 @@ export default function ServicesAdminPage() {
               onChange={(e) => setFilterCategory(e.target.value)}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
-              <option value="all">All Categories</option>
+              <option value="all">{t('allCategories')}</option>
               {filterCategories.map((category) => {
                 const categoryLabels: Record<string, string> = {
                   "features-activation": "FEATURES ACTIVATION",
@@ -561,7 +561,7 @@ export default function ServicesAdminPage() {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by title..."
+              placeholder={t('searchByTitle')}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent flex-1 text-base sm:text-sm"
             />
           </div>
@@ -572,13 +572,13 @@ export default function ServicesAdminPage() {
               <table className="w-full">
                 <thead className="bg-zinc-50 dark:bg-zinc-900">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Image</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Service</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Vehicle</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Category</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Price</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">Actions</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('image')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('title')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('vehicleVIN')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('category')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('price')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('status')}</th>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -685,7 +685,7 @@ export default function ServicesAdminPage() {
                               }}
                               className="px-3 py-1 text-xs rounded border border-[var(--border-color)] hover:bg-zinc-50 transition-colors"
                             >
-                              Edit
+                              {t('edit')}
                             </button>
                             <button
                               onClick={async () => {
@@ -729,7 +729,7 @@ export default function ServicesAdminPage() {
                               }}
                               className="px-3 py-1 text-xs rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors"
                             >
-                              Delete
+                              {t('delete')}
                             </button>
                           </div>
                         </td>
@@ -746,8 +746,8 @@ export default function ServicesAdminPage() {
             {filteredAllServices.length === 0 ? (
               <div className="text-center py-8 text-zinc-500">
                 {allServices.length === 0
-                  ? "No services found. Add services using the 'Add/Edit Services' view."
-                  : "No services match your filters."}
+                  ? t('noServicesFoundAdd')
+                  : t('noServicesMatchFilters')}
               </div>
             ) : (
               filteredAllServices.map((service) => (
@@ -811,7 +811,7 @@ export default function ServicesAdminPage() {
                       }}
                       className="flex-1 px-4 py-3 rounded border border-[var(--border-color)] hover:bg-zinc-50 transition-colors text-sm font-medium"
                     >
-                      Edit
+                      {t('edit')}
                     </button>
                     <button
                       onClick={async () => {
@@ -879,7 +879,7 @@ export default function ServicesAdminPage() {
           }}
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
         >
-          <option value="">Select Brand</option>
+          <option value="">{t('selectBrand')}</option>
           {Array.from(new Set(vehicles.map(v => v.brand)))
             .sort((a, b) => {
               // Sort: land-rover first, jaguar second, then alphabetically
@@ -907,7 +907,7 @@ export default function ServicesAdminPage() {
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
           disabled={!selectedBrand || availableVehicles.length === 0}
         >
-          <option value="">Select Model</option>
+          <option value="">{t('selectModel')}</option>
           {availableVehicles.map((vehicle) => (
             <option key={vehicle.value} value={vehicle.value}>
               {vehicle.title}
@@ -926,7 +926,7 @@ export default function ServicesAdminPage() {
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
           disabled={!selectedModel || availableYears.length === 0}
         >
-          <option value="">Select Year</option>
+          <option value="">{t('selectYear')}</option>
           {availableYears.map((year, index) => (
             <option key={index} value={year.value}>
               {year.label}
@@ -939,7 +939,7 @@ export default function ServicesAdminPage() {
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
         >
-          <option value="">Select Category</option>
+          <option value="">{t('selectCategory')}</option>
           <option value="features-activation">Features Activation</option>
           <option value="retrofits">Retrofits</option>
           <option value="power-upgrade">Power Upgrade</option>
@@ -964,7 +964,7 @@ export default function ServicesAdminPage() {
             }}
             className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
           >
-            + Add Service
+            + {t('add')} {t('title')}
           </button>
         )}
       </div>
@@ -984,12 +984,12 @@ export default function ServicesAdminPage() {
       {showAddForm && (
         <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
           <h2 className="text-lg sm:text-xl font-semibold mb-4">
-            {editingIndex !== null ? "Edit" : "Add"} Service to {selectedBrand} / {selectedModel} / {selectedYear} / {selectedCategory}
+            {editingIndex !== null ? t('edit') : t('add')} {t('title')} {t('to')} {selectedBrand} / {selectedModel} / {selectedYear} / {selectedCategory}
           </h2>
 
           <div className="grid gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">Title</label>
+              <label className="block text-sm font-medium mb-2">{t('title')}</label>
               <input
                 type="text"
                 value={formData.title}
@@ -1001,9 +1001,9 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Select Image</label>
+              <label className="block text-sm font-medium mb-2">{t('selectImage')}</label>
               {loadingImages ? (
-                <div className="text-sm text-zinc-500">Loading images...</div>
+                <div className="text-sm text-zinc-500">{t('loadingImages')}</div>
               ) : availableImages.length > 0 ? (
                 <div className="space-y-3">
                   <select
@@ -1102,7 +1102,7 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Price</label>
+              <label className="block text-sm font-medium mb-2">{t('price')}</label>
               <input
                 type="text"
                 value={formData.price}
@@ -1114,7 +1114,7 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Requirements</label>
+              <label className="block text-sm font-medium mb-2">{t('requirements')}</label>
               <select
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
@@ -1127,7 +1127,7 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Status (Optional)</label>
+              <label className="block text-sm font-medium mb-2">{t('status')} ({t('optional')})</label>
               <select
                 value={formData.status || ""}
                 onChange={(e) => {
@@ -1139,15 +1139,15 @@ export default function ServicesAdminPage() {
                 }}
                 className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
               >
-                <option value="">No Status</option>
-                <option value="in-stock">IN STOCK</option>
-                <option value="unavailable">UNAVAILABLE</option>
-                <option value="coming-soon">COMING SOON</option>
+                <option value="">{t('noStatus')}</option>
+                <option value="in-stock">{t('inStock')}</option>
+                <option value="unavailable">{t('unavailable')}</option>
+                <option value="coming-soon">{t('comingSoon')}</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Description</label>
+              <label className="block text-sm font-medium mb-2">{t('description')}</label>
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -1163,7 +1163,7 @@ export default function ServicesAdminPage() {
                 disabled={saving}
                 className="px-6 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50"
               >
-                {saving ? "Saving..." : editingIndex !== null ? "Update Service" : "Add Service"}
+                {saving ? t('saving') : editingIndex !== null ? t('updateService') : t('addService')}
               </button>
               <button
                 type="button"
@@ -1181,7 +1181,7 @@ export default function ServicesAdminPage() {
                 }}
                 className="px-6 py-2 rounded border border-[var(--border-color)]"
               >
-                Cancel
+                {t('cancel')}
               </button>
             </div>
           </div>
@@ -1192,7 +1192,7 @@ export default function ServicesAdminPage() {
       {yearData && selectedCategory && yearData[selectedCategory] && (
         <div className="mt-8">
           <h2 className="text-xl font-semibold mb-4">
-            Existing Services ({yearData[selectedCategory].length})
+            {t('existingServices')} ({yearData[selectedCategory].length})
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {yearData[selectedCategory].map((service, index) => (
@@ -1259,7 +1259,7 @@ export default function ServicesAdminPage() {
                       }}
                       className="flex-1 px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50 transition-colors"
                     >
-                      Edit
+                      {t('edit')}
                     </button>
                     <button
                       onClick={async () => {

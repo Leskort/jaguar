@@ -2,8 +2,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AdminPage() {
+  const { t } = useLanguage();
   const router = useRouter();
   const [isAuth, setIsAuth] = useState(false);
 
@@ -31,12 +33,12 @@ export default function AdminPage() {
   return (
     <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-semibold">Admin Panel</h1>
+        <h1 className="text-2xl sm:text-3xl font-semibold">{t('adminPanel')}</h1>
         <button
           onClick={handleLogout}
           className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 w-full sm:w-auto"
         >
-          Logout
+          {t('logout')}
         </button>
       </div>
       
@@ -45,9 +47,9 @@ export default function AdminPage() {
           href="/admin/vehicles"
           className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-semibold mb-2">Manage Vehicles</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('manageVehicles')}</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Add, edit, or remove vehicles from the catalog
+            {t('addEditOrRemoveVehicles')}
           </p>
         </Link>
 
@@ -55,9 +57,9 @@ export default function AdminPage() {
           href="/admin/services"
           className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-semibold mb-2">Manage Services</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('manageServices')}</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            Add, edit, or remove service cards for vehicles
+            {t('addEditOrRemoveServices')}
           </p>
         </Link>
 
@@ -65,9 +67,9 @@ export default function AdminPage() {
           href="/admin/orders"
           className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
         >
-          <h2 className="text-xl font-semibold mb-2">View Orders</h2>
+          <h2 className="text-xl font-semibold mb-2">{t('viewOrders')}</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            View and manage customer orders
+            {t('viewAndManageOrders')}
           </p>
         </Link>
       </div>

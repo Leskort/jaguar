@@ -1,8 +1,10 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AdminLoginPage() {
+  const { t } = useLanguage();
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -26,10 +28,10 @@ export default function AdminLoginPage() {
         router.push("/admin");
         router.refresh();
       } else {
-        setError("Invalid password");
+        setError(t('invalidPassword'));
       }
     } catch (err) {
-      setError("Login failed");
+      setError(t('loginFailed'));
     } finally {
       setLoading(false);
     }
@@ -39,8 +41,8 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-[var(--space-black)] px-4">
       <div className="w-full max-w-md p-6 sm:p-8">
         <div className="text-center mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">Admin Login</h1>
-          <p className="text-sm sm:text-base text-zinc-400">Enter password to access admin panel</p>
+          <h1 className="text-2xl sm:text-3xl font-semibold text-white mb-2">{t('adminLogin')}</h1>
+          <p className="text-sm sm:text-base text-zinc-400">{t('enterPassword')}</p>
         </div>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -49,7 +51,7 @@ export default function AdminLoginPage() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
+              placeholder={t('password')}
               className="w-full h-14 sm:h-12 rounded-full border border-white/20 bg-white/10 px-4 text-base sm:text-sm text-white placeholder:text-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
               required
               autoFocus
@@ -65,12 +67,12 @@ export default function AdminLoginPage() {
             disabled={loading}
             className="w-full h-14 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90 disabled:opacity-50 text-base sm:text-sm"
           >
-            {loading ? "Logging in..." : "Login"}
+            {loading ? t('loggingIn') : t('login')}
           </button>
         </form>
         
         <p className="mt-6 text-center text-xs text-zinc-500">
-          Default password: admin123
+          {t('defaultPassword')}
         </p>
       </div>
     </div>

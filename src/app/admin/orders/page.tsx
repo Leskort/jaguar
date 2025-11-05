@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type OrderStatus = "pending" | "reviewed" | "contacted" | "completed" | "cancelled";
 
@@ -33,6 +34,7 @@ type Vehicle = {
 };
 
 export default function OrdersAdminPage() {
+  const { t } = useLanguage();
   const [orders, setOrders] = useState<Order[]>([]);
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -153,7 +155,7 @@ export default function OrdersAdminPage() {
   if (loading) {
     return (
       <div className="container-padded mx-auto max-w-6xl py-12">
-        <p>Loading orders...</p>
+        <p>{t('loading')}</p>
       </div>
     );
   }
@@ -161,8 +163,8 @@ export default function OrdersAdminPage() {
   return (
     <div className="container-padded mx-auto max-w-6xl py-6 sm:py-12 px-4">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
-        <h1 className="text-2xl sm:text-3xl font-semibold">View Orders</h1>
-        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">← Back to Admin</Link>
+        <h1 className="text-2xl sm:text-3xl font-semibold">{t('viewOrders')}</h1>
+        <Link href="/admin" className="text-sm text-zinc-600 hover:underline w-full sm:w-auto text-center sm:text-left">{t('backToAdmin')}</Link>
       </div>
 
       {/* Status Filter */}
@@ -175,7 +177,7 @@ export default function OrdersAdminPage() {
               : "border border-[var(--border-color)] hover:bg-white/5"
           }`}
         >
-          ALL ({orders.length})
+          {t('all')} ({orders.length})
         </button>
         <button
           onClick={() => setStatusFilter("pending")}
@@ -185,7 +187,7 @@ export default function OrdersAdminPage() {
               : "border border-[var(--border-color)] hover:bg-white/5"
           }`}
         >
-          PENDING ({orders.filter(o => (o.status || "pending") === "pending").length})
+          {t('pending')} ({orders.filter(o => (o.status || "pending") === "pending").length})
         </button>
         <button
           onClick={() => setStatusFilter("reviewed")}
@@ -195,7 +197,7 @@ export default function OrdersAdminPage() {
               : "border border-[var(--border-color)] hover:bg-white/5"
           }`}
         >
-          REVIEWED ({orders.filter(o => o.status === "reviewed").length})
+          {t('reviewed')} ({orders.filter(o => o.status === "reviewed").length})
         </button>
         <button
           onClick={() => setStatusFilter("contacted")}
@@ -205,7 +207,7 @@ export default function OrdersAdminPage() {
               : "border border-[var(--border-color)] hover:bg-white/5"
           }`}
         >
-          CONTACTED ({orders.filter(o => o.status === "contacted").length})
+          {t('contacted')} ({orders.filter(o => o.status === "contacted").length})
         </button>
         <button
           onClick={() => setStatusFilter("completed")}
@@ -215,19 +217,19 @@ export default function OrdersAdminPage() {
               : "border border-[var(--border-color)] hover:bg-white/5"
           }`}
         >
-          COMPLETED ({orders.filter(o => o.status === "completed").length})
+          {t('completed')} ({orders.filter(o => o.status === "completed").length})
         </button>
       </div>
 
       {filteredOrders.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-zinc-500 mb-4">
-            {orders.length === 0 ? "No orders yet" : `No orders with status "${statusFilter}"`}
+            {orders.length === 0 ? t('noOrdersYet') : `${t('noOrdersWithStatus')} "${t(statusFilter)}"`}
           </p>
           <p className="text-sm text-zinc-400">
             {orders.length === 0
-              ? "Orders will appear here when customers submit requests through \"GET AN OFFER\""
-              : "Try selecting a different status filter"}
+              ? t('ordersWillAppear')
+              : t('tryDifferentStatus')}
           </p>
         </div>
       ) : (
@@ -236,11 +238,11 @@ export default function OrdersAdminPage() {
             <div key={`${order.id}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <div className="font-semibold">Order #{order.id}</div>
+                  <div className="font-semibold">{t('orderNumber')}{order.id}</div>
                   <div className="text-sm text-zinc-500">
-                    Created: {new Date(order.createdAt).toLocaleString()}
+                    {t('createdAt')}: {new Date(order.createdAt).toLocaleString()}
                     {order.updatedAt && (
-                      <span className="ml-2">• Updated: {new Date(order.updatedAt).toLocaleString()}</span>
+                      <span className="ml-2">• {t('updatedAt')}: {new Date(order.updatedAt).toLocaleString()}</span>
                     )}
                   </div>
                 </div>
@@ -271,15 +273,15 @@ export default function OrdersAdminPage() {
                     }}
                     className={`px-3 py-1 rounded-full text-xs font-medium border border-[var(--border-color)] ${getStatusStyle(order.status || "pending")}`}
                   >
-                    <option value="pending">PENDING</option>
-                    <option value="reviewed">REVIEWED</option>
-                    <option value="contacted">CONTACTED</option>
-                    <option value="completed">COMPLETED</option>
-                    <option value="cancelled">CANCELLED</option>
+                    <option value="pending">{t('pending')}</option>
+                    <option value="reviewed">{t('reviewed')}</option>
+                    <option value="contacted">{t('contacted')}</option>
+                    <option value="completed">{t('completed')}</option>
+                    <option value="cancelled">{t('cancelled')}</option>
                   </select>
                   <button
                     onClick={async () => {
-                      if (!confirm(`Are you sure you want to delete order #${order.id}?`)) return;
+                      if (!confirm(`${t('areYouSureDeleteOrder')} #${order.id}?`)) return;
                       
                       try {
                         const res = await fetch(`/api/admin/orders?id=${order.id}`, {
@@ -304,23 +306,23 @@ export default function OrdersAdminPage() {
                     }}
                     className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 transition-colors"
                   >
-                    Delete
+                    {t('delete')}
                   </button>
                 </div>
               </div>
               <div className="grid md:grid-cols-2 gap-4 text-sm mb-4">
                 <div>
-                  <div className="font-medium mb-2">Customer Information</div>
+                  <div className="font-medium mb-2">{t('customerInformation')}</div>
                   <div className="text-zinc-600 space-y-1">
-                    <div>Name: {order.customerName}</div>
-                    <div>Contact: {order.contact}</div>
-                    <div>VIN: {order.vehicleVIN}</div>
+                    <div>{t('name')}: {order.customerName}</div>
+                    <div>{t('contact')}: {order.contact}</div>
+                    <div>{t('vehicleVIN')}: {order.vehicleVIN}</div>
                   </div>
                 </div>
                 <div>
-                  <div className="font-medium mb-2">Vehicle</div>
+                  <div className="font-medium mb-2">{t('vehicleModel')}</div>
                   {order.type === "general-inquiry" ? (
-                    <div className="text-zinc-400">General Inquiry</div>
+                    <div className="text-zinc-400">{t('generalInquiry')}</div>
                   ) : (
                     <div className="flex items-center gap-3">
                       {(() => {
@@ -357,7 +359,7 @@ export default function OrdersAdminPage() {
               </div>
               {order.items && order.items.length > 0 ? (
                 <div className="border-t border-[var(--border-color)] pt-4">
-                  <div className="font-medium mb-3">Items</div>
+                  <div className="font-medium mb-3">{t('items')}</div>
                   <div className="space-y-3">
                     {order.items.map((item, i) => (
                       <div key={i} className="flex items-center gap-3 text-sm">
@@ -392,7 +394,7 @@ export default function OrdersAdminPage() {
                     ))}
                   </div>
                   <div className="mt-4 pt-3 border-t border-[var(--border-color)] flex justify-between items-center">
-                    <span className="font-semibold">Total:</span>
+                    <span className="font-semibold">{t('total')}:</span>
                     <span className="text-xl font-bold">{order.total}</span>
                   </div>
                 </div>
