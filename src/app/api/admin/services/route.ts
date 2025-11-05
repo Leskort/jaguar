@@ -231,11 +231,71 @@ export async function DELETE(request: Request) {
     const index = rawRequest.index;
     const services = await getServices();
     
+    console.log("[DELETE /api/admin/services] Attempting to delete:", { brand, model, year, category, index });
+    
+    // Try to find the service with normalized values first
+    let foundBrand = brand;
+    let foundModel = model;
+    
     if (services[brand]?.[model]?.[year]?.[category]?.[index]) {
+      console.log("[DELETE /api/admin/services] Found service with normalized values");
       services[brand][model][year][category].splice(index, 1);
       await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
       return NextResponse.json({ success: true });
     }
+    
+    // If not found, try to find with original (non-normalized) values
+    const originalBrand = rawRequest.brand?.trim().toLowerCase() || '';
+    const originalModel = rawRequest.model?.trim().toLowerCase() || '';
+    
+    if (services[originalBrand]?.[originalModel]?.[year]?.[category]?.[index]) {
+      console.log("[DELETE /api/admin/services] Found service with original values:", { originalBrand, originalModel });
+      services[originalBrand][originalModel][year][category].splice(index, 1);
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
+      return NextResponse.json({ success: true });
+    }
+    
+    // If still not found, try to search through all brands and models to find matching service
+    console.log("[DELETE /api/admin/services] Service not found with normalized or original values, searching all brands/models...");
+    
+    let serviceFound = false;
+    for (const serviceBrand in services) {
+      if (serviceBrand && typeof services[serviceBrand] === 'object') {
+        // Check if brand matches (normalized or original)
+        const normalizedServiceBrand = normalizeBrandModel(serviceBrand);
+        if (normalizedServiceBrand !== brand && serviceBrand.toLowerCase() !== originalBrand) {
+          continue;
+        }
+        
+        for (const serviceModel in services[serviceBrand]) {
+          if (services[serviceBrand][serviceModel] && typeof services[serviceBrand][serviceModel] === 'object') {
+            // Check if model matches (normalized or original)
+            const normalizedServiceModel = normalizeBrandModel(serviceModel);
+            if (normalizedServiceModel !== model && serviceModel.toLowerCase() !== originalModel) {
+              continue;
+            }
+            
+            if (services[serviceBrand][serviceModel][year]?.[category]?.[index]) {
+              console.log("[DELETE /api/admin/services] Found service with alternate format:", { serviceBrand, serviceModel });
+              services[serviceBrand][serviceModel][year][category].splice(index, 1);
+              await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
+              serviceFound = true;
+              break;
+            }
+          }
+        }
+        if (serviceFound) break;
+      }
+    }
+    
+    if (serviceFound) {
+      return NextResponse.json({ success: true });
+    }
+    
+    console.error("[DELETE /api/admin/services] Service not found after all attempts:", {
+      requested: { brand, model, year, category, index },
+      availableBrands: Object.keys(services || {}),
+    });
     
     return NextResponse.json({ error: "Service not found" }, { status: 404 });
   } catch (error) {

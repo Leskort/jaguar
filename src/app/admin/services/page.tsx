@@ -707,6 +707,7 @@ export default function ServicesAdminPage() {
                                 if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
                                 
                                 try {
+                                  // Try to delete with both normalized and original values
                                   const res = await fetch("/api/admin/services", {
                                     method: "DELETE",
                                     headers: { "Content-Type": "application/json" },
