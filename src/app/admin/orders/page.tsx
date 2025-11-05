@@ -49,14 +49,16 @@ export default function OrdersAdminPage() {
       setLoading(true);
       const res = await fetch("/api/admin/orders");
       const data = await res.json();
-      setOrders(Array.isArray(data) ? data : []);
+      const ordersArray = Array.isArray(data) ? data : [];
+      setOrders(ordersArray);
       // Force re-render by updating refresh key
       setRefreshKey(prev => prev + 1);
-      return data;
+      return ordersArray;
     } catch (error) {
       console.error("Failed to load orders:", error);
       setOrders([]);
       setRefreshKey(prev => prev + 1);
+      return [];
     } finally {
       setLoading(false);
     }
@@ -198,9 +200,9 @@ export default function OrdersAdminPage() {
           </p>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4" key={refreshKey}>
           {filteredOrders.map((order) => (
-            <div key={order.id} className="rounded-2xl border border-[var(--border-color)] p-6">
+            <div key={`${order.id}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-6">
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <div className="font-semibold">Order #{order.id}</div>
@@ -254,7 +256,10 @@ export default function OrdersAdminPage() {
                         });
                         
                         if (res.ok) {
-                          // Reload orders immediately to show updated data
+                          // Optimistically remove the order from UI
+                          setOrders(prevOrders => prevOrders.filter(o => o.id !== order.id));
+                          setRefreshKey(prev => prev + 1);
+                          // Then reload to ensure consistency
                           await loadOrders();
                         } else {
                           const errorText = await res.text();

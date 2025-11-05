@@ -558,7 +558,7 @@ export default function ServicesAdminPage() {
                     </tr>
                   ) : (
                     filteredAllServices.map((service, idx) => (
-                      <tr key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}`} className="border-t border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
+                      <tr key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="border-t border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                         <td className="px-4 py-3">
                           <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20">
                             {service.image && !service.image.includes(".фв") ? (
@@ -670,7 +670,18 @@ export default function ServicesAdminPage() {
                                     }),
                                   });
                                   if (res.ok) {
-                                    // Reload services immediately to show updated data
+                                    // Optimistically remove the service from UI
+                                    setServices(prevServices => {
+                                      const newServices = { ...prevServices };
+                                      if (newServices[service.brand]?.[service.model]?.[service.year]?.[service.category]) {
+                                        const categoryArray = [...newServices[service.brand][service.model][service.year][service.category]];
+                                        categoryArray.splice(service.index, 1);
+                                        newServices[service.brand][service.model][service.year][service.category] = categoryArray;
+                                      }
+                                      return newServices;
+                                    });
+                                    setRefreshKey(prev => prev + 1);
+                                    // Then reload to ensure consistency
                                     await loadServices();
                                   } else {
                                     const errorText = await res.text();
@@ -706,7 +717,7 @@ export default function ServicesAdminPage() {
               </div>
             ) : (
               filteredAllServices.map((service) => (
-                <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}`} className="rounded-2xl border border-[var(--border-color)] p-4 space-y-3">
+                <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 space-y-3">
                   <div>
                     <div className="font-medium text-base mb-1">{service.title}</div>
                     {service.description && (
@@ -785,7 +796,18 @@ export default function ServicesAdminPage() {
                             }),
                           });
                           if (res.ok) {
-                            // Reload services immediately to show updated data
+                            // Optimistically remove the service from UI
+                            setServices(prevServices => {
+                              const newServices = { ...prevServices };
+                              if (newServices[service.brand]?.[service.model]?.[service.year]?.[service.category]) {
+                                const categoryArray = [...newServices[service.brand][service.model][service.year][service.category]];
+                                categoryArray.splice(service.index, 1);
+                                newServices[service.brand][service.model][service.year][service.category] = categoryArray;
+                              }
+                              return newServices;
+                            });
+                            setRefreshKey(prev => prev + 1);
+                            // Then reload to ensure consistency
                             await loadServices();
                           } else {
                             const errorText = await res.text();
@@ -1222,7 +1244,18 @@ export default function ServicesAdminPage() {
                             }),
                           });
                           if (res.ok) {
-                            // Reload services immediately to show updated data
+                            // Optimistically remove the service from UI
+                            setServices(prevServices => {
+                              const newServices = { ...prevServices };
+                              if (newServices[selectedBrand]?.[selectedModel]?.[selectedYear]?.[selectedCategory]) {
+                                const categoryArray = [...newServices[selectedBrand][selectedModel][selectedYear][selectedCategory]];
+                                categoryArray.splice(index, 1);
+                                newServices[selectedBrand][selectedModel][selectedYear][selectedCategory] = categoryArray;
+                              }
+                              return newServices;
+                            });
+                            setRefreshKey(prev => prev + 1);
+                            // Then reload to ensure consistency
                             await loadServices();
                           } else {
                             const errorText = await res.text();

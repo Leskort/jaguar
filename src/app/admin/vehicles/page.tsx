@@ -513,15 +513,15 @@ export default function VehiclesAdminPage() {
                 const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 
                 return (
-                  <div key={brand}>
+                  <div key={`${brand}-${refreshKey}`}>
                     <h2 className="text-xl font-semibold mb-4 text-[var(--accent-gold)]">
                       {displayName.toUpperCase()} ({brandVehicles.length})
                     </h2>
-                    <div className="space-y-4">
+                    <div className="space-y-4" key={`${brand}-list-${refreshKey}`}>
                       {brandVehicles.map((vehicle, localIndex) => {
                         const globalIndex = vehicles.findIndex(v => v === vehicle);
                         return (
-                          <div key={globalIndex} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
+                          <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               <div className="flex flex-col gap-1">
                                 <button
@@ -593,11 +593,11 @@ export default function VehiclesAdminPage() {
 
         // Filtered view (single brand)
         return (
-          <div className="space-y-4">
+          <div className="space-y-4" key={`filtered-${refreshKey}`}>
             {filteredVehicles.map((vehicle, localIndex) => {
               const globalIndex = vehicles.findIndex(v => v === vehicle);
               return (
-                <div key={globalIndex} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
+                <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="flex flex-col gap-1">
                       <button
