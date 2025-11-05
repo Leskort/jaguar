@@ -594,7 +594,7 @@ export default function ServicesAdminPage() {
                     filteredAllServices.map((service, idx) => (
                       <tr key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="border-t border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                         <td className="px-4 py-3">
-                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
+                          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
                             {service.image && !service.image.includes(".фв") ? (
                               <Image
                                 src={service.image}
@@ -604,10 +604,17 @@ export default function ServicesAdminPage() {
                                 unoptimized
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).style.display = 'none';
+                                  const parent = (e.target as HTMLImageElement).parentElement;
+                                  if (parent && !parent.querySelector('.no-image-message')) {
+                                    const errorMsg = document.createElement("div");
+                                    errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs px-2 text-center";
+                                    errorMsg.textContent = "No image";
+                                    parent.appendChild(errorMsg);
+                                  }
                                 }}
                               />
                             ) : (
-                              <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
+                              <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs px-2 text-center">
                                 No image
                               </div>
                             )}
@@ -752,13 +759,42 @@ export default function ServicesAdminPage() {
             ) : (
               filteredAllServices.map((service) => (
                 <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 space-y-3">
-                  <div>
-                    <div className="font-medium text-base sm:text-lg mb-1">{service.title}</div>
-                    {service.description && (
-                      <div className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 line-clamp-2">
-                        {service.description}
-                      </div>
-                    )}
+                  <div className="flex gap-4">
+                    {/* Service Image */}
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
+                      {service.image && !service.image.includes(".фв") ? (
+                        <Image
+                          src={service.image}
+                          alt={service.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                            const parent = (e.target as HTMLImageElement).parentElement;
+                            if (parent && !parent.querySelector('.no-image-message')) {
+                              const errorMsg = document.createElement("div");
+                              errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs px-2 text-center";
+                              errorMsg.textContent = "No image";
+                              parent.appendChild(errorMsg);
+                            }
+                          }}
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs px-2 text-center">
+                          No image
+                        </div>
+                      )}
+                    </div>
+                    {/* Service Info */}
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium text-base sm:text-lg mb-1">{service.title}</div>
+                      {service.description && (
+                        <div className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 line-clamp-2">
+                          {service.description}
+                        </div>
+                      )}
+                    </div>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <span className="text-sm px-2 py-1 rounded bg-zinc-100 dark:bg-zinc-800">
