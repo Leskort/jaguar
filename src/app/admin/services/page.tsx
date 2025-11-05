@@ -33,7 +33,7 @@ export default function ServicesAdminPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshKey, setRefreshKey] = useState(0); // Force re-render key
-  const [selectedBrand, setSelectedBrand] = useState("land-rover");
+  const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("features-activation");
@@ -41,7 +41,7 @@ export default function ServicesAdminPage() {
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [viewMode, setViewMode] = useState<"all" | "filtered">("all");
-  const [filterBrand, setFilterBrand] = useState<"all" | "land-rover" | "jaguar">("all");
+  const [filterBrand, setFilterBrand] = useState<string>("all");
   const [filterModel, setFilterModel] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [availableImages, setAvailableImages] = useState<string[]>([]);
@@ -330,6 +330,7 @@ export default function ServicesAdminPage() {
       
       // Reload services to show updated data
       await loadServices();
+      await loadVehicles(); // Also reload vehicles to get any new brands/models
       setFormData({
         title: "",
         image: "",
@@ -407,14 +408,28 @@ export default function ServicesAdminPage() {
             <select
               value={filterBrand}
               onChange={(e) => {
-                setFilterBrand(e.target.value as "all" | "land-rover" | "jaguar");
+                setFilterBrand(e.target.value);
                 setFilterModel("all");
               }}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
               <option value="all">All Brands</option>
-              <option value="land-rover">Land Rover</option>
-              <option value="jaguar">Jaguar</option>
+              {Array.from(new Set(vehicles.map(v => v.brand)))
+                .sort((a, b) => {
+                  // Sort: land-rover first, jaguar second, then alphabetically
+                  if (a === "land-rover") return -1;
+                  if (b === "land-rover") return 1;
+                  if (a === "jaguar") return -1;
+                  if (b === "jaguar") return 1;
+                  return a.localeCompare(b);
+                })
+                .map(brand => {
+                  const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                  return (
+                    <option key={brand} value={brand}>{displayName}</option>
+                  );
+                })
+              }
             </select>
 
             <select
@@ -698,8 +713,23 @@ export default function ServicesAdminPage() {
           }}
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
         >
-          <option value="land-rover">Land Rover</option>
-          <option value="jaguar">Jaguar</option>
+          <option value="">Select Brand</option>
+          {Array.from(new Set(vehicles.map(v => v.brand)))
+            .sort((a, b) => {
+              // Sort: land-rover first, jaguar second, then alphabetically
+              if (a === "land-rover") return -1;
+              if (b === "land-rover") return 1;
+              if (a === "jaguar") return -1;
+              if (b === "jaguar") return 1;
+              return a.localeCompare(b);
+            })
+            .map(brand => {
+              const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              return (
+                <option key={brand} value={brand}>{displayName}</option>
+              );
+            })
+          }
         </select>
 
         <select
@@ -709,7 +739,7 @@ export default function ServicesAdminPage() {
             setSelectedYear("");
           }}
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
-          disabled={availableVehicles.length === 0}
+          disabled={!selectedBrand || availableVehicles.length === 0}
         >
           <option value="">Select Model</option>
           {availableVehicles.map((vehicle) => (
@@ -728,7 +758,7 @@ export default function ServicesAdminPage() {
             setSelectedCategory(newCategories[0] || "features-activation");
           }}
           className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
-          disabled={availableYears.length === 0}
+          disabled={!selectedModel || availableYears.length === 0}
         >
           <option value="">Select Year</option>
           {availableYears.map((year, index) => (
@@ -752,7 +782,9 @@ export default function ServicesAdminPage() {
 
         {selectedModel && selectedYear && selectedCategory && (
           <button
-            onClick={() => {
+            onClick={async () => {
+              // Reload vehicles to ensure we have the latest list
+              await loadVehicles();
               setShowAddForm(true);
               setEditingIndex(null);
               setFormData({
@@ -771,9 +803,15 @@ export default function ServicesAdminPage() {
         )}
       </div>
 
-      {availableVehicles.length === 0 && (
+      {selectedBrand && availableVehicles.length === 0 && (
         <div className="mb-6 p-4 rounded-lg bg-yellow-50 border border-yellow-200 text-sm text-yellow-800">
-          No vehicles found for {selectedBrand}. Please add vehicles first in <Link href="/admin/vehicles" className="underline font-medium">Manage Vehicles</Link>.
+          No vehicles found for {selectedBrand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}. Please add vehicles first in <Link href="/admin/vehicles" className="underline font-medium">Manage Vehicles</Link>.
+        </div>
+      )}
+      
+      {!selectedBrand && (
+        <div className="mb-6 p-4 rounded-lg bg-blue-50 border border-blue-200 text-sm text-blue-800">
+          Please select a brand to add services.
         </div>
       )}
 

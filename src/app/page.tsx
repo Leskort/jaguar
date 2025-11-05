@@ -24,19 +24,39 @@ type ServiceOption = {
 function VehicleSelector() {
   const router = useRouter();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-  const [selectedBrand, setSelectedBrand] = useState("land-rover");
+  const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const [brandsLoaded, setBrandsLoaded] = useState(false);
 
   useEffect(() => {
     loadVehicles();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    // Auto-select first brand after vehicles are loaded
+    if (vehicles.length > 0 && !selectedBrand && !brandsLoaded) {
+      const allBrands = Array.from(new Set(vehicles.map(v => v.brand))).sort((a, b) => {
+        if (a === "land-rover") return -1;
+        if (b === "land-rover") return 1;
+        if (a === "jaguar") return -1;
+        if (b === "jaguar") return 1;
+        return a.localeCompare(b);
+      });
+      if (allBrands.length > 0) {
+        setSelectedBrand(allBrands[0]);
+        setBrandsLoaded(true);
+      }
+    }
+  }, [vehicles, selectedBrand, brandsLoaded]);
 
   const loadVehicles = async () => {
     try {
       const res = await fetch("/api/admin/vehicles");
       const data = await res.json();
-      setVehicles(Array.isArray(data) ? data : []);
+      const vehiclesArray = Array.isArray(data) ? data : [];
+      setVehicles(vehiclesArray);
     } catch (error) {
       console.error("Failed to load vehicles:", error);
     }
@@ -45,6 +65,16 @@ function VehicleSelector() {
   const availableModels = vehicles.filter(v => v.brand === selectedBrand);
   const selectedVehicle = availableModels.find(v => v.value === selectedModel);
   const availableYears = selectedVehicle?.years || [];
+
+  // Get all unique brands
+  const allBrands = Array.from(new Set(vehicles.map(v => v.brand))).sort((a, b) => {
+    // Sort: land-rover first, jaguar second, then alphabetically
+    if (a === "land-rover") return -1;
+    if (b === "land-rover") return 1;
+    if (a === "jaguar") return -1;
+    if (b === "jaguar") return 1;
+    return a.localeCompare(b);
+  });
 
   const handleGoToServices = (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,7 +85,7 @@ function VehicleSelector() {
 
   return (
     <div className="space-y-4">
-      <div className="text-sm font-medium">Jaguar Land Rover — select model</div>
+      <div className="text-sm font-medium">Select Vehicle Model</div>
       <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3">
         <select
           value={selectedBrand}
@@ -67,8 +97,13 @@ function VehicleSelector() {
           className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
           required
         >
-          <option value="land-rover">Land Rover</option>
-          <option value="jaguar">Jaguar</option>
+          <option value="">Select Brand</option>
+          {allBrands.map(brand => {
+            const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return (
+              <option key={brand} value={brand}>{displayName}</option>
+            );
+          })}
         </select>
 
         <select
@@ -79,7 +114,7 @@ function VehicleSelector() {
           }}
           className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
           required
-          disabled={availableModels.length === 0}
+          disabled={!selectedBrand || availableModels.length === 0}
         >
           <option value="">Select Model</option>
           {availableModels.map((vehicle) => (
@@ -94,7 +129,7 @@ function VehicleSelector() {
           onChange={(e) => setSelectedYear(e.target.value)}
           className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
           required
-          disabled={availableYears.length === 0}
+          disabled={!selectedModel || availableYears.length === 0}
         >
           <option value="">Select Year</option>
           {availableYears.map((year, index) => (

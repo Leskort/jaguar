@@ -119,7 +119,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
 export default function VehiclesPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedBrand, setSelectedBrand] = useState<"land-rover" | "jaguar" | "all">("all");
+  const [selectedBrand, setSelectedBrand] = useState<string>("all");
 
   useEffect(() => {
     loadVehicles();
@@ -145,8 +145,15 @@ export default function VehiclesPage() {
     ? vehicles 
     : vehicles.filter(v => v.brand === selectedBrand);
 
-  const landRoverVehicles = vehicles.filter(v => v.brand === "land-rover");
-  const jaguarVehicles = vehicles.filter(v => v.brand === "jaguar");
+  // Get all unique brands dynamically
+  const allBrands = Array.from(new Set(vehicles.map(v => v.brand))).sort((a, b) => {
+    // Sort: land-rover first, jaguar second, then alphabetically
+    if (a === "land-rover") return -1;
+    if (b === "land-rover") return 1;
+    if (a === "jaguar") return -1;
+    if (b === "jaguar") return 1;
+    return a.localeCompare(b);
+  });
 
   if (loading) {
     return (
@@ -174,26 +181,23 @@ export default function VehiclesPage() {
           >
             ALL ({vehicles.length})
           </button>
-          <button
-            onClick={() => setSelectedBrand("land-rover")}
-            className={`px-4 py-2 rounded-full border transition-colors ${
-              selectedBrand === "land-rover"
-                ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
-                : "border-[var(--border-color)] hover:bg-white/5"
-            }`}
-          >
-            LAND ROVER ({landRoverVehicles.length})
-          </button>
-          <button
-            onClick={() => setSelectedBrand("jaguar")}
-            className={`px-4 py-2 rounded-full border transition-colors ${
-              selectedBrand === "jaguar"
-                ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
-                : "border-[var(--border-color)] hover:bg-white/5"
-            }`}
-          >
-            JAGUAR ({jaguarVehicles.length})
-          </button>
+          {allBrands.map(brand => {
+            const brandVehicles = vehicles.filter(v => v.brand === brand);
+            const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+            return (
+              <button
+                key={brand}
+                onClick={() => setSelectedBrand(brand)}
+                className={`px-4 py-2 rounded-full border transition-colors ${
+                  selectedBrand === brand
+                    ? "border-[var(--accent-gold)] bg-[var(--accent-gold)]/10 text-[var(--accent-gold)]"
+                    : "border-[var(--border-color)] hover:bg-white/5"
+                }`}
+              >
+                {displayName.toUpperCase()} ({brandVehicles.length})
+              </button>
+            );
+          })}
         </div>
 
         {filteredVehicles.length > 0 ? (
