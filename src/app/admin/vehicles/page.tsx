@@ -137,6 +137,7 @@ export default function VehiclesAdminPage() {
         throw new Error(errorMsg);
       }
       
+      // Reload vehicles to show updated data
       await loadVehicles();
       setFormData({
         brand: "land-rover",
@@ -147,7 +148,6 @@ export default function VehiclesAdminPage() {
       });
       setShowAddForm(false);
       setEditingIndex(null);
-      alert("Vehicle saved successfully!");
     } catch (error) {
       console.error("[Vehicles Admin] Error saving vehicle:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to save vehicle";
@@ -186,6 +186,7 @@ export default function VehiclesAdminPage() {
         throw new Error(errorMsg);
       }
       
+      // Reload vehicles to show updated order
       await loadVehicles();
     } catch (error) {
       console.error("[Vehicles Admin] Error moving vehicle:", error);
@@ -220,8 +221,8 @@ export default function VehiclesAdminPage() {
         throw new Error(errorMsg);
       }
       
+      // Reload vehicles to show updated data
       await loadVehicles();
-      alert("Vehicle deleted successfully!");
     } catch (error) {
       console.error("[Vehicles Admin] Error deleting vehicle:", error);
       const errorMessage = error instanceof Error ? error.message : "Failed to delete vehicle";

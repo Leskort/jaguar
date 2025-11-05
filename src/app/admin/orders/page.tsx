@@ -224,8 +224,8 @@ export default function OrdersAdminPage() {
                         });
                         
                         if (res.ok) {
+                          // Reload orders immediately to show updated data
                           await loadOrders();
-                          alert("Order status updated successfully!");
                         } else {
                           const errorText = await res.text();
                           alert(`Failed to update order status: ${errorText || res.statusText}`);
@@ -254,8 +254,8 @@ export default function OrdersAdminPage() {
                         });
                         
                         if (res.ok) {
+                          // Reload orders immediately to show updated data
                           await loadOrders();
-                          alert("Order deleted successfully!");
                         } else {
                           const errorText = await res.text();
                           alert(`Failed to delete order: ${errorText || res.statusText}`);

@@ -380,7 +380,6 @@ export default function ServicesAdminPage() {
       setShowAddForm(false);
       setEditingIndex(null);
       setSelectedCategory(""); // Reset category selection to show all services
-      alert("Service saved successfully!");
     } catch (error) {
       console.error("Error saving service:", error);
       const errorMessage = error instanceof Error ? error.message : "Unknown error";
@@ -659,7 +658,7 @@ export default function ServicesAdminPage() {
                                 if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
                                 
                                 try {
-                                  await fetch("/api/admin/services", {
+                                  const res = await fetch("/api/admin/services", {
                                     method: "DELETE",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({
@@ -670,8 +669,13 @@ export default function ServicesAdminPage() {
                                       index: service.index,
                                     }),
                                   });
-                                  await loadServices();
-                                  alert("Service deleted successfully!");
+                                  if (res.ok) {
+                                    // Reload services immediately to show updated data
+                                    await loadServices();
+                                  } else {
+                                    const errorText = await res.text();
+                                    alert(`Failed to delete service: ${errorText || res.statusText}`);
+                                  }
                                 } catch (error) {
                                   console.error("Error deleting service:", error);
                                   const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
@@ -769,7 +773,7 @@ export default function ServicesAdminPage() {
                         if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
                         
                         try {
-                          await fetch("/api/admin/services", {
+                          const res = await fetch("/api/admin/services", {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -780,8 +784,13 @@ export default function ServicesAdminPage() {
                               index: service.index,
                             }),
                           });
-                          await loadServices();
-                          alert("Service deleted successfully!");
+                          if (res.ok) {
+                            // Reload services immediately to show updated data
+                            await loadServices();
+                          } else {
+                            const errorText = await res.text();
+                            alert(`Failed to delete service: ${errorText || res.statusText}`);
+                          }
                         } catch (error) {
                           console.error("Error deleting service:", error);
                           const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
@@ -1201,7 +1210,7 @@ export default function ServicesAdminPage() {
                         if (!confirm(`Are you sure you want to delete "${service.title}"?`)) return;
                         
                         try {
-                          await fetch("/api/admin/services", {
+                          const res = await fetch("/api/admin/services", {
                             method: "DELETE",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
@@ -1212,8 +1221,13 @@ export default function ServicesAdminPage() {
                               index,
                             }),
                           });
-                          await loadServices();
-                          alert("Service deleted successfully!");
+                          if (res.ok) {
+                            // Reload services immediately to show updated data
+                            await loadServices();
+                          } else {
+                            const errorText = await res.text();
+                            alert(`Failed to delete service: ${errorText || res.statusText}`);
+                          }
                         } catch (error) {
                           console.error("Error deleting service:", error);
                           const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
