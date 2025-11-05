@@ -35,7 +35,7 @@ export default function ServicesAdminPage() {
   const [selectedBrand, setSelectedBrand] = useState("land-rover");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("features-activation");
+  const [selectedCategory, setSelectedCategory] = useState<string>("features-activation");
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
@@ -333,7 +333,7 @@ export default function ServicesAdminPage() {
       });
       setShowAddForm(false);
       setEditingIndex(null);
-      setSelectedCategory(null); // Reset category selection to show all services
+      setSelectedCategory(""); // Reset category selection to show all services
       alert("Service saved successfully!");
     } catch (error) {
       console.error("Error saving service:", error);
