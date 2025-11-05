@@ -42,6 +42,22 @@ export default function OrdersAdminPage() {
   useEffect(() => {
     loadOrders();
     loadVehicles();
+    
+    // Auto-refresh every 10 seconds
+    const interval = setInterval(() => {
+      loadOrders();
+    }, 10000);
+    
+    // Refresh when window gains focus
+    const handleFocus = () => {
+      loadOrders();
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   const loadOrders = async () => {

@@ -33,6 +33,22 @@ export default function VehiclesAdminPage() {
 
   useEffect(() => {
     loadVehicles();
+    
+    // Auto-refresh every 10 seconds
+    const interval = setInterval(() => {
+      loadVehicles();
+    }, 10000);
+    
+    // Refresh when window gains focus
+    const handleFocus = () => {
+      loadVehicles();
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   useEffect(() => {

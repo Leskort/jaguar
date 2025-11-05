@@ -61,6 +61,23 @@ export default function ServicesAdminPage() {
   useEffect(() => {
     loadServices();
     loadVehicles();
+    
+    // Auto-refresh every 10 seconds
+    const interval = setInterval(() => {
+      loadServices();
+    }, 10000);
+    
+    // Refresh when window gains focus
+    const handleFocus = () => {
+      loadServices();
+      loadVehicles();
+    };
+    window.addEventListener('focus', handleFocus);
+    
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+    };
   }, []);
 
   useEffect(() => {
