@@ -76,6 +76,17 @@ function VehicleSelector() {
     return a.localeCompare(b);
   });
 
+  // Clear selectedModel if it doesn't belong to the selected brand
+  useEffect(() => {
+    if (selectedBrand && selectedModel) {
+      const modelExists = availableModels.some(v => v.value === selectedModel);
+      if (!modelExists) {
+        setSelectedModel("");
+        setSelectedYear("");
+      }
+    }
+  }, [selectedBrand, selectedModel, availableModels]);
+
   const handleGoToServices = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedBrand && selectedModel && selectedYear) {
@@ -90,7 +101,9 @@ function VehicleSelector() {
         <select
           value={selectedBrand}
           onChange={(e) => {
-            setSelectedBrand(e.target.value);
+            const newBrand = e.target.value;
+            setSelectedBrand(newBrand);
+            // Force clear model and year immediately
             setSelectedModel("");
             setSelectedYear("");
           }}
@@ -115,10 +128,11 @@ function VehicleSelector() {
           className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
           required
           disabled={!selectedBrand || availableModels.length === 0}
+          key={selectedBrand} // Force re-render when brand changes
         >
           <option value="">Select Model</option>
           {availableModels.map((vehicle) => (
-            <option key={vehicle.value} value={vehicle.value}>
+            <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
               {vehicle.title}
             </option>
           ))}
@@ -130,10 +144,11 @@ function VehicleSelector() {
           className="h-10 rounded-full border border-[var(--border-color)] px-4 bg-transparent text-sm"
           required
           disabled={!selectedModel || availableYears.length === 0}
+          key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
         >
           <option value="">Select Year</option>
           {availableYears.map((year, index) => (
-            <option key={index} value={year.value}>
+            <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
               {year.label}
             </option>
           ))}
