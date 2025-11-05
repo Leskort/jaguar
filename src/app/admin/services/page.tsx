@@ -96,7 +96,7 @@ export default function ServicesAdminPage() {
       const servicesData = data || {};
       
       // Only update if data actually changed
-      setServices(prevServices => {
+      setServices((prevServices: any) => {
         const prevStr = JSON.stringify(prevServices);
         const newStr = JSON.stringify(servicesData);
         if (prevStr !== newStr) {
