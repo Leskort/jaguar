@@ -558,7 +558,7 @@ export default function Home() {
       {/* OUR WORKS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
           <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
             {t('seeAll')}
           </Link>

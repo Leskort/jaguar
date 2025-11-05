@@ -89,11 +89,9 @@ export const translations = {
     featuresActivationDescription: 'Activation of hidden features and software options.',
     powerUpgradeDescription: 'Individual chip tuning for JLR.',
     accessoriesDescription: 'Original accessories and kits.',
-    goToServices: 'Go to services',
     topOrders: 'Top orders',
     noServicesAvailable: 'No services available yet. Services will appear here once added in the admin panel.',
     addToCart: 'Add to cart',
-    ourWorks: 'Our works',
     seeAll: 'See all',
     contactsInUK: 'Contacts in the UK',
     schedule: 'Schedule',
@@ -150,7 +148,6 @@ export const translations = {
     accept: 'Accept',
     
     // Vehicles page
-    vehicles: 'Vehicles',
     loadingVehicles: 'Loading vehicles...',
     noVehiclesFound: 'No vehicles found.',
     addVehiclesAdmin: 'Please add vehicles through the admin panel.',
@@ -243,11 +240,9 @@ export const translations = {
     featuresActivationDescription: 'Активация скрытых функций и программных опций.',
     powerUpgradeDescription: 'Индивидуальный чип-тюнинг для JLR.',
     accessoriesDescription: 'Оригинальные аксессуары и комплекты.',
-    goToServices: 'Перейти к услугам',
     topOrders: 'Топ заказов',
     noServicesAvailable: 'Услуги пока недоступны. Услуги появятся здесь после добавления в админ-панели.',
     addToCart: 'Добавить в корзину',
-    ourWorks: 'Наши работы',
     seeAll: 'Посмотреть все',
     contactsInUK: 'Контакты в Великобритании',
     schedule: 'График работы',
@@ -304,7 +299,6 @@ export const translations = {
     accept: 'Принять',
     
     // Vehicles page
-    vehicles: 'Автомобили',
     loadingVehicles: 'Загрузка автомобилей...',
     noVehiclesFound: 'Автомобили не найдены.',
     addVehiclesAdmin: 'Пожалуйста, добавьте автомобили через админ-панель.',

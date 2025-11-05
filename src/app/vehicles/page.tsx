@@ -168,7 +168,7 @@ export default function VehiclesPage() {
   return (
     <section className="container-padded mx-auto max-w-6xl py-8 sm:py-16 px-4">
       <div className="flex items-center gap-4 sm:gap-8">
-        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">{t('vehicles')}</h1>
+        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">{t('vehicles').replace('VEHICLES', 'Vehicles').replace('АВТОМОБИЛИ', 'Автомобили')}</h1>
       </div>
 
       <div className="mt-6 sm:mt-10">
