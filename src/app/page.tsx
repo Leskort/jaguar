@@ -349,7 +349,7 @@ function TopOrdersSection() {
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
             className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow"
           >
-            <div className="relative h-48 sm:h-56 bg-silver/20">
+            <div className="relative h-48 sm:h-56 bg-silver/20 dark:bg-zinc-800/30">
               {service.image ? (
                 <Image
                   src={service.image}
@@ -399,14 +399,14 @@ function TopOrdersSection() {
         <>
           <button
             onClick={scrollLeft}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
             aria-label="Previous"
           >
             <span className="text-xl">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 active:bg-zinc-100 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
             aria-label="Next"
           >
             <span className="text-xl">→</span>
@@ -565,7 +565,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-video rounded-xl bg-silver/20" />
+            <div key={i} className="aspect-video rounded-xl bg-silver/20 dark:bg-zinc-800/30" />
           ))}
         </div>
       </section>
@@ -594,7 +594,7 @@ export default function Home() {
             }
           ].map((article) => (
             <article key={article.title} className="rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-silver/20" />
+              <div className="h-48 bg-silver/20 dark:bg-zinc-800/30" />
               <div className="p-4 sm:p-6">
                 <h3 className="font-semibold mb-2">{article.title}</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{article.description}</p>

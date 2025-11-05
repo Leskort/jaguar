@@ -38,7 +38,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
         onClick={handleCardClick}
         className={`block rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-all duration-200 ${hasMultipleYears ? 'cursor-pointer' : ''}`}
       >
-        <div className="relative h-48 bg-silver/20 overflow-hidden">
+        <div className="relative h-48 bg-silver/20 dark:bg-zinc-800/30 overflow-hidden">
           {!imgError && vehicle.image ? (
             <Image
               src={vehicle.image}
@@ -50,7 +50,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
               onError={() => setImgError(true)}
             />
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs bg-silver/10">
+            <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs bg-silver/10 dark:bg-zinc-800/50">
               {vehicle.title}
             </div>
           )}
@@ -91,12 +91,12 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
 
       {/* Year Dropdown */}
       {hasMultipleYears && showYearDropdown && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[var(--border-color)] rounded-lg shadow-lg z-10 overflow-hidden">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-[var(--space-black)] border border-[var(--border-color)] rounded-lg shadow-lg z-10 overflow-hidden">
           {vehicle.years.map((year, index) => (
             <Link
               key={index}
               href={`/services/${vehicle.brand}/${vehicle.value}/${year.value}`}
-              className="block px-4 py-3 hover:bg-[var(--accent-gold)]/10 hover:text-[var(--accent-gold)] transition-colors text-sm font-medium"
+              className="block px-4 py-3 text-[var(--foreground)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--accent-gold)] transition-colors text-sm font-medium"
               onClick={() => setShowYearDropdown(false)}
             >
               {year.label}
