@@ -355,7 +355,7 @@ export default function VehiclesAdminPage() {
                   }}
                   className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 >
-                  <option value="">-- Select existing brand --</option>
+                  <option value="">{t('selectExistingBrand')}</option>
                   <option value="land-rover">Land Rover</option>
                   <option value="jaguar">Jaguar</option>
                   {Array.from(new Set(vehicles.map(v => v.brand)))
@@ -366,7 +366,7 @@ export default function VehiclesAdminPage() {
                     ))
                   }
                 </select>
-                <span className="self-center text-sm text-zinc-500 hidden sm:inline">or</span>
+                <span className="self-center text-sm text-zinc-500 hidden sm:inline">{t('or')}</span>
                 <input
                   type="text"
                   value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? "" : formData.brand}
@@ -385,10 +385,10 @@ export default function VehiclesAdminPage() {
                     }
                   }}
                   className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
-                  placeholder="Enter new brand (e.g., range-rover)"
+                  placeholder={t('enterNewBrand')}
                 />
               </div>
-              <p className="text-xs text-zinc-500 mt-1">Select existing brand from dropdown or enter a new one (lowercase with hyphens)</p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{t('selectExistingBrandHint')}</p>
             </div>
 
             <div>
@@ -427,7 +427,7 @@ export default function VehiclesAdminPage() {
                     className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                     required
                   >
-                    <option value="">-- Select an image --</option>
+                    <option value="">{t('selectAnImage')}</option>
                     {availableImages.map((imgPath) => {
                       const fileName = imgPath.split("/").pop() || imgPath;
                       return (
@@ -439,7 +439,7 @@ export default function VehiclesAdminPage() {
                   </select>
                   {formData.image && (
                     <div className="mt-2">
-                      <div className="text-xs text-zinc-500 mb-2">Preview:</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400 mb-2">{t('preview')}</div>
                       <div className="relative w-full h-48 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/10">
                         <img
                           src={formData.image}
@@ -456,7 +456,7 @@ export default function VehiclesAdminPage() {
                 </div>
               ) : (
                 <div className="text-sm text-zinc-500">
-                  No images found in /vehicles/{formData.brand}/
+                  {t('noImagesFound').replace('{brand}', formData.brand)}
                 </div>
               )}
             </div>
@@ -464,7 +464,7 @@ export default function VehiclesAdminPage() {
             <div>
               <label className="block text-sm font-medium mb-2">{t('years')}</label>
               {formData.years.map((year, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+                <div key={index} className="flex flex-col sm:flex-row gap-2 mb-2">
                   <input
                     type="text"
                     value={year.value}
@@ -485,7 +485,7 @@ export default function VehiclesAdminPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveYear(index)}
-                                className="px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
+                      className="px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm w-full sm:w-auto"
                     >
                       {t('removeYear')}
                     </button>
