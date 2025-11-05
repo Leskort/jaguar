@@ -163,9 +163,18 @@ export default function ServicesAdminPage() {
 
   const allServices = getAllServices();
 
-  // Get unique years and categories from all services for filters
-  const filterYears = Array.from(new Set(allServices.map(s => s.year))).sort();
-  const filterCategories = Array.from(new Set(allServices.map(s => s.category))).sort();
+  // Filter services by brand and model first to get available years and categories
+  let servicesForFilters = allServices;
+  if (filterBrand !== "all") {
+    servicesForFilters = servicesForFilters.filter(s => s.brand === filterBrand);
+  }
+  if (filterModel !== "all") {
+    servicesForFilters = servicesForFilters.filter(s => s.model === filterModel);
+  }
+
+  // Get unique years and categories from filtered services (based on selected brand/model)
+  const filterYears = Array.from(new Set(servicesForFilters.map(s => s.year))).sort();
+  const filterCategories = Array.from(new Set(servicesForFilters.map(s => s.category))).sort();
 
   // Filter all services
   const filteredAllServices = allServices.filter((service) => {
@@ -439,6 +448,8 @@ export default function ServicesAdminPage() {
               onChange={(e) => {
                 setFilterBrand(e.target.value);
                 setFilterModel("all");
+                setFilterYear("all");
+                setFilterCategory("all");
               }}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
             >
@@ -463,7 +474,11 @@ export default function ServicesAdminPage() {
 
             <select
               value={filterModel}
-              onChange={(e) => setFilterModel(e.target.value)}
+              onChange={(e) => {
+                setFilterModel(e.target.value);
+                setFilterYear("all");
+                setFilterCategory("all");
+              }}
               className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
               disabled={filterBrand === "all"}
             >
