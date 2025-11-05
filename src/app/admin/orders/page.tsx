@@ -171,50 +171,50 @@ export default function OrdersAdminPage() {
       <div className="mb-6 flex gap-2 sm:gap-3 flex-wrap">
         <button
           onClick={() => setStatusFilter("all")}
-          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "all"
-              ? "bg-[var(--accent-gold)] text-black"
-              : "border border-[var(--border-color)] hover:bg-white/5"
+              ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+              : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >
           {t('all')} ({orders.length})
         </button>
         <button
           onClick={() => setStatusFilter("pending")}
-          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "pending"
-              ? "bg-yellow-100 text-yellow-800"
-              : "border border-[var(--border-color)] hover:bg-white/5"
+              ? "bg-yellow-100 text-yellow-800 border-yellow-300"
+              : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >
           {t('pending')} ({orders.filter(o => (o.status || "pending") === "pending").length})
         </button>
         <button
           onClick={() => setStatusFilter("reviewed")}
-          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "reviewed"
-              ? "bg-blue-100 text-blue-800"
-              : "border border-[var(--border-color)] hover:bg-white/5"
+              ? "bg-blue-100 text-blue-800 border-blue-300"
+              : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >
           {t('reviewed')} ({orders.filter(o => o.status === "reviewed").length})
         </button>
         <button
           onClick={() => setStatusFilter("contacted")}
-          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "contacted"
-              ? "bg-green-100 text-green-800"
-              : "border border-[var(--border-color)] hover:bg-white/5"
+              ? "bg-green-100 text-green-800 border-green-300"
+              : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >
           {t('contacted')} ({orders.filter(o => o.status === "contacted").length})
         </button>
         <button
           onClick={() => setStatusFilter("completed")}
-          className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+          className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "completed"
-              ? "bg-green-100 text-green-800"
-              : "border border-[var(--border-color)] hover:bg-white/5"
+              ? "bg-green-100 text-green-800 border-green-300"
+              : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >
           {t('completed')} ({orders.filter(o => o.status === "completed").length})
@@ -235,18 +235,18 @@ export default function OrdersAdminPage() {
       ) : (
         <div className="space-y-4" key={refreshKey}>
           {filteredOrders.map((order) => (
-            <div key={`${order.id}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <div className="font-semibold">{t('orderNumber')}{order.id}</div>
-                  <div className="text-sm text-zinc-500">
+            <div key={`${order.id}-${refreshKey}`} className="rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 gap-4">
+                <div className="flex-1">
+                  <div className="font-semibold text-base sm:text-lg">{t('orderNumber')}{order.id}</div>
+                  <div className="text-xs sm:text-sm text-zinc-500 mt-1">
                     {t('createdAt')}: {new Date(order.createdAt).toLocaleString()}
                     {order.updatedAt && (
                       <span className="ml-2">• {t('updatedAt')}: {new Date(order.updatedAt).toLocaleString()}</span>
                     )}
                   </div>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap w-full sm:w-auto">
                   <select
                     value={order.status || "pending"}
                     onChange={async (e) => {
@@ -271,7 +271,7 @@ export default function OrdersAdminPage() {
                         alert(`Failed to update order status: ${errorMessage}`);
                       }
                     }}
-                    className={`px-3 py-1 rounded-full text-xs font-medium border border-[var(--border-color)] ${getStatusStyle(order.status || "pending")}`}
+                    className={`px-3 py-2 sm:py-1 rounded-full text-xs sm:text-xs font-medium border-2 ${getStatusStyle(order.status || "pending")} min-h-[36px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none`}
                   >
                     <option value="pending">{t('pending')}</option>
                     <option value="reviewed">{t('reviewed')}</option>
@@ -304,27 +304,27 @@ export default function OrdersAdminPage() {
                         alert(`Failed to delete order: ${errorMessage}`);
                       }
                     }}
-                    className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 transition-colors"
+                    className="px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                   >
                     {t('delete')}
                   </button>
                 </div>
               </div>
-              <div className="grid md:grid-cols-2 gap-4 text-sm mb-4">
+              <div className="grid md:grid-cols-2 gap-4 sm:gap-6 text-sm sm:text-base mb-4">
                 <div>
-                  <div className="font-medium mb-2">{t('customerInformation')}</div>
-                  <div className="text-zinc-600 space-y-1">
-                    <div>{t('name')}: {order.customerName}</div>
-                    <div>{t('contact')}: {order.contact}</div>
-                    <div>{t('vehicleVIN')}: {order.vehicleVIN}</div>
+                  <div className="font-medium mb-2 text-base sm:text-base">{t('customerInformation')}</div>
+                  <div className="text-zinc-600 dark:text-zinc-400 space-y-1.5 text-sm sm:text-sm">
+                    <div><strong>{t('name')}:</strong> {order.customerName}</div>
+                    <div><strong>{t('contact')}:</strong> {order.contact}</div>
+                    <div><strong>{t('vehicleVIN')}:</strong> {order.vehicleVIN}</div>
                   </div>
                 </div>
                 <div>
-                  <div className="font-medium mb-2">{t('vehicleModel')}</div>
+                  <div className="font-medium mb-2 text-base sm:text-base">{t('vehicleModel')}</div>
                   {order.type === "general-inquiry" ? (
                     <div className="text-zinc-400">{t('generalInquiry')}</div>
                   ) : (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap sm:flex-nowrap">
                       {(() => {
                         const vehicleImage = getVehicleImage(
                           order.vehicle.brand,
@@ -332,7 +332,7 @@ export default function OrdersAdminPage() {
                           order.vehicle.year
                         );
                         return vehicleImage ? (
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                          <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
                             <Image
                               src={vehicleImage}
                               alt={`${order.vehicle.brand} ${order.vehicle.model}`}
@@ -345,12 +345,12 @@ export default function OrdersAdminPage() {
                             />
                           </div>
                         ) : (
-                          <div className="w-20 h-20 rounded-lg border border-[var(--border-color)] bg-silver/20 flex-shrink-0 flex items-center justify-center text-zinc-400 text-xs text-center px-1">
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs text-center px-1">
                             No image
                           </div>
                         );
                       })()}
-                      <div className="text-zinc-600">
+                      <div className="text-zinc-600 dark:text-zinc-400 text-sm sm:text-base">
                         {order.vehicle.brand.replace('-', ' ')} / {order.vehicle.model.replace(/-/g, ' ')} / {order.vehicle.year}
                       </div>
                     </div>
@@ -359,12 +359,12 @@ export default function OrdersAdminPage() {
               </div>
               {order.items && order.items.length > 0 ? (
                 <div className="border-t border-[var(--border-color)] pt-4">
-                  <div className="font-medium mb-3">{t('items')}</div>
+                  <div className="font-medium mb-3 text-base sm:text-base">{t('items')}</div>
                   <div className="space-y-3">
                     {order.items.map((item, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm">
+                      <div key={i} className="flex items-center gap-3 text-sm sm:text-base flex-wrap sm:flex-nowrap">
                         {item.image && !item.image.includes(".фв") ? (
-                          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
                             <Image
                               src={item.image}
                               alt={item.title}
@@ -377,25 +377,25 @@ export default function OrdersAdminPage() {
                             />
                           </div>
                         ) : (
-                          <div className="w-16 h-16 rounded-lg border border-[var(--border-color)] bg-silver/20 flex-shrink-0 flex items-center justify-center text-zinc-400 text-xs text-center px-1">
+                          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs text-center px-1">
                             No image
                           </div>
                         )}
-                        <div className="flex-1">
-                          <div className="font-medium text-zinc-900">{item.title}</div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{item.title}</div>
                           {item.brand && item.model && (
-                            <div className="text-xs text-zinc-500">
+                            <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400">
                               {item.brand.replace('-', ' ')} / {item.model.replace(/-/g, ' ')} / {item.year}
                             </div>
                           )}
                         </div>
-                        <div className="font-medium text-zinc-900">{item.price}</div>
+                        <div className="font-medium text-zinc-900 dark:text-zinc-100 text-sm sm:text-base whitespace-nowrap">{item.price}</div>
                       </div>
                     ))}
                   </div>
                   <div className="mt-4 pt-3 border-t border-[var(--border-color)] flex justify-between items-center">
-                    <span className="font-semibold">{t('total')}:</span>
-                    <span className="text-xl font-bold">{order.total}</span>
+                    <span className="font-semibold text-base sm:text-lg">{t('total')}:</span>
+                    <span className="text-lg sm:text-xl font-bold">{order.total}</span>
                   </div>
                 </div>
               ) : (

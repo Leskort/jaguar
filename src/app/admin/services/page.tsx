@@ -451,20 +451,20 @@ export default function ServicesAdminPage() {
       <div className="mb-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
         <button
           onClick={() => setViewMode("all")}
-          className={`px-4 py-3 sm:py-2 rounded border text-sm sm:text-base ${
+          className={`px-4 py-3 sm:py-2 rounded-lg border-2 text-sm sm:text-base font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all ${
             viewMode === "all"
               ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
-              : "border-[var(--border-color)]"
+              : "border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
           }`}
         >
           {t('allServices')} ({allServices.length})
         </button>
         <button
           onClick={() => setViewMode("filtered")}
-          className={`px-4 py-3 sm:py-2 rounded border text-sm sm:text-base ${
+          className={`px-4 py-3 sm:py-2 rounded-lg border-2 text-sm sm:text-base font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all ${
             viewMode === "filtered"
               ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
-              : "border-[var(--border-color)]"
+              : "border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
           }`}
         >
           {t('addEditServices')}
@@ -484,7 +484,7 @@ export default function ServicesAdminPage() {
                 setFilterYear("all");
                 setFilterCategory("all");
               }}
-              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+              className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
             >
               <option value="all">{t('allBrands')}</option>
               {Array.from(new Set(vehicles.map(v => v.brand)))
@@ -512,7 +512,7 @@ export default function ServicesAdminPage() {
                 setFilterYear("all");
                 setFilterCategory("all");
               }}
-              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+              className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
               disabled={filterBrand === "all"}
             >
               <option value="all">{t('allModels')}</option>
@@ -529,7 +529,7 @@ export default function ServicesAdminPage() {
             <select
               value={filterYear}
               onChange={(e) => setFilterYear(e.target.value)}
-              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+              className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
             >
               <option value="all">{t('allYears')}</option>
               {filterYears.map((year) => (
@@ -540,7 +540,7 @@ export default function ServicesAdminPage() {
             <select
               value={filterCategory}
               onChange={(e) => setFilterCategory(e.target.value)}
-              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+              className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
             >
               <option value="all">{t('allCategories')}</option>
               {filterCategories.map((category) => {
@@ -562,23 +562,23 @@ export default function ServicesAdminPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={t('searchByTitle')}
-              className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent flex-1 text-base sm:text-sm"
+              className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] flex-1 text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
             />
           </div>
 
           {/* Services Table - Desktop / Cards - Mobile */}
-          <div className="hidden md:block rounded-2xl border border-[var(--border-color)] overflow-hidden">
+          <div className="hidden md:block rounded-2xl border-2 border-[var(--border-color)] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-zinc-50 dark:bg-zinc-900">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('image')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('title')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('vehicleVIN')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('category')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('price')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('status')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-semibold">{t('actions')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('image')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('title')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('vehicleVIN')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('category')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('price')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('status')}</th>
+                    <th className="px-4 py-3 text-left text-sm sm:text-sm font-semibold">{t('actions')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -594,7 +594,7 @@ export default function ServicesAdminPage() {
                     filteredAllServices.map((service, idx) => (
                       <tr key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="border-t border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
                         <td className="px-4 py-3">
-                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20">
+                          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
                             {service.image && !service.image.includes(".фв") ? (
                               <Image
                                 src={service.image}
@@ -683,7 +683,7 @@ export default function ServicesAdminPage() {
                                 setShowAddForm(true);
                                 setViewMode("filtered");
                               }}
-                              className="px-3 py-1 text-xs rounded border border-[var(--border-color)] hover:bg-zinc-50 transition-colors"
+                              className="px-3 py-2 sm:py-1 text-xs sm:text-xs rounded-lg border-2 border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors font-medium min-h-[36px] sm:min-h-0 active:scale-95"
                             >
                               {t('edit')}
                             </button>
@@ -727,7 +727,7 @@ export default function ServicesAdminPage() {
                                   alert(`Failed to delete service: ${errorMessage}`);
                                 }
                               }}
-                              className="px-3 py-1 text-xs rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors"
+                              className="px-3 py-2 sm:py-1 text-xs sm:text-xs rounded-lg border-2 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors font-medium min-h-[36px] sm:min-h-0 active:scale-95"
                             >
                               {t('delete')}
                             </button>
@@ -751,11 +751,11 @@ export default function ServicesAdminPage() {
               </div>
             ) : (
               filteredAllServices.map((service) => (
-                <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 space-y-3">
+                <div key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}-${refreshKey}`} className="rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 space-y-3">
                   <div>
-                    <div className="font-medium text-base mb-1">{service.title}</div>
+                    <div className="font-medium text-base sm:text-lg mb-1">{service.title}</div>
                     {service.description && (
-                      <div className="text-sm text-zinc-500 line-clamp-2">
+                      <div className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 line-clamp-2">
                         {service.description}
                       </div>
                     )}
@@ -783,7 +783,7 @@ export default function ServicesAdminPage() {
                       </span>
                     )}
                   </div>
-                  <div className="text-lg font-semibold">{service.price}</div>
+                  <div className="text-base sm:text-lg font-semibold">{service.price}</div>
                   <div className="flex gap-2 pt-2">
                     <button
                       onClick={async () => {
@@ -809,7 +809,7 @@ export default function ServicesAdminPage() {
                         setShowAddForm(true);
                         setViewMode("filtered");
                       }}
-                      className="flex-1 px-4 py-3 rounded border border-[var(--border-color)] hover:bg-zinc-50 transition-colors text-sm font-medium"
+                      className="flex-1 px-4 py-3 rounded-lg border-2 border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors text-sm font-medium min-h-[44px] active:scale-95 shadow-sm"
                     >
                       {t('edit')}
                     </button>
@@ -853,9 +853,9 @@ export default function ServicesAdminPage() {
                           alert(`Failed to delete service: ${errorMessage}`);
                         }
                       }}
-                      className="flex-1 px-4 py-3 rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
+                      className="flex-1 px-4 py-3 rounded-lg border-2 border-red-300 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-sm font-medium min-h-[44px] active:scale-95 shadow-sm"
                     >
-                      Delete
+                      {t('delete')}
                     </button>
                   </div>
                 </div>
@@ -877,7 +877,7 @@ export default function ServicesAdminPage() {
             setSelectedModel("");
             setSelectedYear("");
           }}
-          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+          className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
         >
           <option value="">{t('selectBrand')}</option>
           {Array.from(new Set(vehicles.map(v => v.brand)))
@@ -904,7 +904,7 @@ export default function ServicesAdminPage() {
             setSelectedModel(e.target.value);
             setSelectedYear("");
           }}
-          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+          className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
           disabled={!selectedBrand || availableVehicles.length === 0}
         >
           <option value="">{t('selectModel')}</option>
@@ -923,7 +923,7 @@ export default function ServicesAdminPage() {
             const newCategories = newYearData ? Object.keys(newYearData) : [];
             setSelectedCategory(newCategories[0] || "features-activation");
           }}
-          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+          className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
           disabled={!selectedModel || availableYears.length === 0}
         >
           <option value="">{t('selectYear')}</option>
@@ -937,7 +937,7 @@ export default function ServicesAdminPage() {
         <select
           value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
-          className="h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+          className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
         >
           <option value="">{t('selectCategory')}</option>
           <option value="features-activation">Features Activation</option>
@@ -962,7 +962,7 @@ export default function ServicesAdminPage() {
                 status: "in-stock",
               });
             }}
-            className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
+            className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
           >
             + {t('add')} {t('title')}
           </button>
@@ -982,7 +982,7 @@ export default function ServicesAdminPage() {
       )}
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
+        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 bg-white dark:bg-[var(--space-black)]">
           <h2 className="text-lg sm:text-xl font-semibold mb-4">
             {editingIndex !== null ? t('edit') : t('add')} {t('title')} {t('to')} {selectedBrand} / {selectedModel} / {selectedYear} / {selectedCategory}
           </h2>
@@ -994,7 +994,7 @@ export default function ServicesAdminPage() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="DYNAMIC MODE"
                 required
               />
@@ -1009,7 +1009,7 @@ export default function ServicesAdminPage() {
                   <select
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                    className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                   >
                     <option value="">-- Select an image (optional) --</option>
                     {availableImages.map((imgPath) => {
@@ -1069,7 +1069,7 @@ export default function ServicesAdminPage() {
                       type="text"
                       value={formData.image}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                      className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                      className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                       placeholder="/services/features-activation/image.jpg"
                     />
                     {formData.image && (
@@ -1107,7 +1107,7 @@ export default function ServicesAdminPage() {
                 type="text"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="£150"
                 required
               />
@@ -1118,7 +1118,7 @@ export default function ServicesAdminPage() {
               <select
                 value={formData.requirements}
                 onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 required
               >
                 <option value="No">No</option>
@@ -1137,7 +1137,7 @@ export default function ServicesAdminPage() {
                     status: value === "" ? undefined : value as "in-stock" | "unavailable" | "coming-soon"
                   });
                 }}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
               >
                 <option value="">{t('noStatus')}</option>
                 <option value="in-stock">{t('inStock')}</option>
@@ -1151,7 +1151,7 @@ export default function ServicesAdminPage() {
               <textarea
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                className="w-full min-h-24 rounded border border-[var(--border-color)] px-4 py-2 bg-transparent"
+                className="w-full min-h-24 rounded-lg border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="Factory dynamic program activation for enhanced driving experience."
                 required
               />
@@ -1161,7 +1161,7 @@ export default function ServicesAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50"
+                className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
               >
                 {saving ? t('saving') : editingIndex !== null ? t('updateService') : t('addService')}
               </button>
@@ -1179,7 +1179,7 @@ export default function ServicesAdminPage() {
                     status: "in-stock",
                   });
                 }}
-                className="px-6 py-2 rounded border border-[var(--border-color)]"
+                className="px-6 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800"
               >
                 {t('cancel')}
               </button>
@@ -1196,7 +1196,7 @@ export default function ServicesAdminPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {yearData[selectedCategory].map((service, index) => (
-              <div key={index} className="rounded-xl border border-[var(--border-color)] overflow-hidden bg-white">
+              <div key={index} className="rounded-xl border-2 border-[var(--border-color)] overflow-hidden bg-white dark:bg-[var(--space-black)]">
                 <div className="relative h-32 bg-silver/20">
                   {service.image && !service.image.includes(".фв") ? (
                     <Image
@@ -1232,11 +1232,11 @@ export default function ServicesAdminPage() {
                   )}
                 </div>
                 <div className="p-4">
-                  <div className="font-medium text-sm mb-2">{service.title}</div>
-                  <div className="text-xs text-zinc-500 mb-1">
-                    Requirements: {service.requirements}
+                  <div className="font-medium text-sm sm:text-base mb-2">{service.title}</div>
+                  <div className="text-xs sm:text-sm text-zinc-500 dark:text-zinc-400 mb-1">
+                    {t('requirements')}: {service.requirements}
                   </div>
-                  <div className="text-lg font-semibold mb-3">{service.price}</div>
+                  <div className="text-base sm:text-lg font-semibold mb-3">{service.price}</div>
                   <div className="flex gap-2">
                     <button
                       onClick={async () => {
@@ -1257,7 +1257,7 @@ export default function ServicesAdminPage() {
                         setEditingIndex(index);
                         setShowAddForm(true);
                       }}
-                      className="flex-1 px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50 transition-colors"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                     >
                       {t('edit')}
                     </button>
@@ -1301,9 +1301,9 @@ export default function ServicesAdminPage() {
                           alert(`Failed to delete service: ${errorMessage}`);
                         }
                       }}
-                      className="flex-1 px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 transition-colors"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                     >
-                      Delete
+                      {t('delete')}
                     </button>
                   </div>
                 </div>

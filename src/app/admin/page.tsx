@@ -36,39 +36,39 @@ export default function AdminPage() {
         <h1 className="text-2xl sm:text-3xl font-semibold">{t('adminPanel')}</h1>
         <button
           onClick={handleLogout}
-          className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 w-full sm:w-auto"
+          className="px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm sm:text-sm font-medium hover:bg-red-50 active:scale-95 transition-all min-h-[44px] sm:min-h-0 w-full sm:w-auto shadow-sm"
         >
           {t('logout')}
         </button>
       </div>
       
-      <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         <Link
           href="/admin/vehicles"
-          className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
+          className="rounded-2xl border-2 border-[var(--border-color)] p-6 sm:p-6 hover:shadow-lg active:scale-[0.98] transition-all min-h-[120px] sm:min-h-0 flex flex-col justify-center"
         >
-          <h2 className="text-xl font-semibold mb-2">{t('manageVehicles')}</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('manageVehicles')}</h2>
+          <p className="text-sm sm:text-sm text-zinc-600 dark:text-zinc-400">
             {t('addEditOrRemoveVehicles')}
           </p>
         </Link>
 
         <Link
           href="/admin/services"
-          className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
+          className="rounded-2xl border-2 border-[var(--border-color)] p-6 sm:p-6 hover:shadow-lg active:scale-[0.98] transition-all min-h-[120px] sm:min-h-0 flex flex-col justify-center"
         >
-          <h2 className="text-xl font-semibold mb-2">{t('manageServices')}</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('manageServices')}</h2>
+          <p className="text-sm sm:text-sm text-zinc-600 dark:text-zinc-400">
             {t('addEditOrRemoveServices')}
           </p>
         </Link>
 
         <Link
           href="/admin/orders"
-          className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow"
+          className="rounded-2xl border-2 border-[var(--border-color)] p-6 sm:p-6 hover:shadow-lg active:scale-[0.98] transition-all min-h-[120px] sm:min-h-0 flex flex-col justify-center sm:col-span-2 lg:col-span-1"
         >
-          <h2 className="text-xl font-semibold mb-2">{t('viewOrders')}</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('viewOrders')}</h2>
+          <p className="text-sm sm:text-sm text-zinc-600 dark:text-zinc-400">
             {t('viewAndManageOrders')}
           </p>
         </Link>

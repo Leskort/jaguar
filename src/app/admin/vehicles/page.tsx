@@ -284,11 +284,11 @@ export default function VehiclesAdminPage() {
         <div className="flex gap-2 sm:gap-3 flex-wrap w-full sm:w-auto">
           <button
             onClick={() => setSelectedBrand("all")}
-            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
-              selectedBrand === "all"
-                ? "bg-[var(--accent-gold)] text-black"
-                : "border border-[var(--border-color)] hover:bg-white/5"
-            }`}
+                  className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
+                    selectedBrand === "all"
+                      ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+                      : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
+                  }`}
           >
             {t('all')} ({vehicles.length})
           </button>
@@ -308,10 +308,10 @@ export default function VehiclesAdminPage() {
                 <button
                   key={brand}
                   onClick={() => setSelectedBrand(brand)}
-                  className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+                  className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
                     selectedBrand === brand
-                      ? "bg-[var(--accent-gold)] text-black"
-                      : "border border-[var(--border-color)] hover:bg-white/5"
+                      ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+                      : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
                   }`}
                 >
                   {displayName.toUpperCase()} ({count})
@@ -331,14 +331,14 @@ export default function VehiclesAdminPage() {
               years: [{ value: "", label: "" }],
             });
           }}
-          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto"
+          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
         >
           + {t('addVehicle')}
         </button>
       </div>
 
       {showAddForm && (
-        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border border-[var(--border-color)] p-4 sm:p-6">
+        <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 bg-white dark:bg-[var(--space-black)]">
           <h2 className="text-lg sm:text-xl font-semibold mb-4">{editingIndex !== null ? t('editVehicle') : t('addVehicle')}</h2>
           
           <div className="grid gap-4 sm:gap-6">
@@ -353,7 +353,7 @@ export default function VehiclesAdminPage() {
                       loadImages(e.target.value);
                     }
                   }}
-                  className="flex-1 h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                  className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 >
                   <option value="">-- Select existing brand --</option>
                   <option value="land-rover">Land Rover</option>
@@ -384,7 +384,7 @@ export default function VehiclesAdminPage() {
                       loadImages(newBrand);
                     }
                   }}
-                  className="flex-1 h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                  className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                   placeholder="Enter new brand (e.g., range-rover)"
                 />
               </div>
@@ -397,7 +397,7 @@ export default function VehiclesAdminPage() {
                 type="text"
                 value={formData.value}
                 onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="discovery-5-l462"
                 required
               />
@@ -409,7 +409,7 @@ export default function VehiclesAdminPage() {
                 type="text"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="DISCOVERY 5 / L462"
                 required
               />
@@ -424,7 +424,7 @@ export default function VehiclesAdminPage() {
                   <select
                     value={formData.image}
                     onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                    className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                     required
                   >
                     <option value="">-- Select an image --</option>
@@ -469,7 +469,7 @@ export default function VehiclesAdminPage() {
                     type="text"
                     value={year.value}
                     onChange={(e) => handleYearChange(index, "value", e.target.value)}
-                    className="flex-1 h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                    className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                     placeholder="2017-2020"
                     required
                   />
@@ -477,7 +477,7 @@ export default function VehiclesAdminPage() {
                     type="text"
                     value={year.label}
                     onChange={(e) => handleYearChange(index, "label", e.target.value)}
-                    className="flex-1 h-10 rounded border border-[var(--border-color)] px-4 bg-transparent"
+                    className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                     placeholder="2017–2020"
                     required
                   />
@@ -485,7 +485,7 @@ export default function VehiclesAdminPage() {
                     <button
                       type="button"
                       onClick={() => handleRemoveYear(index)}
-                      className="px-4 py-2 rounded border border-red-300 text-red-600 hover:bg-red-50"
+                                className="px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 font-medium hover:bg-red-50 dark:hover:bg-red-900/20 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                     >
                       {t('removeYear')}
                     </button>
@@ -495,7 +495,7 @@ export default function VehiclesAdminPage() {
               <button
                 type="button"
                 onClick={handleAddYear}
-                className="mt-2 text-sm text-[var(--accent-gold)] hover:underline"
+                className="mt-2 text-sm sm:text-sm font-medium text-[var(--accent-gold)] hover:underline min-h-[36px] sm:min-h-0 flex items-center"
               >
                 + {t('addYear')}
               </button>
@@ -505,7 +505,7 @@ export default function VehiclesAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50"
+                className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
               >
                 {saving ? t('saving') : editingIndex !== null ? t('save') : t('addVehicle')}
               </button>
@@ -515,7 +515,7 @@ export default function VehiclesAdminPage() {
                   setShowAddForm(false);
                   setEditingIndex(null);
                 }}
-                className="px-6 py-2 rounded border border-[var(--border-color)]"
+                className="px-6 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800"
               >
                 {t('cancel')}
               </button>
@@ -556,13 +556,13 @@ export default function VehiclesAdminPage() {
                       {brandVehicles.map((vehicle, localIndex) => {
                         const globalIndex = vehicles.findIndex(v => v === vehicle);
                         return (
-                          <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
-                            <div className="flex items-center gap-4">
+                          <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                            <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                               <div className="flex flex-col gap-1">
                                 <button
                                   onClick={() => handleMove(globalIndex, "up")}
                                   disabled={globalIndex === 0 || vehicles[globalIndex - 1]?.brand !== brand}
-                                  className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  className="px-3 py-2 sm:py-1 rounded-lg border-2 border-[var(--border-color)] text-xs sm:text-xs hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] sm:min-h-0 active:scale-95 font-medium"
                                   title={t('moveUp')}
                                 >
                                   ↑
@@ -570,14 +570,14 @@ export default function VehiclesAdminPage() {
                                 <button
                                   onClick={() => handleMove(globalIndex, "down")}
                                   disabled={globalIndex === vehicles.length - 1 || vehicles[globalIndex + 1]?.brand !== brand}
-                                  className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  className="px-3 py-2 sm:py-1 rounded-lg border-2 border-[var(--border-color)] text-xs sm:text-xs hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] sm:min-h-0 active:scale-95 font-medium"
                                   title={t('moveDown')}
                                 >
                                   ↓
                                 </button>
                               </div>
                               {vehicle.image && (
-                                <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                                <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
                                   <Image
                                     src={vehicle.image}
                                     alt={vehicle.title}
@@ -590,27 +590,27 @@ export default function VehiclesAdminPage() {
                                   />
                                 </div>
                               )}
-                              <div>
-                                <div className="font-medium">{vehicle.title}</div>
-                                <div className="text-sm text-zinc-600">
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-sm sm:text-base">{vehicle.title}</div>
+                                <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
                                   {vehicle.brand} / {vehicle.value} / {vehicle.years.map((y) => y.label).join(", ")}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex gap-2">
+                            <div className="flex gap-2 w-full sm:w-auto">
                               <button
                                 onClick={() => {
                                   setFormData(vehicle);
                                   setEditingIndex(globalIndex);
                                   setShowAddForm(true);
                                 }}
-                                className="px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50"
+                                className="flex-1 sm:flex-none px-4 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                               >
-                                Edit
+                                {t('edit')}
                               </button>
                               <button
                                 onClick={() => handleDelete(globalIndex)}
-                                className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
+                                className="flex-1 sm:flex-none px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                               >
                                 {t('delete')}
                               </button>
@@ -632,22 +632,22 @@ export default function VehiclesAdminPage() {
             {filteredVehicles.map((vehicle, localIndex) => {
               const globalIndex = vehicles.findIndex(v => v === vehicle);
               return (
-                <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+                <div key={`${globalIndex}-${refreshKey}`} className="rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 sm:gap-4 w-full sm:w-auto">
                     <div className="flex flex-col gap-1">
                       <button
                         onClick={() => handleMove(globalIndex, "up")}
                         disabled={globalIndex === 0}
-                        className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                        title="Move up"
+                        className="px-3 py-2 sm:py-1 rounded-lg border-2 border-[var(--border-color)] text-xs sm:text-xs hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] sm:min-h-0 active:scale-95 font-medium"
+                        title={t('moveUp')}
                       >
                         ↑
                       </button>
                       <button
                         onClick={() => handleMove(globalIndex, "down")}
                         disabled={globalIndex === vehicles.length - 1}
-                        className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                        title="Move down"
+                        className="px-3 py-2 sm:py-1 rounded-lg border-2 border-[var(--border-color)] text-xs sm:text-xs hover:bg-zinc-50 dark:hover:bg-zinc-800 disabled:opacity-30 disabled:cursor-not-allowed min-h-[36px] sm:min-h-0 active:scale-95 font-medium"
+                        title={t('moveDown')}
                       >
                         ↓
                       </button>
@@ -673,22 +673,22 @@ export default function VehiclesAdminPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <button
                       onClick={() => {
                         setFormData(vehicle);
                         setEditingIndex(globalIndex);
                         setShowAddForm(true);
                       }}
-                      className="px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50"
+                      className="flex-1 sm:flex-none px-4 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                     >
-                      Edit
+                      {t('edit')}
                     </button>
                     <button
                       onClick={() => handleDelete(globalIndex)}
-                      className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
+                      className="flex-1 sm:flex-none px-4 py-3 sm:py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 min-h-[44px] sm:min-h-0 active:scale-95 shadow-sm"
                     >
-                      Delete
+                      {t('delete')}
                     </button>
                   </div>
                 </div>
