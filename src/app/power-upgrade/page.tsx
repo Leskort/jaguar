@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function PowerUpgradePage() {
+  const { t } = useLanguage();
+  
   return (
     <div>
       {/* Hero Section with blurred car background */}
@@ -15,34 +19,26 @@ export default function PowerUpgradePage() {
           <div className="order-2 lg:order-1">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border-2 border-[var(--accent-gold)]">
               <div className="absolute inset-0 bg-silver/20 flex items-center justify-center">
-                <span className="text-zinc-400 text-sm">Power Upgrade Image</span>
+                <span className="text-zinc-400 text-sm">{t('powerUpgradeTitle')} Image</span>
               </div>
             </div>
           </div>
 
           {/* Text on Right */}
           <div className="order-1 lg:order-2">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">Power Upgrade</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">{t('powerUpgradeTitle')}</h1>
             <div className="space-y-4 text-base sm:text-lg text-zinc-700 dark:text-zinc-300">
-              <p>
-                Manufacturers release vehicles with varying power characteristics due to market preferences. The same engine can have different power outputs in different markets.
-              </p>
-              <p>
-                Factory power software is available for most models. Before applying factory power software, we perform technical checks of: engine, boost system, fuel/injection, cooling, intake, exhaust, emission, gearbox, transfer box, drive shafts, differentials, and brake system.
-              </p>
-              <p>
-                For proven reliable engines, we also offer non-factory power software (Stage 1 and Stage 2 upgrades).
-              </p>
-              <p className="mt-6">
-                You can view services by choosing a vehicle model.
-              </p>
+              <p>{t('powerUpgradeDesc1')}</p>
+              <p>{t('powerUpgradeDesc2')}</p>
+              <p>{t('powerUpgradeDesc3')}</p>
+              <p className="mt-6">{t('viewServicesByModelShort')}</p>
             </div>
             <div className="mt-8">
               <Link
                 href="/contact"
                 className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
               >
-                GET AN OFFER
+                {t('getAnOffer')}
               </Link>
             </div>
           </div>
@@ -57,7 +53,7 @@ export default function PowerUpgradePage() {
             href="/contact"
             className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
           >
-            GET AN OFFER
+            {t('getAnOffer')}
           </Link>
         </div>
       </section>

@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AccessoriesPage() {
+  const { t } = useLanguage();
+  
   return (
     <div>
       {/* Hero Section with blurred car background */}
@@ -15,36 +19,32 @@ export default function AccessoriesPage() {
           <div className="order-2 lg:order-1">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border-2 border-[var(--accent-gold)]">
               <div className="absolute inset-0 bg-silver/20 flex items-center justify-center">
-                <span className="text-zinc-400 text-sm">Accessories Image</span>
+                <span className="text-zinc-400 text-sm">{t('accessoriesTitle')} Image</span>
               </div>
             </div>
           </div>
 
           {/* Text on Right */}
           <div className="order-1 lg:order-2">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">Other Services and Accessories</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">{t('accessoriesTitle')}</h1>
             <div className="space-y-4 text-base sm:text-lg text-zinc-700 dark:text-zinc-300">
-              <p>
-                We continuously develop new services for LAND ROVER, JAGUAR brand:
-              </p>
+              <p>{t('accessoriesDesc')}</p>
               <ul className="list-disc list-inside space-y-2 ml-4">
-                <li>Exterior tuning, styling, restyling.</li>
-                <li>Services for the sale and installation of factory accessories (electrically deployable side steps, tow bars, mud flaps, etc.).</li>
-                <li>Services for the installation of various electronic anti-theft security systems.</li>
-                <li>Installation of more advanced braking systems.</li>
-                <li>Binding, replacement or updating of different LAND ROVER, JAGUAR electronic modules.</li>
-                <li>Adapting vehicles from other markets to the European one (installing navigation maps, adjusting radio frequencies, replacing front and rear lights, replacing charging sockets for electric vehicles, adjusting or replacing instrument clusters, changing service intervals, etc.).</li>
+                <li>{t('accessoriesItem1')}</li>
+                <li>{t('accessoriesItem2')}</li>
+                <li>{t('accessoriesItem3')}</li>
+                <li>{t('accessoriesItem4')}</li>
+                <li>{t('accessoriesItem5')}</li>
+                <li>{t('accessoriesItem6')}</li>
               </ul>
-              <p className="mt-6">
-                You can view services by choosing a vehicle model.
-              </p>
+              <p className="mt-6">{t('viewServicesByModelShort')}</p>
             </div>
             <div className="mt-8">
               <Link
                 href="/contact"
                 className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
               >
-                GET AN OFFER
+                {t('getAnOffer')}
               </Link>
             </div>
           </div>
@@ -59,7 +59,7 @@ export default function AccessoriesPage() {
             href="/contact"
             className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
           >
-            GET AN OFFER
+            {t('getAnOffer')}
           </Link>
         </div>
       </section>

@@ -768,7 +768,7 @@ export default function Home() {
         <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
           <p><strong>Land Rover:</strong> {t('modelsLandRover').replace('Land Rover: ', '')}</p>
           <p><strong>Jaguar:</strong> {t('modelsJaguar').replace('Jaguar: ', '')}</p>
-          <p><strong>Engines:</strong> Petrol and diesel, including modern hybrids (PHEV).</p>
+          <p><strong>{t('engines')}:</strong> {t('enginesDescription')}</p>
         </div>
       </section>
 

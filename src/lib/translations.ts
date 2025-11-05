@@ -93,8 +93,6 @@ export const translations = {
     noServicesAvailable: 'No services available yet. Services will appear here once added in the admin panel.',
     addToCart: 'Add to cart',
     seeAll: 'See all',
-    contactsInUK: 'Contacts in the UK',
-    schedule: 'Schedule',
     monFri: 'Mon–Fri 10:00–19:00',
     satWorking: 'Sat — working by agreement',
     sunDayOff: 'Sun — day off',
@@ -151,6 +149,54 @@ export const translations = {
     loadingVehicles: 'Loading vehicles...',
     noVehiclesFound: 'No vehicles found.',
     addVehiclesAdmin: 'Please add vehicles through the admin panel.',
+    
+    // Footer
+    schedule: 'SCHEDULE',
+    aboutUs: 'About us',
+    contactsInUK: 'CONTACTS IN THE UK',
+    contactsInUkraine: 'CONTACTS IN UKRAINE',
+    allRightsReserved: 'All rights reserved',
+    
+    // Contact page
+    contact: 'Contact',
+    unitedKingdom: 'United Kingdom',
+    ukraine: 'Ukraine',
+    callbackFormComingSoon: 'Secure callback form with encrypted submission coming soon.',
+    
+    // Our Works page
+    project: 'Project',
+    galleryComingSoon: 'Gallery-style project layout coming soon.',
+    
+    // Engines
+    engines: 'Engines',
+    enginesDescription: 'Petrol and diesel, including modern hybrids (PHEV).',
+    
+    // Service pages
+    retrofitsTitle: 'Retrofits',
+    retrofitsPageDescription: 'We offer genuine factory features for LAND ROVER and JAGUAR vehicles. Any factory system can be installed if it matches the year of manufacture and model.',
+    retrofitsInstallation: 'The installation process includes: physical installation, connecting to the electronic control unit, software works, setting up, and testing.',
+    retrofitsWhy: 'Why choose retrofitting? You may have missed some features when buying a vehicle, bought from stock, or want higher configuration features without overpaying for the entire package.',
+    viewServicesByModel: 'You can view the list of services by choosing a vehicle model.',
+    viewServicesByModelShort: 'You can view services by choosing a vehicle model.',
+    
+    featuresActivationTitle: 'Features Activation',
+    featuresActivationDesc1: 'Modern LAND ROVER and JAGUAR vehicles are equipped with advanced electronic systems for comfort, safety, and efficiency.',
+    featuresActivationDesc2: 'Manufacturers often separate features into different packages or reserve them for top-tier configurations.',
+    featuresActivationDesc3: 'We can open the full potential of the installed equipment, allowing you to access all available features.',
+    
+    powerUpgradeTitle: 'Power Upgrade',
+    powerUpgradeDesc1: 'Manufacturers release vehicles with varying power characteristics due to market preferences. The same engine can have different power outputs in different markets.',
+    powerUpgradeDesc2: 'Factory power software is available for most models. Before applying factory power software, we perform technical checks of: engine, boost system, fuel/injection, cooling, intake, exhaust, emission, gearbox, transfer box, drive shafts, differentials, and brake system.',
+    powerUpgradeDesc3: 'For proven reliable engines, we also offer non-factory power software (Stage 1 and Stage 2 upgrades).',
+    
+    accessoriesTitle: 'Other Services and Accessories',
+    accessoriesDesc: 'We continuously develop new services for LAND ROVER, JAGUAR brand:',
+    accessoriesItem1: 'Exterior tuning, styling, restyling.',
+    accessoriesItem2: 'Services for the sale and installation of factory accessories (electrically deployable side steps, tow bars, mud flaps, etc.).',
+    accessoriesItem3: 'Services for the installation of various electronic anti-theft security systems.',
+    accessoriesItem4: 'Installation of more advanced braking systems.',
+    accessoriesItem5: 'Binding, replacement or updating of different LAND ROVER, JAGUAR electronic modules.',
+    accessoriesItem6: 'Adapting vehicles from other markets to the European one (installing navigation maps, adjusting radio frequencies, replacing front and rear lights, replacing charging sockets for electric vehicles, adjusting or replacing instrument clusters, changing service intervals, etc.).',
   },
   ru: {
     // Navigation
@@ -244,8 +290,6 @@ export const translations = {
     noServicesAvailable: 'Услуги пока недоступны. Услуги появятся здесь после добавления в админ-панели.',
     addToCart: 'Добавить в корзину',
     seeAll: 'Посмотреть все',
-    contactsInUK: 'Контакты в Великобритании',
-    schedule: 'График работы',
     monFri: 'Пн–Пт 10:00–19:00',
     satWorking: 'Сб — работа по договоренности',
     sunDayOff: 'Вс — выходной',
@@ -302,6 +346,54 @@ export const translations = {
     loadingVehicles: 'Загрузка автомобилей...',
     noVehiclesFound: 'Автомобили не найдены.',
     addVehiclesAdmin: 'Пожалуйста, добавьте автомобили через админ-панель.',
+    
+    // Footer
+    schedule: 'ГРАФИК РАБОТЫ',
+    aboutUs: 'О нас',
+    contactsInUK: 'КОНТАКТЫ В ВЕЛИКОБРИТАНИИ',
+    contactsInUkraine: 'КОНТАКТЫ В УКРАИНЕ',
+    allRightsReserved: 'Все права защищены',
+    
+    // Contact page
+    contact: 'Контакты',
+    unitedKingdom: 'Великобритания',
+    ukraine: 'Украина',
+    callbackFormComingSoon: 'Безопасная форма обратного звонка с зашифрованной отправкой скоро появится.',
+    
+    // Our Works page
+    project: 'Проект',
+    galleryComingSoon: 'Галерея проектов скоро появится.',
+    
+    // Engines
+    engines: 'Двигатели',
+    enginesDescription: 'Бензиновые и дизельные, включая современные гибриды (PHEV).',
+    
+    // Service pages
+    retrofitsTitle: 'Ретрофиты',
+    retrofitsPageDescription: 'Мы предлагаем оригинальные заводские функции для автомобилей LAND ROVER и JAGUAR. Любая заводская система может быть установлена, если она соответствует году выпуска и модели.',
+    retrofitsInstallation: 'Процесс установки включает: физическую установку, подключение к блоку электронного управления, программные работы, настройку и тестирование.',
+    retrofitsWhy: 'Почему стоит выбрать ретрофитинг? Вы могли пропустить некоторые функции при покупке автомобиля, купить со склада или хотите функции более высокой конфигурации без переплаты за весь пакет.',
+    viewServicesByModel: 'Вы можете просмотреть список услуг, выбрав модель автомобиля.',
+    viewServicesByModelShort: 'Вы можете просмотреть услуги, выбрав модель автомобиля.',
+    
+    featuresActivationTitle: 'Активация функций',
+    featuresActivationDesc1: 'Современные автомобили LAND ROVER и JAGUAR оснащены передовыми электронными системами для комфорта, безопасности и эффективности.',
+    featuresActivationDesc2: 'Производители часто разделяют функции на разные пакеты или резервируют их для топовых конфигураций.',
+    featuresActivationDesc3: 'Мы можем раскрыть полный потенциал установленного оборудования, позволяя вам получить доступ ко всем доступным функциям.',
+    
+    powerUpgradeTitle: 'Усиление мощности',
+    powerUpgradeDesc1: 'Производители выпускают автомобили с различными характеристиками мощности из-за рыночных предпочтений. Один и тот же двигатель может иметь разную мощность в разных рынках.',
+    powerUpgradeDesc2: 'Заводское программное обеспечение мощности доступно для большинства моделей. Перед применением заводского ПО мощности мы проводим технические проверки: двигателя, системы наддува, топлива/впрыска, охлаждения, впуска, выпуска, выбросов, коробки передач, раздаточной коробки, карданных валов, дифференциалов и тормозной системы.',
+    powerUpgradeDesc3: 'Для проверенных надежных двигателей мы также предлагаем не заводское программное обеспечение мощности (апгрейды Stage 1 и Stage 2).',
+    
+    accessoriesTitle: 'Другие услуги и аксессуары',
+    accessoriesDesc: 'Мы постоянно разрабатываем новые услуги для бренда LAND ROVER, JAGUAR:',
+    accessoriesItem1: 'Внешний тюнинг, стилизация, рестайлинг.',
+    accessoriesItem2: 'Услуги по продаже и установке заводских аксессуаров (электрически выдвигаемые боковые подножки, фаркопы, брызговики и т.д.).',
+    accessoriesItem3: 'Услуги по установке различных электронных противоугонных систем безопасности.',
+    accessoriesItem4: 'Установка более продвинутых тормозных систем.',
+    accessoriesItem5: 'Привязка, замена или обновление различных электронных модулей LAND ROVER, JAGUAR.',
+    accessoriesItem6: 'Адаптация автомобилей с других рынков к европейскому (установка карт навигации, настройка радиочастот, замена передних и задних фар, замена зарядных розеток для электромобилей, настройка или замена комбинаций приборов, изменение сервисных интервалов и т.д.).',
   },
 } as const;
 

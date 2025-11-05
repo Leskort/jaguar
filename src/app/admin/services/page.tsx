@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ServiceOption = {
   title: string;
@@ -29,6 +30,7 @@ type ServiceWithVehicle = ServiceOption & {
 };
 
 export default function ServicesAdminPage() {
+  const { t } = useLanguage();
   const [services, setServices] = useState<any>({});
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -225,10 +227,10 @@ export default function ServicesAdminPage() {
   };
 
   const categoryLabels: Record<string, string> = {
-    "features-activation": "Features Activation",
-    "retrofits": "Retrofits",
-    "power-upgrade": "Power Upgrade",
-    "accessories": "Accessories",
+    "features-activation": t('featuresActivation'),
+    "retrofits": t('retrofits'),
+    "power-upgrade": t('powerUpgrade'),
+    "accessories": t('accessories'),
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

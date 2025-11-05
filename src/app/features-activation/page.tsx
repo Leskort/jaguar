@@ -1,6 +1,10 @@
+"use client";
 import Link from "next/link";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function FeaturesActivationPage() {
+  const { t } = useLanguage();
+  
   return (
     <div>
       {/* Hero Section with blurred car background */}
@@ -15,34 +19,26 @@ export default function FeaturesActivationPage() {
           <div className="order-2 lg:order-1">
             <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border-2 border-[var(--accent-gold)]">
               <div className="absolute inset-0 bg-silver/20 flex items-center justify-center">
-                <span className="text-zinc-400 text-sm">Features Activation Image</span>
+                <span className="text-zinc-400 text-sm">{t('featuresActivationTitle')} Image</span>
               </div>
             </div>
           </div>
 
           {/* Text on Right */}
           <div className="order-1 lg:order-2">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">Features Activation</h1>
+            <h1 className="text-4xl sm:text-5xl font-bold mb-6 uppercase">{t('featuresActivationTitle')}</h1>
             <div className="space-y-4 text-base sm:text-lg text-zinc-700 dark:text-zinc-300">
-              <p>
-                Modern LAND ROVER and JAGUAR vehicles are equipped with advanced electronic systems for comfort, safety, and efficiency.
-              </p>
-              <p>
-                Manufacturers often separate features into different packages or reserve them for top-tier configurations.
-              </p>
-              <p>
-                We can open the full potential of the installed equipment, allowing you to access all available features.
-              </p>
-              <p className="mt-6">
-                You can view services by choosing a vehicle model.
-              </p>
+              <p>{t('featuresActivationDesc1')}</p>
+              <p>{t('featuresActivationDesc2')}</p>
+              <p>{t('featuresActivationDesc3')}</p>
+              <p className="mt-6">{t('viewServicesByModelShort')}</p>
             </div>
             <div className="mt-8">
               <Link
                 href="/contact"
                 className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
               >
-                GET AN OFFER
+                {t('getAnOffer')}
               </Link>
             </div>
           </div>
@@ -57,7 +53,7 @@ export default function FeaturesActivationPage() {
             href="/contact"
             className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
           >
-            GET AN OFFER
+            {t('getAnOffer')}
           </Link>
         </div>
       </section>
