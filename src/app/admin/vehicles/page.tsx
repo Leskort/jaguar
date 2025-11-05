@@ -339,12 +339,12 @@ export default function VehiclesAdminPage() {
 
       {showAddForm && (
         <form onSubmit={handleSubmit} className="mb-8 rounded-2xl border-2 border-[var(--border-color)] p-4 sm:p-6 bg-white dark:bg-[var(--space-black)]">
-          <h2 className="text-lg sm:text-xl font-semibold mb-4">{editingIndex !== null ? t('editVehicle') : t('addVehicle')}</h2>
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6">{editingIndex !== null ? t('editVehicle') : t('addVehicle')}</h2>
           
-          <div className="grid gap-4 sm:gap-6">
+          <div className="grid gap-5 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">{t('brand')}</label>
-              <div className="flex flex-col sm:flex-row gap-2">
+              <label className="block text-sm sm:text-sm font-medium mb-2.5 sm:mb-2">{t('brand')}</label>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-2">
                 <select
                   value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? formData.brand : ""}
                   onChange={(e) => {
@@ -353,7 +353,7 @@ export default function VehiclesAdminPage() {
                       loadImages(e.target.value);
                     }
                   }}
-                  className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
+                  className="flex-1 w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                 >
                   <option value="">{t('selectExistingBrand')}</option>
                   <option value="land-rover">Land Rover</option>
@@ -366,7 +366,7 @@ export default function VehiclesAdminPage() {
                     ))
                   }
                 </select>
-                <span className="self-center text-sm text-zinc-500 hidden sm:inline">{t('or')}</span>
+                <span className="self-center text-sm text-zinc-500 dark:text-zinc-400 hidden sm:inline mx-1">{t('or')}</span>
                 <input
                   type="text"
                   value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? "" : formData.brand}
@@ -384,15 +384,15 @@ export default function VehiclesAdminPage() {
                       loadImages(newBrand);
                     }
                   }}
-                  className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
+                  className="flex-1 w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
                   placeholder={t('enterNewBrand')}
                 />
               </div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">{t('selectExistingBrandHint')}</p>
+              <p className="text-xs sm:text-xs text-zinc-500 dark:text-zinc-400 mt-2 sm:mt-1 leading-relaxed">{t('selectExistingBrandHint')}</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">{t('vehicleValue')} (e.g., discovery-5-l462)</label>
+              <label className="block text-sm sm:text-sm font-medium mb-2.5 sm:mb-2">{t('vehicleValue')} <span className="text-xs text-zinc-500 dark:text-zinc-400">(e.g., discovery-5-l462)</span></label>
               <input
                 type="text"
                 value={formData.value}
@@ -404,7 +404,7 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">{t('vehicleTitle')} (e.g., DISCOVERY 5 / L462)</label>
+              <label className="block text-sm sm:text-sm font-medium mb-2.5 sm:mb-2">{t('vehicleTitle')} <span className="text-xs text-zinc-500 dark:text-zinc-400">(e.g., DISCOVERY 5 / L462)</span></label>
               <input
                 type="text"
                 value={formData.title}
@@ -416,7 +416,7 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">{t('selectImage')}</label>
+              <label className="block text-sm sm:text-sm font-medium mb-2.5 sm:mb-2">{t('selectImage')}</label>
               {loadingImages ? (
                 <div className="text-sm text-zinc-500">{t('loadingImages')}</div>
               ) : availableImages.length > 0 ? (
@@ -462,9 +462,9 @@ export default function VehiclesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">{t('years')}</label>
+              <label className="block text-sm sm:text-sm font-medium mb-2.5 sm:mb-2">{t('years')}</label>
               {formData.years.map((year, index) => (
-                <div key={index} className="flex flex-col sm:flex-row gap-2 mb-2">
+                <div key={index} className="flex flex-col sm:flex-row gap-3 sm:gap-2 mb-3 sm:mb-2">
                   <input
                     type="text"
                     value={year.value}
@@ -495,17 +495,17 @@ export default function VehiclesAdminPage() {
               <button
                 type="button"
                 onClick={handleAddYear}
-                className="mt-2 text-sm sm:text-sm font-medium text-[var(--accent-gold)] hover:underline min-h-[36px] sm:min-h-0 flex items-center"
+                className="mt-3 sm:mt-2 text-sm sm:text-sm font-medium text-[var(--accent-gold)] hover:underline min-h-[44px] sm:min-h-[36px] flex items-center justify-center sm:justify-start"
               >
                 + {t('addYear')}
               </button>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-3 pt-2">
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all text-base sm:text-sm"
               >
                 {saving ? t('saving') : editingIndex !== null ? t('save') : t('addVehicle')}
               </button>
@@ -515,7 +515,7 @@ export default function VehiclesAdminPage() {
                   setShowAddForm(false);
                   setEditingIndex(null);
                 }}
-                className="px-6 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800"
+                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-lg border-2 border-[var(--border-color)] font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all hover:bg-zinc-50 dark:hover:bg-zinc-800 text-base sm:text-sm"
               >
                 {t('cancel')}
               </button>
