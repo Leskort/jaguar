@@ -285,12 +285,16 @@ export default function ServicesAdminPage() {
           return;
         }
         
+        // Normalize brand and model before sending
+        const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+        const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        
         const response = await fetch("/api/admin/services", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            brand: selectedBrand,
-            model: selectedModel,
+            brand: normalizedBrand,
+            model: normalizedModel,
             year: selectedYear,
             category: selectedCategory,
             index: editingIndex,
@@ -347,12 +351,16 @@ export default function ServicesAdminPage() {
         }
       } else {
         // Add new service
+        // Normalize brand and model before sending
+        const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+        const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        
         const response = await fetch("/api/admin/services", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            brand: selectedBrand,
-            model: selectedModel,
+            brand: normalizedBrand,
+            model: normalizedModel,
             year: selectedYear,
             category: selectedCategory,
             service: serviceData,

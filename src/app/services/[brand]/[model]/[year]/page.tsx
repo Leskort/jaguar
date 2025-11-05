@@ -28,8 +28,27 @@ async function getServices() {
   }
 }
 
+// Normalize URL parameters - decode, trim, lowercase, replace spaces with hyphens
+function normalizeUrlParam(param: string): string {
+  if (!param) return param;
+  try {
+    // Decode URL encoding (e.g., %20 -> space)
+    const decoded = decodeURIComponent(param);
+    // Normalize: trim, lowercase, replace spaces with hyphens
+    return decoded.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  } catch {
+    // If decoding fails, just normalize
+    return param.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  }
+}
+
 export default async function ServiceCatalogPage({ params }: { params: Promise<{ brand: string, model: string, year: string }> }) {
-  const { brand, model, year } = await params;
+  const rawParams = await params;
+  
+  // Normalize URL parameters to match stored data format
+  const brand = normalizeUrlParam(rawParams.brand);
+  const model = normalizeUrlParam(rawParams.model);
+  const year = rawParams.year; // Year can contain hyphens, so we keep it as is but trim
   
   const servicesData = await getServices();
   const brandData = servicesData[brand];

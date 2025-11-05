@@ -32,9 +32,22 @@ export async function GET() {
   return NextResponse.json(services);
 }
 
+// Normalize brand and model - lowercase, trim, replace spaces with hyphens
+function normalizeBrandModel(value: string): string {
+  if (!value) return value;
+  return value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
 export async function POST(request: Request) {
   try {
-    const { brand, model, year, category, service } = await request.json();
+    const rawRequest = await request.json();
+    // Normalize brand and model to ensure consistent format
+    const brand = normalizeBrandModel(rawRequest.brand || '');
+    const model = normalizeBrandModel(rawRequest.model || '');
+    const year = rawRequest.year;
+    const category = rawRequest.category;
+    const service = rawRequest.service;
+    
     console.log("[POST /api/admin/services] Request received:", { brand, model, year, category, serviceTitle: service?.title });
     console.log("[POST /api/admin/services] Environment check:", {
       isNetlify: isNetlifyEnvironment(),
@@ -87,7 +100,13 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const requestBody = await request.json();
-    const { brand, model, year, category, index, service } = requestBody;
+    // Normalize brand and model to ensure consistent format
+    const brand = normalizeBrandModel(requestBody.brand || '');
+    const model = normalizeBrandModel(requestBody.model || '');
+    const year = requestBody.year;
+    const category = requestBody.category;
+    const index = requestBody.index;
+    const service = requestBody.service;
     
     console.log("=== PUT REQUEST ===");
     console.log("Request body:", JSON.stringify(requestBody, null, 2));
@@ -203,7 +222,13 @@ export async function PUT(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const { brand, model, year, category, index } = await request.json();
+    const rawRequest = await request.json();
+    // Normalize brand and model to ensure consistent format
+    const brand = normalizeBrandModel(rawRequest.brand || '');
+    const model = normalizeBrandModel(rawRequest.model || '');
+    const year = rawRequest.year;
+    const category = rawRequest.category;
+    const index = rawRequest.index;
     const services = await getServices();
     
     if (services[brand]?.[model]?.[year]?.[category]?.[index]) {

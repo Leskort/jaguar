@@ -32,6 +32,12 @@ export async function GET() {
   return NextResponse.json(vehiclesWithOrder);
 }
 
+// Normalize vehicle value (model slug) - lowercase, trim, replace spaces with hyphens
+function normalizeValue(value: string): string {
+  if (!value) return value;
+  return value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+}
+
 export async function POST(request: Request) {
   try {
     const vehicle = await request.json();
@@ -41,9 +47,16 @@ export async function POST(request: Request) {
       AWS_LAMBDA: process.env.AWS_LAMBDA_FUNCTION_NAME
     });
     
+    // Normalize vehicle value (model slug)
+    const normalizedVehicle = {
+      ...vehicle,
+      value: normalizeValue(vehicle.value || ''),
+      brand: vehicle.brand?.trim().toLowerCase().replace(/\s+/g, '-') || vehicle.brand,
+    };
+    
     const vehicles = await getVehicles();
     // Assign order based on current array length
-    const newVehicle = { ...vehicle, order: vehicles.length };
+    const newVehicle = { ...normalizedVehicle, order: vehicles.length };
     const updated = [...vehicles, newVehicle];
     
     console.log("[POST /api/admin/vehicles] Saving to storage...");
@@ -64,9 +77,15 @@ export async function PUT(request: Request) {
   try {
     const { index, vehicle } = await request.json();
     const vehicles = await getVehicles();
+    // Normalize vehicle value (model slug)
+    const normalizedVehicle = {
+      ...vehicle,
+      value: normalizeValue(vehicle.value || ''),
+      brand: vehicle.brand?.trim().toLowerCase().replace(/\s+/g, '-') || vehicle.brand,
+    };
     // Preserve the order when updating
     const existingOrder = vehicles[index]?.order !== undefined ? vehicles[index].order : index;
-    vehicles[index] = { ...vehicle, order: existingOrder };
+    vehicles[index] = { ...normalizedVehicle, order: existingOrder };
     
     await saveStorageData(STORAGE_KEY, FALLBACK_PATH, vehicles);
     return NextResponse.json({ success: true });

@@ -92,7 +92,10 @@ function VehicleSelector() {
   const handleGoToServices = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedBrand && selectedModel && selectedYear) {
-      router.push(`/services/${selectedBrand}/${selectedModel}/${selectedYear}`);
+      // Normalize brand and model for URL (lowercase, trim, replace spaces with hyphens)
+      const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+      const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      router.push(`/services/${normalizedBrand}/${normalizedModel}/${selectedYear}`);
     }
   };
 
