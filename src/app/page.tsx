@@ -169,6 +169,7 @@ function VehicleSelector() {
 }
 
 function TopOrdersSection() {
+  const { t } = useLanguage();
   const [topServices, setTopServices] = useState<Array<ServiceOption & { brand: string; model: string; year: string; category: string }>>([]);
   const [loading, setLoading] = useState(true);
 
@@ -334,7 +335,7 @@ function TopOrdersSection() {
   if (topServices.length === 0) {
     return (
       <div className="text-center py-12 text-zinc-500">
-        <p className="text-sm sm:text-base">No services available yet. Services will appear here once added in the admin panel.</p>
+        <p className="text-sm sm:text-base">{t('noServicesAvailable')}</p>
       </div>
     );
   }
@@ -368,7 +369,7 @@ function TopOrdersSection() {
               )}
               {service.status === "in-stock" && (
                 <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-2 sm:px-3 py-1 rounded text-[10px] sm:text-xs font-bold">
-                  IN STOCK
+                  {t('inStock')}
                 </div>
               )}
             </div>
@@ -379,13 +380,13 @@ function TopOrdersSection() {
                   href="/vehicles"
                   className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full bg-[var(--accent-gold)] text-black text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg active:scale-95 transition-all"
                 >
-                  Add to cart
+                  {t('addToCart')}
                 </Link>
                 <Link
                   href="/vehicles"
                   className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
                 >
-                  Details
+                  {t('details')}
                 </Link>
               </div>
             </div>
@@ -476,25 +477,25 @@ export default function Home() {
         <div className="absolute inset-0 opacity-30 bg-[url('/window.svg')] bg-cover bg-center pointer-events-none" />
         <div className="relative z-10 container-padded mx-auto max-w-6xl py-12 sm:py-20 px-4">
           <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-tight max-w-4xl mb-4">
-            Chip tuning for Land Rover and Jaguar. Unlock the true potential of your vehicle.
+            {t('heroTitle')}
           </h1>
           <div className="space-y-2 text-base sm:text-lg text-zinc-300 max-w-3xl mb-8">
-            <p>Increase power and torque.</p>
-            <p>Improve throttle response and overall performance.</p>
-            <p>Optimize fuel consumption.</p>
+            <p>{t('heroPoint1')}</p>
+            <p>{t('heroPoint2')}</p>
+            <p>{t('heroPoint3')}</p>
           </div>
           <div className="flex flex-wrap gap-3 sm:gap-4">
             <button 
               onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} 
               className="h-12 sm:h-10 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
-              GET AN OFFER
+              {t('getAnOffer')}
             </button>
             <Link 
               href="/contact"
               className="h-12 sm:h-10 px-6 sm:px-5 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 hover:bg-white/20 active:scale-95 transition-all"
             >
-              CONTACTS
+              {t('contacts')}
             </Link>
           </div>
         </div>
@@ -502,27 +503,27 @@ export default function Home() {
 
       {/* SERVICES */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Services</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('services')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
-              title: "Retrofits",
-              description: "Factory options — installation for specific model and year.",
+              title: t('retrofits'),
+              description: t('retrofitsDescription'),
               link: "/retrofits"
             },
             {
-              title: "Features activation",
-              description: "Activation of hidden features and software options.",
+              title: t('featuresActivation'),
+              description: t('featuresActivationDescription'),
               link: "/features-activation"
             },
             {
-              title: "Power upgrade",
-              description: "Individual chip tuning for JLR.",
+              title: t('powerUpgrade'),
+              description: t('powerUpgradeDescription'),
               link: "/power-upgrade"
             },
             {
-              title: "Accessories",
-              description: "Original accessories and kits.",
+              title: t('accessories'),
+              description: t('accessoriesDescription'),
               link: "/accessories"
             }
           ].map((service) => (
@@ -534,7 +535,7 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-3">{service.title}</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{service.description}</p>
               <span className="text-sm text-[var(--accent-gold)] hover:underline">
-                Go to services
+                {t('goToServices')}
               </span>
             </Link>
           ))}
@@ -548,7 +549,7 @@ export default function Home() {
 
       {/* TOP ORDERS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Top orders</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('topOrders')}</h2>
         <div className="relative">
           <TopOrdersSection />
         </div>
@@ -557,9 +558,9 @@ export default function Home() {
       {/* OUR WORKS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">Our works</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks')}</h2>
           <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
-            See all
+            {t('seeAll')}
           </Link>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -674,7 +675,7 @@ export default function Home() {
 
       {/* CONTACTS UK */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">Contacts in the UK</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('contactsInUK')}</h2>
         <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
           <p>Unit 29 Integra:ME, Parkwood Industrial Estate, Bircholt Road, Maidstone, ME15 9GQ</p>
           <p>
@@ -682,18 +683,18 @@ export default function Home() {
           </p>
         </div>
         <div>
-          <h3 className="font-semibold mb-3">Schedule</h3>
+          <h3 className="font-semibold mb-3">{t('schedule')}</h3>
           <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-            <li>* Mon–Fri 10:00–19:00</li>
-            <li>* Sat — working by agreement</li>
-            <li>* Sun — day off</li>
+            <li>* {t('monFri')}</li>
+            <li>* {t('satWorking')}</li>
+            <li>* {t('sunDayOff')}</li>
           </ul>
         </div>
       </section>
 
       {/* TEAM */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Our team</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('ourTeam')}</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
           {[
             { name: "Jenya (UK Branch)", role: "Certified Master Technician", details: "JLR Level‑4, 7+ years" },
@@ -714,24 +715,24 @@ export default function Home() {
 
       {/* WHY CHOOSE */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Why choose chip tuning from LR-Chip?</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('whyChooseTitle')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {[
             {
-              title: "Power and torque",
-              description: "Up to 30% increase in power and torque. Lively response, dynamic acceleration and confidence when overtaking."
+              title: t('powerAndTorque'),
+              description: t('powerAndTorqueDesc')
             },
             {
-              title: "Fuel savings",
-              description: "Up to 15% reduction in fuel consumption through optimization of mixture formation and boost maps."
+              title: t('fuelSavings'),
+              description: t('fuelSavingsDesc')
             },
             {
-              title: "Safety and reliability",
-              description: "We work within safe factory limits. Engine life is not affected."
+              title: t('safetyAndReliability'),
+              description: t('safetyAndReliabilityDesc')
             },
             {
-              title: "Comfort and ease",
-              description: "On request — correct shutdown of EGR and DPF, optimization of transmission logic for smoother shifts."
+              title: t('comfortAndEase'),
+              description: t('comfortAndEaseDesc')
             }
           ].map((item) => (
             <div key={item.title} className="rounded-2xl border border-[var(--border-color)] p-6">
@@ -744,13 +745,13 @@ export default function Home() {
 
       {/* PROCESS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Chip tuning process — fast and professional</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('processTitle')}</h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
           {[
-            { num: "1", title: "Diagnostics", desc: "Free computer check of systems and errors." },
-            { num: "2", title: "Reading/Setup", desc: "We read the original ECU software and create an individual profile for your engine and driving style." },
-            { num: "3", title: "Flashing", desc: "We upload the optimized calibration to the control unit." },
-            { num: "4", title: "Test drive and result", desc: "Control measurements, adaptations and demonstration of changes." }
+            { num: "1", title: t('diagnostics'), desc: t('diagnosticsDesc') },
+            { num: "2", title: t('readingSetup'), desc: t('readingSetupDesc') },
+            { num: "3", title: t('flashing'), desc: t('flashingDesc') },
+            { num: "4", title: t('testDrive'), desc: t('testDriveDesc') }
           ].map((step) => (
             <div key={step.num} className="rounded-2xl border border-[var(--border-color)] p-6">
               <div className="text-2xl font-bold text-[var(--accent-gold)] mb-2">{step.num}.</div>
@@ -763,24 +764,24 @@ export default function Home() {
 
       {/* MODELS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">We work with all Land Rover and Jaguar models</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('modelsTitle')}</h2>
         <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
-          <p><strong>Land Rover:</strong> Range Rover, Range Rover Sport, Velar, Evoque, Discovery, Defender and more.</p>
-          <p><strong>Jaguar:</strong> F-Pace, E-Pace, XE, XF, XJ, F-Type and more.</p>
+          <p><strong>Land Rover:</strong> {t('modelsLandRover').replace('Land Rover: ', '')}</p>
+          <p><strong>Jaguar:</strong> {t('modelsJaguar').replace('Jaguar: ', '')}</p>
           <p><strong>Engines:</strong> Petrol and diesel, including modern hybrids (PHEV).</p>
         </div>
       </section>
 
       {/* EXPERTISE */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">LR-Chip — expertise you can trust</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('advantagesTitle')}</h2>
         <div className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
           {[
-            "**Narrow specialization:** We work exclusively with Land Rover and Jaguar — we know their ECU nuances.",
-            "**Individual maps:** No 'universal boxes' — personal calibration for your vehicle's condition.",
-            "**Professional tools:** Alientech, Magic Motorsport and certified software.",
-            "**Guarantees and confidentiality:** Written warranty on work and data security.",
-            "**Free return to stock:** When selling the vehicle, we will restore factory settings at no extra charge."
+            t('narrowSpecialization'),
+            t('individualMaps'),
+            t('professionalTools'),
+            t('guarantees'),
+            t('freeReturn')
           ].map((item, i) => (
             <div key={i}>* {item}</div>
           ))}
@@ -789,24 +790,24 @@ export default function Home() {
 
       {/* FAQ */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Frequently asked questions (FAQ)</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('faqTitle')}</h2>
         <div className="space-y-6">
           {[
             {
-              q: "Does chip tuning void the factory warranty?",
-              a: "Chip tuning may affect dealer warranty if the malfunction is directly related to software changes. We work within safe limits and provide our own warranty on work."
+              q: t('faq1Question'),
+              a: t('faq1Answer')
             },
             {
-              q: "Is the remap visible during dealer diagnostics?",
-              a: "Our methods minimize detectability during standard dealer diagnostics. However, specialized checks may detect software changes."
+              q: t('faq2Question'),
+              a: t('faq2Answer')
             },
             {
-              q: "How long does the process take?",
-              a: "Usually 2–4 hours, depending on the model, ECU type and selected options (EGR/DPF/transmission)."
+              q: t('faq3Question'),
+              a: t('faq3Answer')
             },
             {
-              q: "Is it harmful to the engine and transmission?",
-              a: "No, with proper calibration we maintain temperature and load limits, which does not reduce the life of the units."
+              q: t('faq4Question'),
+              a: t('faq4Answer')
             }
           ].map((faq, i) => (
             <details key={i} className="rounded-xl border border-[var(--border-color)] p-4">
@@ -820,9 +821,9 @@ export default function Home() {
       {/* FINAL CTA */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">Ready to transform your Land Rover or Jaguar?</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">{t('finalCTATitle')}</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-            Contact us today for a free consultation and accurate cost estimate.
+            {t('finalCTADesc')}
           </p>
           <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
             <input
@@ -835,7 +836,7 @@ export default function Home() {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder="Name"
+              placeholder={t('name')}
               required
             />
             <input
@@ -843,17 +844,17 @@ export default function Home() {
               value={formData.contact}
               onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
               className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder="Phone"
+              placeholder={t('phone')}
               required
             />
             <input
               type="text"
               className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder="Vehicle model"
+              placeholder={t('vehicleModel')}
             />
             <textarea
               className="h-24 sm:h-24 rounded-md border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[100px] focus:border-[var(--accent-gold)] focus:outline-none resize-none"
-              placeholder="Comment"
+              placeholder={t('comment')}
             />
             <div className="flex flex-col sm:flex-row gap-3">
               <button
@@ -861,19 +862,19 @@ export default function Home() {
                 disabled={submitting}
                 className="flex-1 h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
-                {submitting ? "Submitting..." : "Submit request"}
+                {submitting ? t('submitting') : t('submitRequest')}
               </button>
               <a
                 href="tel:+447840000321"
                 className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
               >
-                Call us
+                {t('callUs')}
           </a>
           <a
                 href="https://wa.me/447840000321"
                 className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
               >
-                WhatsApp
+                {t('whatsapp')}
               </a>
             </div>
           </form>
@@ -886,14 +887,14 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/60" onClick={() => setOfferOpen(false)} />
           <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white text-black p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
             <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-500 hover:text-black text-xl" onClick={() => setOfferOpen(false)}>✕</button>
-            <h3 className="text-lg sm:text-xl font-semibold pr-8">Get an offer</h3>
+            <h3 className="text-lg sm:text-xl font-semibold pr-8">{t('getAnOfferTitle')}</h3>
             <form onSubmit={handleOfferSubmit} className="mt-4 sm:mt-6 grid gap-3">
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-                placeholder="YOUR NAME"
+                placeholder={t('yourName')}
                 required
               />
               <input
@@ -901,7 +902,7 @@ export default function Home() {
                 value={formData.vin}
                 onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
                 className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-                placeholder="VEHICLE VIN NUMBER"
+                placeholder={t('vehicleVINNumber')}
                 required
               />
               <input
@@ -909,7 +910,7 @@ export default function Home() {
                 value={formData.contact}
                 onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
                 className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-                placeholder="MOBILE NUMBER OR EMAIL ADDRESS"
+                placeholder={t('mobileNumberOrEmail')}
                 required
               />
               <button
@@ -917,7 +918,7 @@ export default function Home() {
                 disabled={submitting}
                 className="h-10 sm:h-12 rounded-md bg-[#ffd000] text-black text-sm sm:text-base font-medium disabled:opacity-50"
               >
-                {submitting ? "Submitting..." : "GET AN OFFER"}
+                {submitting ? t('submitting') : t('getAnOffer')}
               </button>
             </form>
           </div>
@@ -928,8 +929,8 @@ export default function Home() {
       {!cookieAccepted && (
         <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
-            <div className="text-[10px] sm:text-xs flex-1">This website stores cookies on your computer to provide more personalized services to you.</div>
-            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={() => setCookieAccepted(true)}>Accept</button>
+            <div className="text-[10px] sm:text-xs flex-1">{t('cookieMessage')}</div>
+            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={() => setCookieAccepted(true)}>{t('accept')}</button>
           </div>
         </div>
       )}

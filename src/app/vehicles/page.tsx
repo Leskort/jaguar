@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type Vehicle = {
   brand: string;
@@ -117,6 +118,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
 };
 
 export default function VehiclesPage() {
+  const { t } = useLanguage();
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedBrand, setSelectedBrand] = useState<string>("all");
@@ -158,7 +160,7 @@ export default function VehiclesPage() {
   if (loading) {
     return (
       <section className="container-padded mx-auto max-w-6xl py-24 text-center">
-        <p>Loading vehicles...</p>
+        <p>{t('loadingVehicles')}</p>
       </section>
     );
   }
@@ -166,7 +168,7 @@ export default function VehiclesPage() {
   return (
     <section className="container-padded mx-auto max-w-6xl py-8 sm:py-16 px-4">
       <div className="flex items-center gap-4 sm:gap-8">
-        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">Vehicles</h1>
+        <h1 className="text-2xl sm:text-4xl font-semibold tracking-tight">{t('vehicles')}</h1>
       </div>
 
       <div className="mt-6 sm:mt-10">
@@ -179,7 +181,7 @@ export default function VehiclesPage() {
                 : "border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
             }`}
           >
-            ALL ({vehicles.length})
+            {t('all')} ({vehicles.length})
           </button>
           {allBrands.map(brand => {
             const brandVehicles = vehicles.filter(v => v.brand === brand);
@@ -208,9 +210,9 @@ export default function VehiclesPage() {
           </div>
         ) : (
           <div className="mt-6 sm:mt-10 text-center py-8 sm:py-12">
-            <p className="text-zinc-500 mb-4 text-sm sm:text-base">No vehicles found.</p>
+            <p className="text-zinc-500 mb-4 text-sm sm:text-base">{t('noVehiclesFound')}</p>
             <p className="text-xs sm:text-sm text-zinc-400">
-              Please add vehicles through the admin panel.
+              {t('addVehiclesAdmin')}
             </p>
           </div>
         )}
