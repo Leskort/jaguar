@@ -573,24 +573,24 @@ export default function Home() {
       {/* LATEST ARTICLES */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">Latest articles</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold">{t('latestArticles')}</h2>
           <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
-            See more
+            {t('seeMore')}
           </Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             {
-              title: "DEFENDER 11.4″ PiVi Pro display retrofit",
-              description: "Large display with high brightness and screen area."
+              title: t('article1Title'),
+              description: t('article1Description')
             },
             {
-              title: "DISCOVERY 5 2022MY+ — eight systems in 2 days",
-              description: "Upgrades on EVA 2.0 platform with PiVi Pro."
+              title: t('article2Title'),
+              description: t('article2Description')
             },
             {
-              title: "Range Rover 2020MY: HUD and ACC",
-              description: "Features of Head‑Up Display and adaptive cruise retrofitting."
+              title: t('article3Title'),
+              description: t('article3Description')
             }
           ].map((article) => (
             <article key={article.title} className="rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow">
@@ -599,7 +599,7 @@ export default function Home() {
                 <h3 className="font-semibold mb-2">{article.title}</h3>
                 <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{article.description}</p>
                 <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
-                  Read
+                  {t('read')}
                 </Link>
               </div>
             </article>
@@ -610,9 +610,9 @@ export default function Home() {
       {/* CONTACT FORM */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">LR‑CHIP retrofitting specialist</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4">{t('retrofittingSpecialist')}</h2>
           <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-            Any factory system can be installed, if it matches the year of manufacture and model.
+            {t('anyFactorySystem')}
           </p>
           <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
             <input
@@ -657,14 +657,14 @@ export default function Home() {
 
       {/* FEW FACTS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">Few facts about us</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('fewFactsAboutUs')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
           {[
-            "1‑year warranty for all retrofit systems",
-            "Only genuine parts and equipment",
-            "Specializing exclusively in Land Rover, Jaguar vehicles",
-            "8+ years experience, 1400+ JLR vehicles",
-            "600+ posts in Instagram with JLR upgrades"
+            t('fact1'),
+            t('fact2'),
+            t('fact3'),
+            t('fact4'),
+            t('fact5')
           ].map((fact, i) => (
             <div key={i} className="text-sm text-zinc-600 dark:text-zinc-400">
               * {fact}

@@ -171,6 +171,29 @@ export const translations = {
     engines: 'Engines',
     enginesDescription: 'Petrol and diesel, including modern hybrids (PHEV).',
     
+    // Latest articles
+    latestArticles: 'Latest articles',
+    seeMore: 'See more',
+    read: 'Read',
+    article1Title: 'DEFENDER 11.4″ PiVi Pro display retrofit',
+    article1Description: 'Large display with high brightness and screen area.',
+    article2Title: 'DISCOVERY 5 2022MY+ — eight systems in 2 days',
+    article2Description: 'Upgrades on EVA 2.0 platform with PiVi Pro.',
+    article3Title: 'Range Rover 2020MY: HUD and ACC',
+    article3Description: 'Features of Head‑Up Display and adaptive cruise retrofitting.',
+    
+    // Contact form
+    retrofittingSpecialist: 'LR‑CHIP retrofitting specialist',
+    anyFactorySystem: 'Any factory system can be installed, if it matches the year of manufacture and model.',
+    
+    // Few facts
+    fewFactsAboutUs: 'Few facts about us',
+    fact1: '1‑year warranty for all retrofit systems',
+    fact2: 'Only genuine parts and equipment',
+    fact3: 'Specializing exclusively in Land Rover, Jaguar vehicles',
+    fact4: '8+ years experience, 1400+ JLR vehicles',
+    fact5: '600+ posts in Instagram with JLR upgrades',
+    
     // Service pages
     retrofitsTitle: 'Retrofits',
     retrofitsPageDescription: 'We offer genuine factory features for LAND ROVER and JAGUAR vehicles. Any factory system can be installed if it matches the year of manufacture and model.',
@@ -367,6 +390,29 @@ export const translations = {
     // Engines
     engines: 'Двигатели',
     enginesDescription: 'Бензиновые и дизельные, включая современные гибриды (PHEV).',
+    
+    // Latest articles
+    latestArticles: 'Последние статьи',
+    seeMore: 'Смотреть все',
+    read: 'Читать',
+    article1Title: 'DEFENDER 11.4″ ретрофит дисплея PiVi Pro',
+    article1Description: 'Большой дисплей с высокой яркостью и площадью экрана.',
+    article2Title: 'DISCOVERY 5 2022MY+ — восемь систем за 2 дня',
+    article2Description: 'Апгрейды на платформе EVA 2.0 с PiVi Pro.',
+    article3Title: 'Range Rover 2020MY: HUD и ACC',
+    article3Description: 'Особенности ретрофитинга проекционного дисплея и адаптивного круиз-контроля.',
+    
+    // Contact form
+    retrofittingSpecialist: 'LR‑CHIP специалист по ретрофитингу',
+    anyFactorySystem: 'Любая заводская система может быть установлена, если она соответствует году выпуска и модели.',
+    
+    // Few facts
+    fewFactsAboutUs: 'Несколько фактов о нас',
+    fact1: '1‑летняя гарантия на все системы ретрофитинга',
+    fact2: 'Только оригинальные запчасти и оборудование',
+    fact3: 'Специализация исключительно на автомобилях Land Rover, Jaguar',
+    fact4: 'Более 8 лет опыта, 1400+ автомобилей JLR',
+    fact5: 'Более 600 постов в Instagram с апгрейдами JLR',
     
     // Service pages
     retrofitsTitle: 'Ретрофиты',
