@@ -34,14 +34,14 @@ export default function VehiclesAdminPage() {
   useEffect(() => {
     loadVehicles();
     
-    // Auto-refresh every 10 seconds
+    // Auto-refresh every 10 seconds (silently, without loading indicator)
     const interval = setInterval(() => {
-      loadVehicles();
+      loadVehicles(false);
     }, 10000);
     
-    // Refresh when window gains focus
+    // Refresh when window gains focus (silently)
     const handleFocus = () => {
-      loadVehicles();
+      loadVehicles(false);
     };
     window.addEventListener('focus', handleFocus);
     
@@ -55,21 +55,38 @@ export default function VehiclesAdminPage() {
     loadImages(formData.brand);
   }, [formData.brand]);
 
-  const loadVehicles = async () => {
+  const loadVehicles = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       const res = await fetch("/api/admin/vehicles");
       const data = await res.json();
-      setVehicles(Array.isArray(data) ? data : []);
-      // Force re-render by updating refresh key
-      setRefreshKey(prev => prev + 1);
-      return data;
+      const vehiclesArray = Array.isArray(data) ? data : [];
+      
+      // Only update if data actually changed
+      setVehicles(prevVehicles => {
+        const prevIds = prevVehicles.map((v, i) => `${i}-${v.brand}-${v.value}`).sort().join(',');
+        const newIds = vehiclesArray.map((v, i) => `${i}-${v.brand}-${v.value}`).sort().join(',');
+        if (prevIds !== newIds || prevVehicles.length !== vehiclesArray.length) {
+          setRefreshKey(prev => prev + 1);
+          return vehiclesArray;
+        }
+        return prevVehicles;
+      });
+      
+      return vehiclesArray;
     } catch (error) {
       console.error("Failed to load vehicles:", error);
-      setVehicles([]);
-      setRefreshKey(prev => prev + 1);
+      if (showLoading) {
+        setVehicles([]);
+        setRefreshKey(prev => prev + 1);
+      }
+      return [];
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 

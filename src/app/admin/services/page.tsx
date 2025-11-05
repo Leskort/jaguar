@@ -62,14 +62,14 @@ export default function ServicesAdminPage() {
     loadServices();
     loadVehicles();
     
-    // Auto-refresh every 10 seconds
+    // Auto-refresh every 10 seconds (silently, without loading indicator)
     const interval = setInterval(() => {
-      loadServices();
+      loadServices(false);
     }, 10000);
     
-    // Refresh when window gains focus
+    // Refresh when window gains focus (silently)
     const handleFocus = () => {
-      loadServices();
+      loadServices(false);
       loadVehicles();
     };
     window.addEventListener('focus', handleFocus);
@@ -86,23 +86,38 @@ export default function ServicesAdminPage() {
     }
   }, [selectedCategory, showAddForm]);
 
-  const loadServices = async () => {
+  const loadServices = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       const res = await fetch("/api/admin/services");
       const data = await res.json();
       const servicesData = data || {};
-      setServices(servicesData);
-      // Force re-render by updating refresh key
-      setRefreshKey(prev => prev + 1);
+      
+      // Only update if data actually changed
+      setServices(prevServices => {
+        const prevStr = JSON.stringify(prevServices);
+        const newStr = JSON.stringify(servicesData);
+        if (prevStr !== newStr) {
+          setRefreshKey(prev => prev + 1);
+          return servicesData;
+        }
+        return prevServices;
+      });
+      
       return servicesData;
     } catch (error) {
       console.error("Failed to load services:", error);
-      setServices({});
-      setRefreshKey(prev => prev + 1);
+      if (showLoading) {
+        setServices({});
+        setRefreshKey(prev => prev + 1);
+      }
       return {};
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 

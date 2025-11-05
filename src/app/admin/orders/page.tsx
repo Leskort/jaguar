@@ -43,14 +43,14 @@ export default function OrdersAdminPage() {
     loadOrders();
     loadVehicles();
     
-    // Auto-refresh every 10 seconds
+    // Auto-refresh every 10 seconds (silently, without loading indicator)
     const interval = setInterval(() => {
-      loadOrders();
+      loadOrders(false);
     }, 10000);
     
-    // Refresh when window gains focus
+    // Refresh when window gains focus (silently)
     const handleFocus = () => {
-      loadOrders();
+      loadOrders(false);
     };
     window.addEventListener('focus', handleFocus);
     
@@ -60,23 +60,38 @@ export default function OrdersAdminPage() {
     };
   }, []);
 
-  const loadOrders = async () => {
+  const loadOrders = async (showLoading = true) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setLoading(true);
+      }
       const res = await fetch("/api/admin/orders");
       const data = await res.json();
       const ordersArray = Array.isArray(data) ? data : [];
-      setOrders(ordersArray);
-      // Force re-render by updating refresh key
-      setRefreshKey(prev => prev + 1);
+      
+      // Only update if data actually changed
+      setOrders(prevOrders => {
+        const prevIds = prevOrders.map(o => o.id).sort().join(',');
+        const newIds = ordersArray.map(o => o.id).sort().join(',');
+        if (prevIds !== newIds) {
+          setRefreshKey(prev => prev + 1);
+          return ordersArray;
+        }
+        return prevOrders;
+      });
+      
       return ordersArray;
     } catch (error) {
       console.error("Failed to load orders:", error);
-      setOrders([]);
-      setRefreshKey(prev => prev + 1);
+      if (showLoading) {
+        setOrders([]);
+        setRefreshKey(prev => prev + 1);
+      }
       return [];
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
     }
   };
 
