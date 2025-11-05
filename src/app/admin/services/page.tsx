@@ -32,6 +32,7 @@ export default function ServicesAdminPage() {
   const [services, setServices] = useState<any>({});
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0); // Force re-render key
   const [selectedBrand, setSelectedBrand] = useState("land-rover");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
@@ -68,11 +69,17 @@ export default function ServicesAdminPage() {
 
   const loadServices = async () => {
     try {
+      setLoading(true);
       const res = await fetch("/api/admin/services");
       const data = await res.json();
-      setServices(data);
+      setServices(data || {});
+      // Force re-render by updating refresh key
+      setRefreshKey(prev => prev + 1);
+      return data;
     } catch (error) {
       console.error("Failed to load services:", error);
+      setServices({});
+      setRefreshKey(prev => prev + 1);
     } finally {
       setLoading(false);
     }

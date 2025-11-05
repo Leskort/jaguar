@@ -15,12 +15,13 @@ type Vehicle = {
 export default function VehiclesAdminPage() {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
+  const [refreshKey, setRefreshKey] = useState(0); // Force re-render key
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
   const [availableImages, setAvailableImages] = useState<string[]>([]);
   const [loadingImages, setLoadingImages] = useState(false);
-  const [selectedBrand, setSelectedBrand] = useState<"all" | "land-rover" | "jaguar">("all");
+  const [selectedBrand, setSelectedBrand] = useState<string>("all");
 
   const [formData, setFormData] = useState<Vehicle>({
     brand: "land-rover",
@@ -40,11 +41,17 @@ export default function VehiclesAdminPage() {
 
   const loadVehicles = async () => {
     try {
+      setLoading(true);
       const res = await fetch("/api/admin/vehicles");
       const data = await res.json();
-      setVehicles(data);
+      setVehicles(Array.isArray(data) ? data : []);
+      // Force re-render by updating refresh key
+      setRefreshKey(prev => prev + 1);
+      return data;
     } catch (error) {
       console.error("Failed to load vehicles:", error);
+      setVehicles([]);
+      setRefreshKey(prev => prev + 1);
     } finally {
       setLoading(false);
     }
@@ -86,6 +93,13 @@ export default function VehiclesAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate brand is set
+    if (!formData.brand || formData.brand.trim() === "") {
+      alert("Please select or enter a brand");
+      return;
+    }
+    
     setSaving(true);
 
     try {
@@ -242,26 +256,32 @@ export default function VehiclesAdminPage() {
           >
             ALL ({vehicles.length})
           </button>
-          <button
-            onClick={() => setSelectedBrand("land-rover")}
-            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
-              selectedBrand === "land-rover"
-                ? "bg-[var(--accent-gold)] text-black"
-                : "border border-[var(--border-color)] hover:bg-white/5"
-            }`}
-          >
-            LAND ROVER ({vehicles.filter(v => v.brand === "land-rover").length})
-          </button>
-          <button
-            onClick={() => setSelectedBrand("jaguar")}
-            className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
-              selectedBrand === "jaguar"
-                ? "bg-[var(--accent-gold)] text-black"
-                : "border border-[var(--border-color)] hover:bg-white/5"
-            }`}
-          >
-            JAGUAR ({vehicles.filter(v => v.brand === "jaguar").length})
-          </button>
+          {Array.from(new Set(vehicles.map(v => v.brand)))
+            .sort((a, b) => {
+              // Sort: land-rover first, jaguar second, then alphabetically
+              if (a === "land-rover") return -1;
+              if (b === "land-rover") return 1;
+              if (a === "jaguar") return -1;
+              if (b === "jaguar") return 1;
+              return a.localeCompare(b);
+            })
+            .map(brand => {
+              const count = vehicles.filter(v => v.brand === brand).length;
+              const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              return (
+                <button
+                  key={brand}
+                  onClick={() => setSelectedBrand(brand)}
+                  className={`px-3 sm:px-4 py-2.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors ${
+                    selectedBrand === brand
+                      ? "bg-[var(--accent-gold)] text-black"
+                      : "border border-[var(--border-color)] hover:bg-white/5"
+                  }`}
+                >
+                  {displayName.toUpperCase()} ({count})
+                </button>
+              );
+            })}
         </div>
         <button
           onClick={() => {
@@ -288,18 +308,51 @@ export default function VehiclesAdminPage() {
           <div className="grid gap-4 sm:gap-6">
             <div>
               <label className="block text-sm font-medium mb-2">Brand</label>
-              <select
-                value={formData.brand}
-                onChange={(e) => {
-                  setFormData({ ...formData, brand: e.target.value, image: "" });
-                  loadImages(e.target.value);
-                }}
-                className="w-full h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
-                required
-              >
-                <option value="land-rover">Land Rover</option>
-                <option value="jaguar">Jaguar</option>
-              </select>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <select
+                  value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? formData.brand : ""}
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setFormData({ ...formData, brand: e.target.value, image: "" });
+                      loadImages(e.target.value);
+                    }
+                  }}
+                  className="flex-1 h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                >
+                  <option value="">-- Select existing brand --</option>
+                  <option value="land-rover">Land Rover</option>
+                  <option value="jaguar">Jaguar</option>
+                  {Array.from(new Set(vehicles.map(v => v.brand)))
+                    .filter(b => b !== "land-rover" && b !== "jaguar")
+                    .sort()
+                    .map(brand => (
+                      <option key={brand} value={brand}>{brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}</option>
+                    ))
+                  }
+                </select>
+                <span className="self-center text-sm text-zinc-500 hidden sm:inline">or</span>
+                <input
+                  type="text"
+                  value={vehicles.some(v => v.brand === formData.brand) || formData.brand === "land-rover" || formData.brand === "jaguar" ? "" : formData.brand}
+                  onChange={(e) => {
+                    const newBrand = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                    setFormData({ ...formData, brand: newBrand, image: "" });
+                    if (newBrand) {
+                      loadImages(newBrand);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    if (e.target.value) {
+                      const newBrand = e.target.value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                      setFormData(prev => ({ ...prev, brand: newBrand }));
+                      loadImages(newBrand);
+                    }
+                  }}
+                  className="flex-1 h-12 sm:h-10 rounded border border-[var(--border-color)] px-4 bg-transparent text-base sm:text-sm"
+                  placeholder="Enter new brand (e.g., range-rover)"
+                />
+              </div>
+              <p className="text-xs text-zinc-500 mt-1">Select existing brand from dropdown or enter a new one (lowercase with hyphens)</p>
             </div>
 
             <div>
@@ -440,164 +493,99 @@ export default function VehiclesAdminPage() {
           ? vehicles
           : vehicles.filter(v => v.brand === selectedBrand);
 
-        const landRoverVehicles = vehicles.filter(v => v.brand === "land-rover");
-        const jaguarVehicles = vehicles.filter(v => v.brand === "jaguar");
-
         // Group vehicles by brand when showing all
         if (selectedBrand === "all") {
+          // Get all unique brands, sorted
+          const allBrands = Array.from(new Set(vehicles.map(v => v.brand))).sort((a, b) => {
+            // Sort: land-rover first, jaguar second, then alphabetically
+            if (a === "land-rover") return -1;
+            if (b === "land-rover") return 1;
+            if (a === "jaguar") return -1;
+            if (b === "jaguar") return 1;
+            return a.localeCompare(b);
+          });
+
           return (
             <div className="space-y-8">
-              {/* Land Rover Section */}
-              {landRoverVehicles.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-4 text-[var(--accent-gold)]">
-                    LAND ROVER ({landRoverVehicles.length})
-                  </h2>
-                  <div className="space-y-4">
-                    {landRoverVehicles.map((vehicle, localIndex) => {
-                      const globalIndex = vehicles.findIndex(v => v === vehicle);
-                      return (
-                        <div key={globalIndex} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="flex flex-col gap-1">
+              {allBrands.map(brand => {
+                const brandVehicles = vehicles.filter(v => v.brand === brand);
+                const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                
+                return (
+                  <div key={brand}>
+                    <h2 className="text-xl font-semibold mb-4 text-[var(--accent-gold)]">
+                      {displayName.toUpperCase()} ({brandVehicles.length})
+                    </h2>
+                    <div className="space-y-4">
+                      {brandVehicles.map((vehicle, localIndex) => {
+                        const globalIndex = vehicles.findIndex(v => v === vehicle);
+                        return (
+                          <div key={globalIndex} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="flex flex-col gap-1">
+                                <button
+                                  onClick={() => handleMove(globalIndex, "up")}
+                                  disabled={globalIndex === 0 || vehicles[globalIndex - 1]?.brand !== brand}
+                                  className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  title="Move up"
+                                >
+                                  ↑
+                                </button>
+                                <button
+                                  onClick={() => handleMove(globalIndex, "down")}
+                                  disabled={globalIndex === vehicles.length - 1 || vehicles[globalIndex + 1]?.brand !== brand}
+                                  className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  title="Move down"
+                                >
+                                  ↓
+                                </button>
+                              </div>
+                              {vehicle.image && (
+                                <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                                  <Image
+                                    src={vehicle.image}
+                                    alt={vehicle.title}
+                                    fill
+                                    className="object-cover"
+                                    unoptimized
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).style.display = 'none';
+                                    }}
+                                  />
+                                </div>
+                              )}
+                              <div>
+                                <div className="font-medium">{vehicle.title}</div>
+                                <div className="text-sm text-zinc-600">
+                                  {vehicle.brand} / {vehicle.value} / {vehicle.years.map((y) => y.label).join(", ")}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex gap-2">
                               <button
-                                onClick={() => handleMove(globalIndex, "up")}
-                                disabled={globalIndex === 0 || vehicles[globalIndex - 1]?.brand !== "land-rover"}
-                                className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                title="Move up"
+                                onClick={() => {
+                                  setFormData(vehicle);
+                                  setEditingIndex(globalIndex);
+                                  setShowAddForm(true);
+                                }}
+                                className="px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50"
                               >
-                                ↑
+                                Edit
                               </button>
                               <button
-                                onClick={() => handleMove(globalIndex, "down")}
-                                disabled={globalIndex === vehicles.length - 1 || vehicles[globalIndex + 1]?.brand !== "land-rover"}
-                                className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                title="Move down"
+                                onClick={() => handleDelete(globalIndex)}
+                                className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
                               >
-                                ↓
+                                Delete
                               </button>
                             </div>
-                            {vehicle.image && (
-                              <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
-                                <Image
-                                  src={vehicle.image}
-                                  alt={vehicle.title}
-                                  fill
-                                  className="object-cover"
-                                  unoptimized
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                  }}
-                                />
-                              </div>
-                            )}
-                            <div>
-                              <div className="font-medium">{vehicle.title}</div>
-                              <div className="text-sm text-zinc-600">
-                                {vehicle.brand} / {vehicle.value} / {vehicle.years.map((y) => y.label).join(", ")}
-                              </div>
-                            </div>
                           </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => {
-                                setFormData(vehicle);
-                                setEditingIndex(globalIndex);
-                                setShowAddForm(true);
-                              }}
-                              className="px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(globalIndex)}
-                              className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
-
-              {/* Jaguar Section */}
-              {jaguarVehicles.length > 0 && (
-                <div>
-                  <h2 className="text-xl font-semibold mb-4 text-[var(--accent-gold)]">
-                    JAGUAR ({jaguarVehicles.length})
-                  </h2>
-                  <div className="space-y-4">
-                    {jaguarVehicles.map((vehicle, localIndex) => {
-                      const globalIndex = vehicles.findIndex(v => v === vehicle);
-                      return (
-                        <div key={globalIndex} className="rounded-2xl border border-[var(--border-color)] p-4 flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <div className="flex flex-col gap-1">
-                              <button
-                                onClick={() => handleMove(globalIndex, "up")}
-                                disabled={globalIndex === 0 || vehicles[globalIndex - 1]?.brand !== "jaguar"}
-                                className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                title="Move up"
-                              >
-                                ↑
-                              </button>
-                              <button
-                                onClick={() => handleMove(globalIndex, "down")}
-                                disabled={globalIndex === vehicles.length - 1 || vehicles[globalIndex + 1]?.brand !== "jaguar"}
-                                className="px-2 py-1 rounded border border-[var(--border-color)] text-xs hover:bg-zinc-50 disabled:opacity-30 disabled:cursor-not-allowed"
-                                title="Move down"
-                              >
-                                ↓
-                              </button>
-                            </div>
-                            {vehicle.image && (
-                              <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
-                                <Image
-                                  src={vehicle.image}
-                                  alt={vehicle.title}
-                                  fill
-                                  className="object-cover"
-                                  unoptimized
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                  }}
-                                />
-                              </div>
-                            )}
-                            <div>
-                              <div className="font-medium">{vehicle.title}</div>
-                              <div className="text-sm text-zinc-600">
-                                {vehicle.brand} / {vehicle.value} / {vehicle.years.map((y) => y.label).join(", ")}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => {
-                                setFormData(vehicle);
-                                setEditingIndex(globalIndex);
-                                setShowAddForm(true);
-                              }}
-                              className="px-4 py-2 rounded border border-[var(--border-color)] text-sm hover:bg-zinc-50"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(globalIndex)}
-                              className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50"
-                            >
-                              Delete
-                            </button>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
+                );
+              })}
             </div>
           );
         }
