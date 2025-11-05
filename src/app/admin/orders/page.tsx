@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 type OrderStatus = "pending" | "reviewed" | "contacted" | "completed" | "cancelled";
 
@@ -9,7 +10,7 @@ type Order = {
   customerName: string;
   vehicleVIN: string;
   contact: string;
-  items: Array<{ title: string; price: string; brand: string; model: string; year: string }>;
+  items: Array<{ title: string; price: string; brand: string; model: string; year: string; image?: string }>;
   total: string;
   vehicle: {
     brand: string;
@@ -167,11 +168,15 @@ export default function OrdersAdminPage() {
                         
                         if (res.ok) {
                           await loadOrders();
+                          alert("Order status updated successfully!");
                         } else {
-                          alert("Failed to update order status");
+                          const errorText = await res.text();
+                          alert(`Failed to update order status: ${errorText || res.statusText}`);
                         }
                       } catch (error) {
-                        alert("Failed to update order status");
+                        console.error("Error updating order status:", error);
+                        const errorMessage = error instanceof Error ? error.message : "Failed to update order status";
+                        alert(`Failed to update order status: ${errorMessage}`);
                       }
                     }}
                     className={`px-3 py-1 rounded-full text-xs font-medium border border-[var(--border-color)] ${getStatusStyle(order.status || "pending")}`}
@@ -193,11 +198,15 @@ export default function OrdersAdminPage() {
                         
                         if (res.ok) {
                           await loadOrders();
+                          alert("Order deleted successfully!");
                         } else {
-                          alert("Failed to delete order");
+                          const errorText = await res.text();
+                          alert(`Failed to delete order: ${errorText || res.statusText}`);
                         }
                       } catch (error) {
-                        alert("Failed to delete order");
+                        console.error("Error deleting order:", error);
+                        const errorMessage = error instanceof Error ? error.message : "Failed to delete order";
+                        alert(`Failed to delete order: ${errorMessage}`);
                       }
                     }}
                     className="px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 transition-colors"
@@ -230,16 +239,41 @@ export default function OrdersAdminPage() {
               </div>
               {order.items && order.items.length > 0 ? (
                 <div className="border-t border-[var(--border-color)] pt-4">
-                  <div className="font-medium mb-2">Items</div>
-                  <div className="space-y-2">
+                  <div className="font-medium mb-3">Items</div>
+                  <div className="space-y-3">
                     {order.items.map((item, i) => (
-                      <div key={i} className="flex justify-between text-sm text-zinc-600">
-                        <span>{item.title}</span>
-                        <span className="font-medium">{item.price}</span>
+                      <div key={i} className="flex items-center gap-3 text-sm">
+                        {item.image && !item.image.includes(".фв") ? (
+                          <div className="relative w-16 h-16 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-16 h-16 rounded-lg border border-[var(--border-color)] bg-silver/20 flex-shrink-0 flex items-center justify-center text-zinc-400 text-xs text-center px-1">
+                            No image
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="font-medium text-zinc-900">{item.title}</div>
+                          {item.brand && item.model && (
+                            <div className="text-xs text-zinc-500">
+                              {item.brand.replace('-', ' ')} / {item.model.replace(/-/g, ' ')} / {item.year}
+                            </div>
+                          )}
+                        </div>
+                        <div className="font-medium text-zinc-900">{item.price}</div>
                       </div>
                     ))}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[var(--border-color)] flex justify-between items-center">
+                  <div className="mt-4 pt-3 border-t border-[var(--border-color)] flex justify-between items-center">
                     <span className="font-semibold">Total:</span>
                     <span className="text-xl font-bold">{order.total}</span>
                   </div>

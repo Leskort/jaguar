@@ -4,6 +4,15 @@ import { getStorageData, saveStorageData } from "@/lib/storage";
 const STORAGE_KEY = "services";
 const FALLBACK_PATH = "src/data/services.json";
 
+// Helper to check if we're on Netlify
+function isNetlifyEnvironment() {
+  return !!(
+    process.env.NETLIFY === "true" ||
+    process.env.NETLIFY ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME
+  );
+}
+
 async function getServices() {
   try {
     const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
@@ -26,10 +35,15 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const { brand, model, year, category, service } = await request.json();
-    console.log("POST request received:", { brand, model, year, category, serviceTitle: service?.title });
+    console.log("[POST /api/admin/services] Request received:", { brand, model, year, category, serviceTitle: service?.title });
+    console.log("[POST /api/admin/services] Environment check:", {
+      isNetlify: isNetlifyEnvironment(),
+      NETLIFY: process.env.NETLIFY,
+      AWS_LAMBDA: process.env.AWS_LAMBDA_FUNCTION_NAME
+    });
     
     const services = await getServices();
-    console.log("Current services loaded, adding new service...");
+    console.log("[POST /api/admin/services] Current services loaded, adding new service...");
     
     // Ensure structure exists
     if (!services[brand]) services[brand] = {};
@@ -38,27 +52,30 @@ export async function POST(request: Request) {
     if (!services[brand][model][year][category]) services[brand][model][year][category] = [];
     
     services[brand][model][year][category].push(service);
-    console.log(`Service added to array. New length: ${services[brand][model][year][category].length}`);
-    console.log("Saving to storage...");
+    console.log(`[POST /api/admin/services] Service added to array. New length: ${services[brand][model][year][category].length}`);
+    console.log("[POST /api/admin/services] Saving to storage...");
     
     try {
       await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
-      console.log("Service saved successfully to storage");
+      console.log("[POST /api/admin/services] ✅ Service saved successfully to storage");
       return NextResponse.json({ success: true });
     } catch (saveError) {
-      console.error("Error saving to storage:", saveError);
+      console.error("[POST /api/admin/services] ❌ Error saving to storage:", saveError);
       const saveErrorMessage = saveError instanceof Error ? saveError.message : String(saveError);
+      const saveErrorStack = saveError instanceof Error ? saveError.stack : undefined;
+      console.error("[POST /api/admin/services] Error stack:", saveErrorStack);
       return NextResponse.json({ 
         error: "Failed to save to storage",
-        message: saveErrorMessage
+        message: saveErrorMessage,
+        stack: process.env.NODE_ENV === "development" ? saveErrorStack : undefined
       }, { status: 500 });
     }
   } catch (error) {
-    console.error("Error saving service:", error);
+    console.error("[POST /api/admin/services] ❌ Error in handler:", error);
     const errorMessage = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : undefined;
-    console.error("Error message:", errorMessage);
-    console.error("Error stack:", errorStack);
+    console.error("[POST /api/admin/services] Error message:", errorMessage);
+    console.error("[POST /api/admin/services] Error stack:", errorStack);
     return NextResponse.json({ 
       error: "Failed to save",
       message: errorMessage,

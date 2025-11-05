@@ -24,17 +24,22 @@ async function getNetlifyStore() {
   // Check if we should use Blobs (Netlify or Lambda environment)
   const shouldUseBlobs = isNetlify || process.env.AWS_LAMBDA_FUNCTION_NAME;
   
+  console.log("[getNetlifyStore] Checking environment...", {
+    isNetlify,
+    AWS_LAMBDA: !!process.env.AWS_LAMBDA_FUNCTION_NAME,
+    shouldUseBlobs,
+    NETLIFY: process.env.NETLIFY,
+    NETLIFY_DEV: process.env.NETLIFY_DEV,
+    NETLIFY_SITE_ID: process.env.NETLIFY_SITE_ID,
+    NODE_ENV: process.env.NODE_ENV
+  });
+  
   if (!shouldUseBlobs) {
     console.log("[getNetlifyStore] Not on Netlify, skipping Blobs");
     return null;
   }
   
   console.log("[getNetlifyStore] Attempting to initialize Netlify Blobs...");
-  console.log("[getNetlifyStore] Environment:", {
-    NETLIFY: process.env.NETLIFY,
-    AWS_LAMBDA_FUNCTION_NAME: process.env.AWS_LAMBDA_FUNCTION_NAME,
-    NODE_ENV: process.env.NODE_ENV
-  });
   
   try {
     // Import Netlify Blobs dynamically
@@ -47,21 +52,38 @@ async function getNetlifyStore() {
       console.log("[getNetlifyStore] Using getStore API...");
       try {
         // @ts-ignore - Netlify runtime API
-        const store = netlifyBlobs.getStore({ name: "lr-chip-data" });
-        if (store) {
+        // getStore must be called inside request handler context
+        // Try simple call first
+        let store;
+        try {
+          store = netlifyBlobs.getStore({ name: "lr-chip-data" });
+        } catch (e1) {
+          console.log("[getNetlifyStore] Simple getStore failed, trying with consistency...");
+          // @ts-ignore
+          store = netlifyBlobs.getStore({ name: "lr-chip-data", consistency: "strong" });
+        }
+        
+        if (store && typeof store === 'object') {
           console.log("[getNetlifyStore] ✅ Store created successfully with getStore");
           console.log("[getNetlifyStore] Store type:", typeof store);
+          console.log("[getNetlifyStore] Store constructor:", store.constructor?.name);
           console.log("[getNetlifyStore] Store methods:", Object.keys(store));
+          console.log("[getNetlifyStore] Has 'get' method:", typeof store.get === 'function');
+          console.log("[getNetlifyStore] Has 'set' method:", typeof store.set === 'function');
           return store;
         } else {
-          console.error("[getNetlifyStore] getStore returned null/undefined");
+          console.error("[getNetlifyStore] getStore returned invalid value:", store);
+          console.error("[getNetlifyStore] Type of returned value:", typeof store);
         }
       } catch (e) {
         console.error("[getNetlifyStore] getStore failed:", e);
+        console.error("[getNetlifyStore] Error type:", e?.constructor?.name);
         console.error("[getNetlifyStore] Error details:", e instanceof Error ? e.message : String(e));
+        console.error("[getNetlifyStore] Error stack:", e instanceof Error ? e.stack : undefined);
       }
     } else {
       console.warn("[getNetlifyStore] getStore not found in exports");
+      console.warn("[getNetlifyStore] Available exports:", Object.keys(netlifyBlobs));
     }
     
     // Try alternative API if available (only if getStore doesn't work)

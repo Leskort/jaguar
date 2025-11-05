@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 type ServiceOption = {
   title: string;
@@ -192,15 +193,6 @@ export default function ServicesAdminPage() {
         image: formData.image || "",
       };
       
-      if (process.env.NODE_ENV === "development") {
-        console.log("Saving service with data:", {
-          brand: selectedBrand,
-          model: selectedModel,
-          year: selectedYear,
-          category: selectedCategory,
-          service: serviceData,
-        });
-      }
 
       if (editingIndex !== null) {
         // Update existing service
@@ -213,18 +205,6 @@ export default function ServicesAdminPage() {
           description: serviceData.description,
           status: serviceData.status,
         };
-        
-        console.log("=== CLIENT: Updating service ===");
-        console.log("Editing index:", editingIndex, "Type:", typeof editingIndex);
-        console.log("Service data (cleaned):", cleanServiceData);
-        console.log("Request payload:", {
-          brand: selectedBrand,
-          model: selectedModel,
-          year: selectedYear,
-          category: selectedCategory,
-          index: editingIndex,
-          service: cleanServiceData
-        });
         
         const response = await fetch("/api/admin/services", {
           method: "PUT",
@@ -341,6 +321,7 @@ export default function ServicesAdminPage() {
         }
       }
       
+      // Reload services to show updated data
       await loadServices();
       setFormData({
         title: "",
@@ -352,6 +333,7 @@ export default function ServicesAdminPage() {
       });
       setShowAddForm(false);
       setEditingIndex(null);
+      setSelectedCategory(null); // Reset category selection to show all services
       alert("Service saved successfully!");
     } catch (error) {
       console.error("Error saving service:", error);
@@ -460,6 +442,7 @@ export default function ServicesAdminPage() {
               <table className="w-full">
                 <thead className="bg-zinc-50 dark:bg-zinc-900">
                   <tr>
+                    <th className="px-4 py-3 text-left text-sm font-semibold">Image</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold">Service</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold">Vehicle</th>
                     <th className="px-4 py-3 text-left text-sm font-semibold">Category</th>
@@ -471,7 +454,7 @@ export default function ServicesAdminPage() {
                 <tbody>
                   {filteredAllServices.length === 0 ? (
                     <tr>
-                      <td colSpan={6} className="px-4 py-8 text-center text-zinc-500">
+                      <td colSpan={7} className="px-4 py-8 text-center text-zinc-500">
                         {allServices.length === 0
                           ? "No services found. Add services using the 'Add/Edit Services' view."
                           : "No services match your filters."}
@@ -480,6 +463,26 @@ export default function ServicesAdminPage() {
                   ) : (
                     filteredAllServices.map((service, idx) => (
                       <tr key={`${service.brand}-${service.model}-${service.year}-${service.category}-${service.index}`} className="border-t border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900/50">
+                        <td className="px-4 py-3">
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20">
+                            {service.image && !service.image.includes(".фв") ? (
+                              <Image
+                                src={service.image}
+                                alt={service.title}
+                                fill
+                                className="object-cover"
+                                unoptimized
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = 'none';
+                                }}
+                              />
+                            ) : (
+                              <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
+                                No image
+                              </div>
+                            )}
+                          </div>
+                        </td>
                         <td className="px-4 py-3">
                           <div className="font-medium text-sm">{service.title}</div>
                           {service.description && (
@@ -558,8 +561,11 @@ export default function ServicesAdminPage() {
                                     }),
                                   });
                                   await loadServices();
+                                  alert("Service deleted successfully!");
                                 } catch (error) {
-                                  alert("Failed to delete service");
+                                  console.error("Error deleting service:", error);
+                                  const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
+                                  alert(`Failed to delete service: ${errorMessage}`);
                                 }
                               }}
                               className="px-3 py-1 text-xs rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors"
@@ -652,8 +658,11 @@ export default function ServicesAdminPage() {
                             }),
                           });
                           await loadServices();
+                          alert("Service deleted successfully!");
                         } catch (error) {
-                          alert("Failed to delete service");
+                          console.error("Error deleting service:", error);
+                          const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
+                          alert(`Failed to delete service: ${errorMessage}`);
                         }
                       }}
                       className="flex-1 px-4 py-3 rounded border border-red-300 text-red-600 hover:bg-red-50 transition-colors text-sm font-medium"
@@ -978,15 +987,21 @@ export default function ServicesAdminPage() {
             {yearData[selectedCategory].map((service, index) => (
               <div key={index} className="rounded-xl border border-[var(--border-color)] overflow-hidden bg-white">
                 <div className="relative h-32 bg-silver/20">
-                  {service.image && (
-                    <img
+                  {service.image && !service.image.includes(".фв") ? (
+                    <Image
                       src={service.image}
                       alt={service.title}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
+                      unoptimized
                       onError={(e) => {
                         (e.target as HTMLImageElement).style.display = "none";
                       }}
                     />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
+                      {service.title}
+                    </div>
                   )}
                   {service.status && (
                     <>
@@ -1039,8 +1054,11 @@ export default function ServicesAdminPage() {
                             }),
                           });
                           await loadServices();
+                          alert("Service deleted successfully!");
                         } catch (error) {
-                          alert("Failed to delete service");
+                          console.error("Error deleting service:", error);
+                          const errorMessage = error instanceof Error ? error.message : "Failed to delete service";
+                          alert(`Failed to delete service: ${errorMessage}`);
                         }
                       }}
                       className="flex-1 px-4 py-2 rounded border border-red-300 text-red-600 text-sm hover:bg-red-50 transition-colors"

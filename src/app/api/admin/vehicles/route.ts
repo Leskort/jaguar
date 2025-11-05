@@ -35,15 +35,28 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const vehicle = await request.json();
+    console.log("[POST /api/admin/vehicles] Adding vehicle:", vehicle.title);
+    console.log("[POST /api/admin/vehicles] Environment:", {
+      NETLIFY: process.env.NETLIFY,
+      AWS_LAMBDA: process.env.AWS_LAMBDA_FUNCTION_NAME
+    });
+    
     const vehicles = await getVehicles();
     // Assign order based on current array length
     const newVehicle = { ...vehicle, order: vehicles.length };
     const updated = [...vehicles, newVehicle];
     
+    console.log("[POST /api/admin/vehicles] Saving to storage...");
     await saveStorageData(STORAGE_KEY, FALLBACK_PATH, updated);
+    console.log("[POST /api/admin/vehicles] ✅ Vehicle saved successfully");
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to save" }, { status: 500 });
+    console.error("[POST /api/admin/vehicles] ❌ Error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ 
+      error: "Failed to save",
+      message: errorMessage
+    }, { status: 500 });
   }
 }
 

@@ -24,6 +24,12 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const order = await request.json();
+    console.log("[POST /api/admin/orders] Creating order...");
+    console.log("[POST /api/admin/orders] Environment:", {
+      NETLIFY: process.env.NETLIFY,
+      AWS_LAMBDA: process.env.AWS_LAMBDA_FUNCTION_NAME
+    });
+    
     const orders = await getOrders();
     
     const newOrder = {
@@ -35,10 +41,17 @@ export async function POST(request: Request) {
     
     orders.push(newOrder);
     
+    console.log("[POST /api/admin/orders] Saving to storage...");
     await saveStorageData(STORAGE_KEY, FALLBACK_PATH, orders);
+    console.log("[POST /api/admin/orders] ✅ Order saved successfully");
     return NextResponse.json({ success: true, orderId: newOrder.id });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to save order" }, { status: 500 });
+    console.error("[POST /api/admin/orders] ❌ Error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return NextResponse.json({ 
+      error: "Failed to save order",
+      message: errorMessage
+    }, { status: 500 });
   }
 }
 

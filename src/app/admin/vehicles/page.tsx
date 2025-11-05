@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 type Vehicle = {
   brand: string;
@@ -88,19 +89,40 @@ export default function VehiclesAdminPage() {
     setSaving(true);
 
     try {
+      let response;
       if (editingIndex !== null) {
-        await fetch("/api/admin/vehicles", {
+        response = await fetch("/api/admin/vehicles", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ index: editingIndex, vehicle: formData }),
         });
       } else {
-        await fetch("/api/admin/vehicles", {
+        response = await fetch("/api/admin/vehicles", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         });
       }
+      
+      if (!response.ok) {
+        let errorData: any = {};
+        let errorText = "";
+        try {
+          errorText = await response.text();
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText || `HTTP ${response.status}` };
+          }
+        } catch (e) {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        
+        const errorMsg = errorData.message || errorData.error || "Failed to save vehicle";
+        console.error("[Vehicles Admin] Server error:", errorData);
+        throw new Error(errorMsg);
+      }
+      
       await loadVehicles();
       setFormData({
         brand: "land-rover",
@@ -111,8 +133,11 @@ export default function VehiclesAdminPage() {
       });
       setShowAddForm(false);
       setEditingIndex(null);
+      alert("Vehicle saved successfully!");
     } catch (error) {
-      alert("Failed to save vehicle");
+      console.error("[Vehicles Admin] Error saving vehicle:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to save vehicle";
+      alert(`Failed to save vehicle: ${errorMessage}\n\nCheck browser console and Netlify logs for details.`);
     } finally {
       setSaving(false);
     }
@@ -125,14 +150,33 @@ export default function VehiclesAdminPage() {
     const newIndex = direction === "up" ? index - 1 : index + 1;
 
     try {
-      await fetch("/api/admin/vehicles", {
+      const response = await fetch("/api/admin/vehicles", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ fromIndex: index, toIndex: newIndex }),
       });
+      
+      if (!response.ok) {
+        let errorData: any = {};
+        try {
+          const errorText = await response.text();
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText || `HTTP ${response.status}` };
+          }
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        const errorMsg = errorData.message || errorData.error || "Failed to move vehicle";
+        throw new Error(errorMsg);
+      }
+      
       await loadVehicles();
     } catch (error) {
-      alert("Failed to move vehicle");
+      console.error("[Vehicles Admin] Error moving vehicle:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to move vehicle";
+      alert(`Failed to move vehicle: ${errorMessage}\n\nCheck browser console and Netlify logs for details.`);
     }
   };
 
@@ -140,14 +184,34 @@ export default function VehiclesAdminPage() {
     if (!confirm("Are you sure you want to delete this vehicle?")) return;
 
     try {
-      await fetch("/api/admin/vehicles", {
+      const response = await fetch("/api/admin/vehicles", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ index }),
       });
+      
+      if (!response.ok) {
+        let errorData: any = {};
+        try {
+          const errorText = await response.text();
+          try {
+            errorData = JSON.parse(errorText);
+          } catch {
+            errorData = { error: errorText || `HTTP ${response.status}` };
+          }
+        } catch {
+          errorData = { error: `HTTP ${response.status}: ${response.statusText}` };
+        }
+        const errorMsg = errorData.message || errorData.error || "Failed to delete vehicle";
+        throw new Error(errorMsg);
+      }
+      
       await loadVehicles();
+      alert("Vehicle deleted successfully!");
     } catch (error) {
-      alert("Failed to delete vehicle");
+      console.error("[Vehicles Admin] Error deleting vehicle:", error);
+      const errorMessage = error instanceof Error ? error.message : "Failed to delete vehicle";
+      alert(`Failed to delete vehicle: ${errorMessage}\n\nCheck browser console and Netlify logs for details.`);
     }
   };
 
@@ -413,6 +477,20 @@ export default function VehiclesAdminPage() {
                                 ↓
                               </button>
                             </div>
+                            {vehicle.image && (
+                              <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                                <Image
+                                  src={vehicle.image}
+                                  alt={vehicle.title}
+                                  fill
+                                  className="object-cover"
+                                  unoptimized
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            )}
                             <div>
                               <div className="font-medium">{vehicle.title}</div>
                               <div className="text-sm text-zinc-600">
@@ -475,6 +553,20 @@ export default function VehiclesAdminPage() {
                                 ↓
                               </button>
                             </div>
+                            {vehicle.image && (
+                              <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                                <Image
+                                  src={vehicle.image}
+                                  alt={vehicle.title}
+                                  fill
+                                  className="object-cover"
+                                  unoptimized
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            )}
                             <div>
                               <div className="font-medium">{vehicle.title}</div>
                               <div className="text-sm text-zinc-600">
@@ -536,6 +628,20 @@ export default function VehiclesAdminPage() {
                         ↓
                       </button>
                     </div>
+                    {vehicle.image && (
+                      <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                        <Image
+                          src={vehicle.image}
+                          alt={vehicle.title}
+                          fill
+                          className="object-cover"
+                          unoptimized
+                          onError={(e) => {
+                            (e.target as HTMLImageElement).style.display = 'none';
+                          }}
+                        />
+                      </div>
+                    )}
                     <div>
                       <div className="font-medium">{vehicle.title}</div>
                       <div className="text-sm text-zinc-600">
