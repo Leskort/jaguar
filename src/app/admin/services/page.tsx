@@ -671,7 +671,7 @@ export default function ServicesAdminPage() {
                                   });
                                   if (res.ok) {
                                     // Optimistically remove the service from UI
-                                    setServices(prevServices => {
+                                    setServices((prevServices: any) => {
                                       const newServices = { ...prevServices };
                                       if (newServices[service.brand]?.[service.model]?.[service.year]?.[service.category]) {
                                         const categoryArray = [...newServices[service.brand][service.model][service.year][service.category]];
@@ -797,7 +797,7 @@ export default function ServicesAdminPage() {
                           });
                           if (res.ok) {
                             // Optimistically remove the service from UI
-                            setServices(prevServices => {
+                            setServices((prevServices: any) => {
                               const newServices = { ...prevServices };
                               if (newServices[service.brand]?.[service.model]?.[service.year]?.[service.category]) {
                                 const categoryArray = [...newServices[service.brand][service.model][service.year][service.category]];
@@ -1245,7 +1245,7 @@ export default function ServicesAdminPage() {
                           });
                           if (res.ok) {
                             // Optimistically remove the service from UI
-                            setServices(prevServices => {
+                            setServices((prevServices: any) => {
                               const newServices = { ...prevServices };
                               if (newServices[selectedBrand]?.[selectedModel]?.[selectedYear]?.[selectedCategory]) {
                                 const categoryArray = [...newServices[selectedBrand][selectedModel][selectedYear][selectedCategory]];
