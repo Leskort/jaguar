@@ -23,13 +23,24 @@ type Order = {
   updatedAt?: string;
 };
 
+type Vehicle = {
+  brand: string;
+  value: string;
+  title: string;
+  image: string;
+  years: Array<{ value: string; label: string }>;
+  order?: number;
+};
+
 export default function OrdersAdminPage() {
   const [orders, setOrders] = useState<Order[]>([]);
+  const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<OrderStatus | "all">("all");
 
   useEffect(() => {
     loadOrders();
+    loadVehicles();
   }, []);
 
   const loadOrders = async () => {
@@ -43,6 +54,46 @@ export default function OrdersAdminPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadVehicles = async () => {
+    try {
+      const res = await fetch("/api/admin/vehicles");
+      const data = await res.json();
+      setVehicles(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Failed to load vehicles:", error);
+      setVehicles([]);
+    }
+  };
+
+  // Helper function to find vehicle image by brand, model, and year
+  const getVehicleImage = (brand: string, model: string, year: string): string | null => {
+    // Find vehicle by brand and model (value)
+    const vehicle = vehicles.find(v => 
+      v.brand === brand && 
+      v.value === model
+    );
+    
+    if (!vehicle || !vehicle.image) {
+      return null;
+    }
+    
+    // Check if the order year matches any of the vehicle's year ranges
+    // Year can be like "2010-2016" or "2017"
+    const orderYear = parseInt(year.split('-')[0]); // Get first year if range
+    
+    const yearMatch = vehicle.years.some(y => {
+      const yearRange = y.value; // e.g., "2010-2016"
+      if (yearRange.includes('-')) {
+        const [start, end] = yearRange.split('-').map(yr => parseInt(yr.trim()));
+        return orderYear >= start && orderYear <= end;
+      } else {
+        return parseInt(yearRange) === orderYear;
+      }
+    });
+    
+    return yearMatch ? vehicle.image : null;
   };
 
   const getStatusStyle = (status: OrderStatus) => {
@@ -226,15 +277,40 @@ export default function OrdersAdminPage() {
                 </div>
                 <div>
                   <div className="font-medium mb-2">Vehicle</div>
-                  <div className="text-zinc-600">
-                    {order.type === "general-inquiry" ? (
-                      <span className="text-zinc-400">General Inquiry</span>
-                    ) : (
-                      <>
+                  {order.type === "general-inquiry" ? (
+                    <div className="text-zinc-400">General Inquiry</div>
+                  ) : (
+                    <div className="flex items-center gap-3">
+                      {(() => {
+                        const vehicleImage = getVehicleImage(
+                          order.vehicle.brand,
+                          order.vehicle.model,
+                          order.vehicle.year
+                        );
+                        return vehicleImage ? (
+                          <div className="relative w-20 h-20 rounded-lg overflow-hidden border border-[var(--border-color)] bg-silver/20 flex-shrink-0">
+                            <Image
+                              src={vehicleImage}
+                              alt={`${order.vehicle.brand} ${order.vehicle.model}`}
+                              fill
+                              className="object-cover"
+                              unoptimized
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="w-20 h-20 rounded-lg border border-[var(--border-color)] bg-silver/20 flex-shrink-0 flex items-center justify-center text-zinc-400 text-xs text-center px-1">
+                            No image
+                          </div>
+                        );
+                      })()}
+                      <div className="text-zinc-600">
                         {order.vehicle.brand.replace('-', ' ')} / {order.vehicle.model.replace(/-/g, ' ')} / {order.vehicle.year}
-                      </>
-                    )}
-                  </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
               {order.items && order.items.length > 0 ? (
