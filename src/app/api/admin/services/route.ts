@@ -141,7 +141,12 @@ export async function PUT(request: Request) {
     });
     
     // Check if index is valid
-    if (index >= categoryArray.length) {
+    if (categoryArray.length === 0) {
+      console.log("Category array is empty, adding as new service instead of updating");
+      // If array is empty, add as new service instead of updating
+      categoryArray.push(service);
+      console.log("Service added as new (array was empty)");
+    } else if (index >= categoryArray.length) {
       console.error("Index out of bounds:", {
         index,
         arrayLength: categoryArray.length,
@@ -151,14 +156,15 @@ export async function PUT(request: Request) {
         error: "Index out of bounds",
         message: `Index ${index} is out of bounds. Array has ${categoryArray.length} items. Available indexes: 0-${categoryArray.length - 1}`
       }, { status: 400 });
+    } else {
+      // Update the service
+      console.log(`Updating service at index ${index}...`);
+      const oldService = categoryArray[index];
+      console.log("Old service:", oldService?.title);
+      categoryArray[index] = service;
+      console.log("New service:", service.title);
     }
     
-    // Update the service
-    console.log(`Updating service at index ${index}...`);
-    const oldService = categoryArray[index];
-    console.log("Old service:", oldService?.title);
-    categoryArray[index] = service;
-    console.log("New service:", service.title);
     console.log("Service updated in memory, saving to storage...");
     
     try {

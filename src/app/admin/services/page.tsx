@@ -72,14 +72,16 @@ export default function ServicesAdminPage() {
       setLoading(true);
       const res = await fetch("/api/admin/services");
       const data = await res.json();
-      setServices(data || {});
+      const servicesData = data || {};
+      setServices(servicesData);
       // Force re-render by updating refresh key
       setRefreshKey(prev => prev + 1);
-      return data;
+      return servicesData;
     } catch (error) {
       console.error("Failed to load services:", error);
       setServices({});
       setRefreshKey(prev => prev + 1);
+      return {};
     } finally {
       setLoading(false);
     }
@@ -212,6 +214,25 @@ export default function ServicesAdminPage() {
           description: serviceData.description,
           status: serviceData.status,
         };
+        
+        // Verify that the category array exists and has items
+        const brandData = services[selectedBrand];
+        const modelData = brandData?.[selectedModel];
+        const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
+        const categoryArray = yearData?.[selectedCategory];
+        
+        // Validate index before sending
+        if (!categoryArray || !Array.isArray(categoryArray) || categoryArray.length === 0) {
+          alert("Cannot edit: The service category is empty. Please add it as a new service instead.");
+          setEditingIndex(null);
+          return;
+        }
+        
+        if (editingIndex < 0 || editingIndex >= categoryArray.length) {
+          alert(`Invalid index. The category has ${categoryArray.length} items. Please select the service again to edit.`);
+          setEditingIndex(null);
+          return;
+        }
         
         const response = await fetch("/api/admin/services", {
           method: "PUT",
@@ -552,7 +573,20 @@ export default function ServicesAdminPage() {
                         <td className="px-4 py-3">
                           <div className="flex gap-2">
                             <button
-                              onClick={() => {
+                              onClick={async () => {
+                                // Reload services to ensure we have latest data
+                                await loadServices();
+                                // Verify the service still exists at this index
+                                const brandData = services[service.brand];
+                                const modelData = brandData?.[service.model];
+                                const yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                                const categoryArray = yearData?.[service.category];
+                                
+                                if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
+                                  alert("Service data may have changed. Please refresh and try again.");
+                                  return;
+                                }
+                                
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
                                 setSelectedYear(service.year);
@@ -649,7 +683,20 @@ export default function ServicesAdminPage() {
                   <div className="text-lg font-semibold">{service.price}</div>
                   <div className="flex gap-2 pt-2">
                     <button
-                      onClick={() => {
+                      onClick={async () => {
+                        // Reload services to ensure we have latest data
+                        const freshServices = await loadServices();
+                        // Verify the service still exists at this index
+                        const brandData = freshServices[service.brand];
+                        const modelData = brandData?.[service.model];
+                        const yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                        const categoryArray = yearData?.[service.category];
+                        
+                        if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
+                          alert("Service data may have changed. Please refresh and try again.");
+                          return;
+                        }
+                        
                         setSelectedBrand(service.brand);
                         setSelectedModel(service.model);
                         setSelectedYear(service.year);
@@ -1073,7 +1120,20 @@ export default function ServicesAdminPage() {
                   <div className="text-lg font-semibold mb-3">{service.price}</div>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => {
+                      onClick={async () => {
+                        // Reload services to ensure we have latest data
+                        const freshServices = await loadServices();
+                        // Verify the service still exists at this index
+                        const brandData = freshServices[selectedBrand];
+                        const modelData = brandData?.[selectedModel];
+                        const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
+                        const categoryArray = yearData?.[selectedCategory];
+                        
+                        if (!categoryArray || !Array.isArray(categoryArray) || index >= categoryArray.length) {
+                          alert("Service data may have changed. Please refresh and try again.");
+                          return;
+                        }
+                        
                         setFormData(service);
                         setEditingIndex(index);
                         setShowAddForm(true);
