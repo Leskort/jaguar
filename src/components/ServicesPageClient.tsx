@@ -28,8 +28,10 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function ServicesPageClient({ brand, model, year, categoriesData }: ServicesPageClientProps) {
-  // Get available categories from data
-  const availableCategories = Object.keys(categoriesData);
+  // Get available categories from data - only those with at least one service
+  const availableCategories = Object.keys(categoriesData).filter(
+    catKey => categoriesData[catKey] && Array.isArray(categoriesData[catKey]) && categoriesData[catKey].length > 0
+  );
   const [activeCategory, setActiveCategory] = useState(availableCategories[0] || "");
   const [showCart, setShowCart] = useState(false);
   const [showOrderForm, setShowOrderForm] = useState(false);

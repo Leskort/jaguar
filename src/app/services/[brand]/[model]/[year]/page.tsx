@@ -34,7 +34,15 @@ export default async function ServiceCatalogPage({ params }: { params: Promise<{
   const servicesData = await getServices();
   const brandData = servicesData[brand];
   const modelData = brandData?.[model];
-  const categoriesData = (modelData?.[year] as Record<string, ServiceOption[]>) ?? {};
+  const allCategoriesData = (modelData?.[year] as Record<string, ServiceOption[]>) ?? {};
+  
+  // Filter out empty categories (only keep categories with at least one service)
+  const categoriesData: Record<string, ServiceOption[]> = {};
+  for (const [catKey, services] of Object.entries(allCategoriesData)) {
+    if (Array.isArray(services) && services.length > 0) {
+      categoriesData[catKey] = services;
+    }
+  }
   
   if (!categoriesData || Object.keys(categoriesData).length === 0) {
     return (
