@@ -158,6 +158,9 @@ export const translations = {
     addImage: 'Add Image',
     removeImage: 'Remove Image',
     noImagesAdded: 'No images added. Click "Add Image" to add images.',
+    backToWorks: 'Back to Our Works',
+    readMore: 'Read more',
+    workNotFound: 'Work not found',
     
     // Order statuses
     all: 'ALL',
@@ -474,6 +477,9 @@ export const translations = {
     addImage: 'Добавить изображение',
     removeImage: 'Удалить изображение',
     noImagesAdded: 'Изображения не добавлены. Нажмите "Добавить изображение" для добавления.',
+    backToWorks: 'Назад к нашим работам',
+    readMore: 'Читать далее',
+    workNotFound: 'Работа не найдена',
     
     // Order statuses
     all: 'ВСЕ',

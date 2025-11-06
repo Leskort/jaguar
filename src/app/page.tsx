@@ -240,8 +240,8 @@ function OurWorksSection() {
         {works.map((work) => (
           <Link
             key={work.id}
-            href="/our-works"
-            className="group rounded-xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow"
+            href={`/our-works/${work.id}`}
+            className="group rounded-xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-all cursor-pointer"
           >
             <div className="relative aspect-video bg-silver/20 dark:bg-zinc-800/30">
               {work.images && work.images.length > 0 && work.images[0] ? (
