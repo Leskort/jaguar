@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useCartStore, type CartItem } from "@/store/cart";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState, useMemo, memo, useCallback } from "react";
+import { useState, useMemo, memo, useCallback, useRef } from "react";
 
 type ServiceCardProps = {
   option: {
@@ -25,6 +25,10 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
+  
+  // Create a unique instance ID that never changes for this component instance
+  const instanceIdRef = useRef<string>(`card-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  const instanceId = instanceIdRef.current;
   
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   // Use useMemo to ensure stable reference
@@ -51,16 +55,21 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   });
   
   const [imgError, setImgError] = useState(false);
+  // Use instanceId in state key to ensure complete isolation
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
-  // Create unique details ID for this specific card instance using itemId
-  const detailsId = useMemo(() => `details-${itemId}`, [itemId]);
+  // Create unique details ID for this specific card instance using instanceId
+  const detailsId = useMemo(() => `details-${instanceId}`, [instanceId]);
 
-  // Memoize the toggle handler to ensure it's stable
+  // Memoize the toggle handler to ensure it's stable and isolated
   const handleToggleDetails = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDetailsOpen((prev) => !prev);
+    // Use functional update to ensure we're working with the latest state
+    setIsDetailsOpen((prev) => {
+      // Log for debugging (can be removed later)
+      return !prev;
+    });
   }, []);
 
   const handleAddToCart = useCallback(() => {
@@ -96,6 +105,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
     <div 
       className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col isolate"
       data-service-card={itemId}
+      data-instance-id={instanceId}
     >
       <div className="relative h-40 w-full bg-silver/20">
         {imagePath && !imgError ? (
@@ -163,7 +173,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             </button>
           )}
         </div>
-        <div className="mt-auto" id={detailsId} data-card-id={itemId}>
+        <div className="mt-auto" id={detailsId} data-card-id={itemId} data-instance-id={instanceId}>
           <button
             type="button"
             onClick={handleToggleDetails}
@@ -171,6 +181,8 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             aria-expanded={isDetailsOpen}
             aria-controls={`${detailsId}-content`}
             data-card-id={itemId}
+            data-instance-id={instanceId}
+            data-details-button={instanceId}
           >
             {t('details')} <span className={`inline-block transition-transform duration-200 ${isDetailsOpen ? 'rotate-180' : ''}`}>↓</span>
           </button>
@@ -179,6 +191,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
               id={`${detailsId}-content`} 
               className="pt-2 text-xs text-zinc-700 dark:text-zinc-300"
               data-card-id={itemId}
+              data-instance-id={instanceId}
             >
               {(() => {
                 if (language === 'ru') {
