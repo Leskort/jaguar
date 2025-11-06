@@ -7,7 +7,9 @@ export type CartItem = {
   image: string;
   price: string;
   requirements: string;
-  description: string;
+  description?: string; // Legacy field for backward compatibility
+  descriptionEn?: string;
+  descriptionRu?: string;
   brand: string;
   model: string;
   year: string;

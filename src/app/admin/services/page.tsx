@@ -9,7 +9,9 @@ type ServiceOption = {
   image: string;
   price: string;
   requirements: string;
-  description: string;
+  description?: string; // Legacy field for backward compatibility
+  descriptionEn?: string;
+  descriptionRu?: string;
   status?: "in-stock" | "unavailable" | "coming-soon";
 };
 
@@ -30,7 +32,7 @@ type ServiceWithVehicle = ServiceOption & {
 };
 
 export default function ServicesAdminPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [services, setServices] = useState<any>({});
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,6 +59,8 @@ export default function ServicesAdminPage() {
     price: "",
     requirements: "No",
     description: "",
+    descriptionEn: "",
+    descriptionRu: "",
     status: "in-stock",
   });
 
@@ -324,6 +328,8 @@ export default function ServicesAdminPage() {
           price: serviceData.price,
           requirements: serviceData.requirements,
           description: serviceData.description,
+          descriptionEn: serviceData.descriptionEn,
+          descriptionRu: serviceData.descriptionRu,
           status: serviceData.status,
         };
         
@@ -478,6 +484,8 @@ export default function ServicesAdminPage() {
         price: "",
         requirements: "No",
         description: "",
+        descriptionEn: "",
+        descriptionRu: "",
         status: "in-stock",
       });
       setShowAddForm(false);
@@ -698,9 +706,9 @@ export default function ServicesAdminPage() {
                         </td>
                         <td className="px-4 py-3">
                           <div className="font-medium text-sm">{service.title}</div>
-                          {service.description && (
+                          {(service.descriptionEn || service.descriptionRu || service.description) && (
                             <div className="text-xs text-zinc-500 mt-1 line-clamp-1">
-                              {service.description}
+                              {language === 'ru' ? (service.descriptionRu || service.description || '') : (service.descriptionEn || service.description || '')}
                             </div>
                           )}
                         </td>
@@ -866,9 +874,9 @@ export default function ServicesAdminPage() {
                     {/* Service Info */}
                     <div className="flex-1 min-w-0">
                       <div className="font-medium text-base sm:text-lg mb-1">{service.title}</div>
-                      {service.description && (
+                      {(service.descriptionEn || service.descriptionRu || service.description) && (
                         <div className="text-sm sm:text-base text-zinc-500 dark:text-zinc-400 line-clamp-2">
-                          {service.description}
+                          {language === 'ru' ? (service.descriptionRu || service.description || '') : (service.descriptionEn || service.description || '')}
                         </div>
                       )}
                     </div>
@@ -1262,13 +1270,21 @@ export default function ServicesAdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">{t('description')}</label>
+              <label className="block text-sm font-medium mb-2">{t('description')} (English)</label>
               <textarea
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                value={formData.descriptionEn || ""}
+                onChange={(e) => setFormData({ ...formData, descriptionEn: e.target.value })}
                 className="w-full min-h-24 rounded-lg border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium focus:border-[var(--accent-gold)] focus:outline-none"
                 placeholder="Factory dynamic program activation for enhanced driving experience."
-                required
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2">{t('description')} (Русский)</label>
+              <textarea
+                value={formData.descriptionRu || ""}
+                onChange={(e) => setFormData({ ...formData, descriptionRu: e.target.value })}
+                className="w-full min-h-24 rounded-lg border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder="Активация заводской динамической программы для улучшенного опыта вождения."
               />
             </div>
 

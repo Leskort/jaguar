@@ -6,7 +6,9 @@ type ServiceOption = {
   image: string;
   price: string;
   requirements: string;
-  description: string;
+  description?: string; // Legacy field for backward compatibility
+  descriptionEn?: string;
+  descriptionRu?: string;
   status?: "in-stock" | "unavailable" | "coming-soon";
 };
 

@@ -10,7 +10,9 @@ type ServiceCardProps = {
     image: string;
     price: string;
     requirements: string;
-    description: string;
+    description?: string; // Legacy field for backward compatibility
+    descriptionEn?: string;
+    descriptionRu?: string;
     status?: "in-stock" | "unavailable" | "coming-soon";
   };
   brand: string;
@@ -19,7 +21,7 @@ type ServiceCardProps = {
 };
 
 export default function ServiceCard({ option, brand, model, year }: ServiceCardProps) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
   const items = useCartStore((state) => state.items);
@@ -36,6 +38,8 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
       price: option.price,
       requirements: option.requirements,
       description: option.description,
+      descriptionEn: option.descriptionEn,
+      descriptionRu: option.descriptionRu,
       brand,
       model,
       year,
@@ -127,7 +131,11 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
           <summary className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1">
             {t('details')} <span>↓</span>
           </summary>
-          <div className="pt-2 text-xs text-zinc-700">{option.description}</div>
+          <div className="pt-2 text-xs text-zinc-700 dark:text-zinc-300">
+            {language === 'ru' 
+              ? (option.descriptionRu || option.description || '') 
+              : (option.descriptionEn || option.description || '')}
+          </div>
         </details>
       </div>
     </div>
