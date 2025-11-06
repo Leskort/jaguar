@@ -127,7 +127,7 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
             </button>
           )}
         </div>
-        <details className="mt-auto">
+        <details className="mt-auto" id={`details-${itemId}`}>
           <summary className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1">
             {t('details')} <span>↓</span>
           </summary>
