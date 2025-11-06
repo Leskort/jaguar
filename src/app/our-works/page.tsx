@@ -4,6 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+type OrderFormData = {
+  name: string;
+  vin: string;
+  contact: string;
+};
+
 type Work = {
   id: string;
   images: string[]; // Array of image paths
@@ -19,6 +25,13 @@ export default function OurWorksPage() {
   const { t, language } = useLanguage();
   const [works, setWorks] = useState<Work[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showOrderForm, setShowOrderForm] = useState(false);
+  const [orderFormData, setOrderFormData] = useState<OrderFormData>({
+    name: "",
+    vin: "",
+    contact: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     loadWorks();
@@ -35,6 +48,46 @@ export default function OurWorksPage() {
       setWorks([]);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleOrderSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const orderData = {
+        customerName: orderFormData.name,
+        vehicleVIN: orderFormData.vin,
+        contact: orderFormData.contact,
+        items: [],
+        total: "£0",
+        vehicle: {
+          brand: "",
+          model: "",
+          year: "",
+        },
+        type: "general-inquiry",
+      };
+
+      const res = await fetch("/api/admin/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(orderData),
+      });
+
+      if (res.ok) {
+        setShowOrderForm(false);
+        setOrderFormData({ name: "", vin: "", contact: "" });
+        alert(t('requestSubmitted') || "Your request has been submitted! We will contact you soon.");
+      } else {
+        throw new Error("Failed to submit order");
+      }
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      alert(t('failedToSubmitRequest') || "Failed to submit request. Please try again.");
+    } finally {
+      setSubmitting(false);
     }
   };
   
@@ -98,10 +151,63 @@ export default function OurWorksPage() {
       )}
       
       <div className="mt-10 flex items-center justify-center">
-        <Link href="/contact" className="h-12 px-6 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:opacity-90 transition-opacity">
+        <button
+          onClick={() => setShowOrderForm(true)}
+          className="h-12 px-6 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:opacity-90 transition-opacity"
+        >
           {t('getAnOffer')}
-        </Link>
+        </button>
       </div>
+
+      {/* Order Form Modal */}
+      {showOrderForm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/60" onClick={() => setShowOrderForm(false)} />
+          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] p-6 sm:p-8" onClick={(e) => e.stopPropagation()}>
+            <button
+              aria-label="Close"
+              className="absolute right-4 top-4 text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 text-2xl w-8 h-8 flex items-center justify-center"
+              onClick={() => setShowOrderForm(false)}
+            >
+              ✕
+            </button>
+            <h3 className="text-xl sm:text-2xl font-semibold mb-6">{t('getAnOfferTitle')}</h3>
+            <form onSubmit={handleOrderSubmit} className="grid gap-4">
+              <input
+                type="text"
+                value={orderFormData.name}
+                onChange={(e) => setOrderFormData({ ...orderFormData, name: e.target.value })}
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('yourName')}
+                required
+              />
+              <input
+                type="text"
+                value={orderFormData.vin}
+                onChange={(e) => setOrderFormData({ ...orderFormData, vin: e.target.value })}
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('vehicleVINNumber')}
+                required
+              />
+              <input
+                type="text"
+                value={orderFormData.contact}
+                onChange={(e) => setOrderFormData({ ...orderFormData, contact: e.target.value })}
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                placeholder={t('mobileNumberOrEmail')}
+                required
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              >
+                {submitting ? t('submitting') : t('submitOrder')}
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
