@@ -18,16 +18,20 @@ type ServiceCardProps = {
   brand: string;
   model: string;
   year: string;
+  uniqueId?: string; // Optional unique identifier to ensure uniqueness
 };
 
-export default function ServiceCard({ option, brand, model, year }: ServiceCardProps) {
+export default function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps) {
   const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
   const items = useCartStore((state) => state.items);
   const [imgError, setImgError] = useState(false);
 
-  const itemId = `${brand}-${model}-${year}-${option.title}`;
+  // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
+  const itemId = uniqueId 
+    ? `${brand}-${model}-${year}-${uniqueId}`
+    : `${brand}-${model}-${year}-${option.title}-${option.price}-${option.image}`;
   const alreadyInCart = items.some((item) => item.id === itemId);
 
   const handleAddToCart = () => {
