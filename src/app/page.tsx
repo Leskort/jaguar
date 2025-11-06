@@ -966,15 +966,15 @@ export default function Home() {
       {offerOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60" onClick={() => setOfferOpen(false)} />
-          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white text-black p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-500 hover:text-black text-xl" onClick={() => setOfferOpen(false)}>✕</button>
-            <h3 className="text-lg sm:text-xl font-semibold pr-8">{t('getAnOfferTitle')}</h3>
+          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-[var(--space-black)] border-2 border-[var(--border-color)] p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-400 hover:text-zinc-200 text-xl transition-colors" onClick={() => setOfferOpen(false)}>✕</button>
+            <h3 className="text-lg sm:text-xl font-semibold pr-8 text-[var(--foreground)]">{t('getAnOfferTitle')}</h3>
             <form onSubmit={handleOfferSubmit} className="mt-4 sm:mt-6 grid gap-3">
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
                 placeholder={t('yourName')}
                 required
               />
@@ -982,7 +982,7 @@ export default function Home() {
                 type="text"
                 value={formData.vin}
                 onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
                 placeholder={t('vehicleVINNumber')}
                 required
               />
@@ -990,16 +990,16 @@ export default function Home() {
                 type="text"
                 value={formData.contact}
                 onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
                 placeholder={t('mobileNumberOrEmail')}
                 required
               />
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-10 sm:h-12 rounded-md bg-[#ffd000] text-black text-sm sm:text-base font-medium disabled:opacity-50"
+                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
-                {submitting ? t('submitting') : t('getAnOffer')}
+                {submitting ? t('submitting') : t('getAListOfServices')}
               </button>
             </form>
           </div>
