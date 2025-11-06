@@ -207,21 +207,7 @@ function OurWorksSection() {
   };
 
   if (loading) {
-    return (
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
-          <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
-            {t('seeAll')}
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-video rounded-xl bg-silver/20 dark:bg-zinc-800/30" />
-          ))}
-        </div>
-      </section>
-    );
+    return null; // Don't show section while loading
   }
 
   if (works.length === 0) {

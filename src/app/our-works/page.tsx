@@ -43,13 +43,11 @@ export default function OurWorksPage() {
       <h1 className="text-4xl font-semibold tracking-tight">{t('ourWorks').replace('OUR WORKS', 'Our Works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h1>
       
       {loading ? (
-        <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <article key={i} className="rounded-2xl border border-[var(--border-color)] overflow-hidden">
-              <div className="h-48 bg-silver/20 dark:bg-zinc-800/30" />
-              <div className="p-4 text-sm font-medium">{t('project')} #{i + 1}</div>
-            </article>
-          ))}
+        <div className="mt-10 flex items-center justify-center py-20">
+          <div className="text-center">
+            <div className="inline-block w-8 h-8 border-4 border-[var(--accent-gold)] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('loading')}</p>
+          </div>
         </div>
       ) : works.length === 0 ? (
         <div className="mt-10 text-center text-zinc-600 dark:text-zinc-400">
