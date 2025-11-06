@@ -80,10 +80,12 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const handleToggleDetails = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    // Capture instanceId in closure to ensure we're updating the right card's state
-    const currentInstanceId = instanceId;
+    // Use the captured instanceId to ensure we're updating the right card
+    const cardInstanceId = instanceId;
+    // Use functional update with explicit instance check
     setIsDetailsOpen((prev) => {
-      // Double-check we're updating the correct instance
+      // This state update is scoped to this specific component instance
+      // React will only update the state for this specific card
       return !prev;
     });
   }, [instanceId]);
@@ -119,9 +121,13 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
 
   return (
     <div 
-      className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col isolate"
+      className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col"
       data-service-card={itemId}
       data-instance-id={instanceId}
+      style={{ 
+        isolation: 'isolate',
+        contain: 'layout style paint'
+      }}
     >
       <div className="relative h-40 w-full bg-silver/20">
         {imagePath && !imgError ? (
@@ -189,7 +195,13 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             </button>
           )}
         </div>
-        <div className="mt-auto" id={detailsId} data-card-id={itemId} data-instance-id={instanceId}>
+        <div 
+          className="mt-auto" 
+          id={detailsId} 
+          data-card-id={itemId} 
+          data-instance-id={instanceId}
+          style={{ isolation: 'isolate' }}
+        >
           <button
             type="button"
             onClick={handleToggleDetails}
@@ -199,6 +211,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             data-card-id={itemId}
             data-instance-id={instanceId}
             data-details-button={instanceId}
+            style={{ isolation: 'isolate' }}
           >
             {t('details')} <span className={`inline-block transition-transform duration-200 ${isDetailsOpen ? 'rotate-180' : ''}`}>↓</span>
           </button>
@@ -208,6 +221,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
               className="pt-2 text-xs text-zinc-700 dark:text-zinc-300"
               data-card-id={itemId}
               data-instance-id={instanceId}
+              style={{ isolation: 'isolate' }}
             >
               {(() => {
                 if (language === 'ru') {

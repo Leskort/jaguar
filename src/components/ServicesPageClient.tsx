@@ -168,7 +168,8 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
           // Create a truly unique identifier for each card
           // Include all identifying fields plus index and category to ensure uniqueness
           const cardUniqueId = `${opt.title}-${opt.price}-${opt.image}-${opt.requirements}-${index}-${activeCategory}`;
-          // Create a more unique key that includes all identifying information
+          // Create a stable unique key that doesn't change between renders
+          // This ensures React doesn't reuse components incorrectly
           const cardKey = `card-${brand}-${model}-${year}-${activeCategory}-${index}-${opt.title}-${opt.price}-${opt.image}`;
           
           return (
