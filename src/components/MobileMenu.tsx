@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "./SocialIcons";
 
 export default function MobileMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -95,6 +96,38 @@ export default function MobileMenu() {
                       onClick={() => setIsOpen(false)}
                     >
                       01622 801 501
+                    </a>
+                  </div>
+                  <div className="flex items-center gap-4 mt-4">
+                    <a
+                      href="https://t.me/lr_chip"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                      aria-label="Telegram"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <TelegramIcon size={24} />
+                    </a>
+                    <a
+                      href="https://instagram.com/ir_chip"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                      aria-label="Instagram"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <InstagramIcon size={24} />
+                    </a>
+                    <a
+                      href="https://wa.me/447840000321"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                      aria-label="WhatsApp"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <WhatsAppIcon size={24} />
                     </a>
                   </div>
                 </div>

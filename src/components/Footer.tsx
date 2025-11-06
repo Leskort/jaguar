@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "./SocialIcons";
 
 export default function Footer() {
   const { t } = useLanguage();
@@ -49,9 +50,34 @@ export default function Footer() {
             <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
               <a href="mailto:lr.chip.com.ua@gmail.com" className="hover:text-[var(--accent-gold)]">lr.chip.com.ua@gmail.com</a>
             </div>
-            <div className="flex gap-4">
-              <a href="https://instagram.com/ir_chip" target="_blank" rel="noopener noreferrer" className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] text-xs sm:text-sm">IG</a>
-              <a href="#" className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] text-xs sm:text-sm">YT</a>
+            <div className="flex items-center gap-4">
+              <a
+                href="https://t.me/lr_chip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                aria-label="Telegram"
+              >
+                <TelegramIcon size={24} />
+              </a>
+              <a
+                href="https://instagram.com/ir_chip"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                aria-label="Instagram"
+              >
+                <InstagramIcon size={24} />
+              </a>
+              <a
+                href="https://wa.me/447840000321"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                aria-label="WhatsApp"
+              >
+                <WhatsAppIcon size={24} />
+              </a>
             </div>
             <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
               <Link href="/" className="font-semibold">LR‑Chip</Link>

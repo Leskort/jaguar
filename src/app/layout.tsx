@@ -5,6 +5,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import NavLinks from "@/components/NavLinks";
 import Footer from "@/components/Footer";
+import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIcons";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -33,6 +34,35 @@ export default function RootLayout({
               </div>
               <div className="hidden md:flex items-center gap-3 lg:gap-4">
                 <LanguageSwitcher />
+                <div className="flex items-center gap-2 lg:gap-3">
+                  <a
+                    href="https://t.me/lr_chip"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                    aria-label="Telegram"
+                  >
+                    <TelegramIcon size={20} />
+                  </a>
+                  <a
+                    href="https://instagram.com/ir_chip"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                    aria-label="Instagram"
+                  >
+                    <InstagramIcon size={20} />
+                  </a>
+                  <a
+                    href="https://wa.me/447840000321"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                    aria-label="WhatsApp"
+                  >
+                    <WhatsAppIcon size={20} />
+                  </a>
+                </div>
                 <div className="flex items-center gap-3 lg:gap-4 text-xs sm:text-sm font-medium">
                   <a href="tel:+447840000321" className="hover:opacity-80 transition-opacity whitespace-nowrap">0784 0000 321</a>
                   <a href="tel:+441622801501" className="hover:opacity-80 transition-opacity whitespace-nowrap">01622 801 501</a>
