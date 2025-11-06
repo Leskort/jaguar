@@ -163,7 +163,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
       </h2>
 
       {/* Products Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12" style={{ alignItems: 'start' }}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12" style={{ alignItems: 'stretch' }}>
         {currentOptions.map((opt: ServiceOption, index: number) => {
           // Create a truly unique identifier for each card
           // Include all identifying fields plus index and category to ensure uniqueness

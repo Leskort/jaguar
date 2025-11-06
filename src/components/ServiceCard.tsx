@@ -115,14 +115,15 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
 
   return (
     <div 
-      className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col"
+      className="rounded-2xl border border-[var(--border-color)] bg-white dark:bg-zinc-800 overflow-hidden shadow-sm flex flex-col h-full"
       data-service-card={itemId}
       data-instance-id={instanceId}
       style={{ 
         isolation: 'isolate',
         contain: 'layout style paint',
         position: 'relative',
-        transform: 'translateZ(0)'
+        transform: 'translateZ(0)',
+        minHeight: '100%'
       }}
     >
       <div className="relative h-40 w-full bg-silver/20">
@@ -161,14 +162,14 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
           </div>
         )}
       </div>
-      <div className="p-4 flex-1 flex flex-col">
-        <div className="font-medium mb-2 text-sm">{option.title}</div>
-        <div className="text-xs text-zinc-500 flex items-center gap-1">
+      <div className="p-4 flex-1 flex flex-col min-h-[200px]">
+        <div className="font-medium mb-2 text-sm text-zinc-900 dark:text-zinc-100">{option.title}</div>
+        <div className="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-1">
           {option.requirements === "Yes" && <span className="text-orange-500">▲</span>}
           {t('requirements')}: {option.requirements === "Yes" ? t('yes') : t('no')}
         </div>
         <div className="flex items-center justify-between mt-2 mb-3 gap-2">
-          <div className="text-lg sm:text-xl font-semibold">{option.price}</div>
+          <div className="text-lg sm:text-xl font-semibold text-zinc-900 dark:text-zinc-100">{option.price}</div>
           {alreadyInCart ? (
             <button
               onClick={handleRemoveFromCart}
@@ -200,7 +201,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
           <button
             type="button"
             onClick={handleToggleDetails}
-            className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1 hover:text-zinc-800 dark:hover:text-zinc-400 transition-colors w-full text-left bg-transparent border-0 p-0"
+            className="cursor-pointer text-xs select-none text-zinc-600 dark:text-zinc-400 underline flex items-center gap-1 hover:text-zinc-800 dark:hover:text-zinc-300 transition-colors w-full text-left bg-transparent border-0 p-0"
             aria-expanded={isDetailsOpen}
             aria-controls={`${detailsId}-content`}
             data-card-id={itemId}
