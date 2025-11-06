@@ -25,10 +25,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
-  const items = useCartStore((state) => state.items);
-  const [imgError, setImgError] = useState(false);
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
-
+  
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   // Use useMemo to ensure stable reference
   // Include all identifying fields to ensure absolute uniqueness
@@ -41,16 +38,20 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
     return identifier;
   }, [brand, model, year, uniqueId, option.title, option.price, option.image, option.requirements]);
   
-  // Use a more specific check to ensure we're checking the exact item
-  const alreadyInCart = useMemo(() => {
-    return items.some((item) => {
-      // Strict comparison: check all identifying fields
-      return item.id === itemId && 
-             item.title === option.title && 
-             item.price === option.price &&
-             item.image === option.image;
-    });
-  }, [items, itemId, option.title, option.price, option.image]);
+  // Subscribe only to check if THIS specific item is in the cart
+  // Use a selector that extracts only the boolean value for this specific item
+  // This way, the component only re-renders when THIS item's cart status changes
+  const alreadyInCart = useCartStore((state) => {
+    // Check if this specific item exists in cart
+    const found = state.items.find((item) => item.id === itemId);
+    return found !== undefined && 
+           found.title === option.title && 
+           found.price === option.price &&
+           found.image === option.image;
+  });
+  
+  const [imgError, setImgError] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   
   // Create unique details ID for this specific card instance using itemId
   const detailsId = useMemo(() => `details-${itemId}`, [itemId]);
@@ -62,7 +63,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
     setIsDetailsOpen((prev) => !prev);
   }, []);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = useCallback(() => {
     const cartItem: CartItem = {
       id: itemId,
       title: option.title,
@@ -77,11 +78,11 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
       year,
     };
     addItem(cartItem);
-  };
+  }, [itemId, option, brand, model, year, addItem]);
 
-  const handleRemoveFromCart = () => {
+  const handleRemoveFromCart = useCallback(() => {
     removeItem(itemId);
-  };
+  }, [itemId, removeItem]);
 
   const status = option.status;
   const isUnavailable = status === "unavailable" || status === "coming-soon";
