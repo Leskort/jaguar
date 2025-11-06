@@ -135,7 +135,7 @@ export default function ServicesAdminPage() {
       
       console.log("=== CLIENT: loadServices called ===");
       console.log("Services data loaded:", Object.keys(servicesData));
-      // Log a sample service to check descriptionEn and descriptionRu
+      // Log ALL services to check descriptionEn and descriptionRu
       if (servicesData && typeof servicesData === 'object') {
         for (const brand in servicesData) {
           if (servicesData[brand] && typeof servicesData[brand] === 'object') {
@@ -145,15 +145,15 @@ export default function ServicesAdminPage() {
                   if (servicesData[brand][model][year] && typeof servicesData[brand][model][year] === 'object') {
                     for (const category in servicesData[brand][model][year]) {
                       const services = servicesData[brand][model][year][category];
-                      if (Array.isArray(services) && services.length > 0) {
-                        const sampleService = services[0];
-                        console.log("Sample service in loadServices:", JSON.stringify(sampleService, null, 2));
-                        console.log("Sample service description fields:", {
-                          description: sampleService?.description,
-                          descriptionEn: sampleService?.descriptionEn,
-                          descriptionRu: sampleService?.descriptionRu
+                      if (Array.isArray(services)) {
+                        services.forEach((service, idx) => {
+                          console.log(`Service [${brand}][${model}][${year}][${category}][${idx}]:`, JSON.stringify(service, null, 2));
+                          console.log(`Description fields [${brand}][${model}][${year}][${category}][${idx}]:`, {
+                            description: service?.description,
+                            descriptionEn: service?.descriptionEn,
+                            descriptionRu: service?.descriptionRu
+                          });
                         });
-                        break;
                       }
                     }
                   }
@@ -259,8 +259,12 @@ export default function ServicesAdminPage() {
                     const serviceArray = services[brand][model][year][category];
                     if (Array.isArray(serviceArray)) {
                       serviceArray.forEach((service: ServiceOption, index: number) => {
+                        // IMPORTANT: Preserve all properties including descriptionEn and descriptionRu
                         allServices.push({
                           ...service,
+                          // Explicitly preserve descriptionEn and descriptionRu
+                          descriptionEn: service.descriptionEn,
+                          descriptionRu: service.descriptionRu,
                           brand,
                           model,
                           year,
@@ -838,11 +842,23 @@ export default function ServicesAdminPage() {
                                 // Force reload services from server (bypass cache)
                                 const freshServices = await loadServices(false, true);
                                 
-                                // Verify the service still exists at this index using FRESH data
-                                const brandData = freshServices[service.brand];
-                                const modelData = brandData?.[service.model];
-                                const yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                                const categoryArray = yearData?.[service.category];
+                                // Try multiple ways to find the service (normalized and original keys)
+                                const normalizedBrand = service.brand.trim().toLowerCase().replace(/\s+/g, '-');
+                                const normalizedModel = service.model.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                                
+                                // Try normalized keys first
+                                let brandData = freshServices[normalizedBrand] || freshServices[service.brand];
+                                let modelData = brandData?.[normalizedModel] || brandData?.[service.model];
+                                let yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                                let categoryArray = yearData?.[service.category];
+                                
+                                // If not found, try original keys
+                                if (!categoryArray) {
+                                  brandData = freshServices[service.brand];
+                                  modelData = brandData?.[service.model];
+                                  yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                                  categoryArray = yearData?.[service.category];
+                                }
                                 
                                 if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
                                   alert(t('serviceDataChanged'));
@@ -853,8 +869,19 @@ export default function ServicesAdminPage() {
                                 const freshService = categoryArray[service.index];
                                 
                                 console.log("=== CLIENT: Fresh service from server (desktop table) ===");
+                                console.log("Looking for service:", { brand: service.brand, model: service.model, year: service.year, category: service.category, index: service.index });
+                                console.log("Normalized keys:", { normalizedBrand, normalizedModel });
+                                console.log("Found brandData:", !!brandData, "keys:", brandData ? Object.keys(brandData) : []);
+                                console.log("Found modelData:", !!modelData, "keys:", modelData ? Object.keys(modelData) : []);
+                                console.log("Found yearData:", !!yearData, "keys:", yearData ? Object.keys(yearData) : []);
+                                console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
+                                console.log("CategoryArray contents:", categoryArray?.map((s, i) => ({ index: i, title: s?.title, hasDescriptionEn: 'descriptionEn' in (s || {}), hasDescriptionRu: 'descriptionRu' in (s || {}) })));
                                 console.log("Fresh service raw:", freshService);
                                 console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
+                                console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
+                                console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
+                                console.log("Fresh service descriptionEn value:", freshService?.descriptionEn);
+                                console.log("Fresh service descriptionRu value:", freshService?.descriptionRu);
                                 
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
@@ -1029,13 +1056,26 @@ export default function ServicesAdminPage() {
                   <div className="flex gap-2 pt-2">
                     <button
                       onClick={async () => {
-                        // Reload services to ensure we have latest data
-                        const freshServices = await loadServices();
-                        // Verify the service still exists at this index
-                        const brandData = freshServices[service.brand];
-                        const modelData = brandData?.[service.model];
-                        const yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                        const categoryArray = yearData?.[service.category];
+                        // Force reload services from server (bypass cache)
+                        const freshServices = await loadServices(false, true);
+                        
+                        // Try multiple ways to find the service (normalized and original keys)
+                        const normalizedBrand = service.brand.trim().toLowerCase().replace(/\s+/g, '-');
+                        const normalizedModel = service.model.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                        
+                        // Try normalized keys first
+                        let brandData = freshServices[normalizedBrand] || freshServices[service.brand];
+                        let modelData = brandData?.[normalizedModel] || brandData?.[service.model];
+                        let yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                        let categoryArray = yearData?.[service.category];
+                        
+                        // If not found, try original keys
+                        if (!categoryArray) {
+                          brandData = freshServices[service.brand];
+                          modelData = brandData?.[service.model];
+                          yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
+                          categoryArray = yearData?.[service.category];
+                        }
                         
                         if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
                           alert(t('serviceDataChanged'));
@@ -1044,6 +1084,15 @@ export default function ServicesAdminPage() {
                         
                         // Get the FRESH service data from the server
                         const freshService = categoryArray[service.index];
+                        
+                        console.log("=== CLIENT: Fresh service from server (mobile card) ===");
+                        console.log("Looking for service:", { brand: service.brand, model: service.model, year: service.year, category: service.category, index: service.index });
+                        console.log("Normalized keys:", { normalizedBrand, normalizedModel });
+                        console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
+                        console.log("Fresh service raw:", freshService);
+                        console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
+                        console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
+                        console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
                         
                         setSelectedBrand(service.brand);
                         setSelectedModel(service.model);
@@ -1528,11 +1577,23 @@ export default function ServicesAdminPage() {
                         // Force reload services from server (bypass cache)
                         const freshServices = await loadServices(false, true);
                         
-                        // Verify the service still exists at this index
-                        const brandData = freshServices[selectedBrand];
-                        const modelData = brandData?.[selectedModel];
-                        const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
-                        const categoryArray = yearData?.[selectedCategory];
+                        // Try multiple ways to find the service (normalized and original keys)
+                        const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
+                        const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                        
+                        // Try normalized keys first
+                        let brandData = freshServices[normalizedBrand] || freshServices[selectedBrand];
+                        let modelData = brandData?.[normalizedModel] || brandData?.[selectedModel];
+                        let yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
+                        let categoryArray = yearData?.[selectedCategory];
+                        
+                        // If not found, try original keys
+                        if (!categoryArray) {
+                          brandData = freshServices[selectedBrand];
+                          modelData = brandData?.[selectedModel];
+                          yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
+                          categoryArray = yearData?.[selectedCategory];
+                        }
                         
                         if (!categoryArray || !Array.isArray(categoryArray) || index >= categoryArray.length) {
                           alert(t('serviceDataChanged'));
@@ -1543,8 +1604,13 @@ export default function ServicesAdminPage() {
                         const freshService = categoryArray[index];
                         
                         console.log("=== CLIENT: Fresh service from server (existing services) ===");
+                        console.log("Looking for service:", { brand: selectedBrand, model: selectedModel, year: selectedYear, category: selectedCategory, index });
+                        console.log("Normalized keys:", { normalizedBrand, normalizedModel });
+                        console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
                         console.log("Fresh service raw:", freshService);
                         console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
+                        console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
+                        console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
                         
                         // Load service data, ensuring descriptionEn and descriptionRu are set
                         // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
