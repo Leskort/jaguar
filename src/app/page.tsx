@@ -111,111 +111,108 @@ function VehicleSelector() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-base sm:text-lg font-semibold text-center xl:text-left">{t('selectVehicleModel')}</div>
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-8 xl:gap-12 items-start">
-        {/* Selectors Section */}
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <select
-              value={selectedBrand}
-              onChange={(e) => {
-                const newBrand = e.target.value;
-                setSelectedBrand(newBrand);
-                // Force clear model and year immediately
-                setSelectedModel("");
-                setSelectedYear("");
-              }}
-              className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1"
-              required
-            >
-              <option value="">{t('selectBrand')}</option>
-              {allBrands.map(brand => {
-                const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-                return (
-                  <option key={brand} value={brand}>{displayName}</option>
-                );
-              })}
-            </select>
+    <div className="flex flex-col items-center space-y-6">
+      <div className="text-base sm:text-lg font-semibold text-center">{t('selectVehicleModel')}</div>
+      
+      {/* Selectors Section */}
+      <div className="w-full max-w-4xl">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <select
+            value={selectedBrand}
+            onChange={(e) => {
+              const newBrand = e.target.value;
+              setSelectedBrand(newBrand);
+              // Force clear model and year immediately
+              setSelectedModel("");
+              setSelectedYear("");
+            }}
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1 max-w-xs mx-auto sm:mx-0"
+            required
+          >
+            <option value="">{t('selectBrand')}</option>
+            {allBrands.map(brand => {
+              const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              return (
+                <option key={brand} value={brand}>{displayName}</option>
+              );
+            })}
+          </select>
 
-            <select
-              value={selectedModel}
-              onChange={(e) => {
-                setSelectedModel(e.target.value);
-                setSelectedYear("");
-              }}
-              className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1"
-              required
-              disabled={!selectedBrand || availableModels.length === 0}
-              key={selectedBrand} // Force re-render when brand changes
-            >
-              <option value="">{t('selectModel')}</option>
-              {availableModels.map((vehicle) => (
-                <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
-                  {vehicle.title}
-                </option>
-              ))}
-            </select>
+          <select
+            value={selectedModel}
+            onChange={(e) => {
+              setSelectedModel(e.target.value);
+              setSelectedYear("");
+            }}
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs mx-auto sm:mx-0"
+            required
+            disabled={!selectedBrand || availableModels.length === 0}
+            key={selectedBrand} // Force re-render when brand changes
+          >
+            <option value="">{t('selectModel')}</option>
+            {availableModels.map((vehicle) => (
+              <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
+                {vehicle.title}
+              </option>
+            ))}
+          </select>
 
-            <select
-              value={selectedYear}
-              onChange={(e) => setSelectedYear(e.target.value)}
-              className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1"
-              required
-              disabled={!selectedModel || availableYears.length === 0}
-              key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
-            >
-              <option value="">{t('selectYear')}</option>
-              {availableYears.map((year, index) => (
-                <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
-                  {year.label}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs mx-auto sm:mx-0"
+            required
+            disabled={!selectedModel || availableYears.length === 0}
+            key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
+          >
+            <option value="">{t('selectYear')}</option>
+            {availableYears.map((year, index) => (
+              <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
+                {year.label}
+              </option>
+            ))}
+          </select>
         </div>
-        
-        {/* Vehicle Image and Button Section */}
-        {selectedVehicle && selectedVehicle.image ? (
-          <div className="flex flex-col gap-5 w-full xl:w-full items-center xl:items-start">
-            <div className="relative w-full h-72 sm:h-80 xl:h-[420px] rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
-              <Image
-                src={selectedVehicle.image}
-                alt={selectedVehicle.title}
-                fill
-                className="object-cover"
-                unoptimized
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = 'none';
-                  const parent = (e.target as HTMLImageElement).parentElement;
-                  if (parent && !parent.querySelector('.no-image-message')) {
-                    const errorMsg = document.createElement("div");
-                    errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
-                    errorMsg.textContent = "No image";
-                    parent.appendChild(errorMsg);
-                  }
-                }}
-              />
-            </div>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                if (selectedBrand && selectedModel && selectedYear) {
-                  handleGoToServices(e);
-                }
-              }}
-              disabled={!selectedBrand || !selectedModel || !selectedYear}
-              className="w-full xl:w-full h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
-            >
-              {t('goToServices')}
-            </button>
-          </div>
-        ) : (
-          <div className="hidden xl:block w-full h-72 sm:h-80 xl:h-[420px] rounded-2xl border-2 border-dashed border-[var(--border-color)] bg-silver/10 dark:bg-zinc-800/20 flex items-center justify-center">
-            <span className="text-zinc-400 dark:text-zinc-500 text-sm">{t('selectModel')} to see image</span>
-          </div>
-        )}
       </div>
+      
+      {/* Vehicle Image */}
+      {selectedVehicle && selectedVehicle.image && (
+        <div className="relative w-full max-w-lg h-72 sm:h-80 xl:h-96 rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
+          <Image
+            src={selectedVehicle.image}
+            alt={selectedVehicle.title}
+            fill
+            className="object-cover"
+            unoptimized
+            onError={(e) => {
+              (e.target as HTMLImageElement).style.display = 'none';
+              const parent = (e.target as HTMLImageElement).parentElement;
+              if (parent && !parent.querySelector('.no-image-message')) {
+                const errorMsg = document.createElement("div");
+                errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
+                errorMsg.textContent = "No image";
+                parent.appendChild(errorMsg);
+              }
+            }}
+          />
+        </div>
+      )}
+      
+      {/* Button */}
+      {selectedVehicle && selectedVehicle.image && (
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            if (selectedBrand && selectedModel && selectedYear) {
+              handleGoToServices(e);
+            }
+          }}
+          disabled={!selectedBrand || !selectedModel || !selectedYear}
+          className="w-full max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+        >
+          {t('goToServices')}
+        </button>
+      )}
     </div>
   );
 }
