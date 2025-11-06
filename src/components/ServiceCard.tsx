@@ -121,7 +121,8 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
       style={{ 
         isolation: 'isolate',
         contain: 'layout style paint',
-        willChange: 'auto'
+        position: 'relative',
+        transform: 'translateZ(0)'
       }}
     >
       <div className="relative h-40 w-full bg-silver/20">
@@ -195,7 +196,6 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
           id={detailsId} 
           data-card-id={itemId} 
           data-instance-id={instanceId}
-          style={{ isolation: 'isolate' }}
         >
           <button
             type="button"
@@ -206,18 +206,19 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             data-card-id={itemId}
             data-instance-id={instanceId}
             data-details-button={instanceId}
-            style={{ isolation: 'isolate' }}
           >
             {t('details')} <span className={`inline-block transition-transform duration-200 ${isDetailsOpen ? 'rotate-180' : ''}`}>↓</span>
           </button>
-          {isDetailsOpen && (
-            <div 
-              id={`${detailsId}-content`} 
-              className="pt-2 text-xs text-zinc-700 dark:text-zinc-300"
-              data-card-id={itemId}
-              data-instance-id={instanceId}
-              style={{ isolation: 'isolate' }}
-            >
+          <div 
+            id={`${detailsId}-content`} 
+            className="pt-2 text-xs text-zinc-700 dark:text-zinc-300 overflow-hidden transition-all duration-200"
+            data-card-id={itemId}
+            data-instance-id={instanceId}
+            style={{
+              maxHeight: isDetailsOpen ? '1000px' : '0',
+              opacity: isDetailsOpen ? 1 : 0
+            }}
+          >
               {(() => {
                 if (language === 'ru') {
                   return option.descriptionRu || option.description || '';
@@ -226,7 +227,6 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
                 }
               })()}
             </div>
-          )}
         </div>
       </div>
     </div>
