@@ -79,7 +79,7 @@ export default function MobileMenu() {
                   {t('contacts')}
                 </Link>
                 <div className="border-t border-[var(--border-color)] pt-4 mt-2">
-                  <LanguageSwitcher />
+                  <LanguageSwitcher fullWidth={true} />
                 </div>
                 <div className="border-t border-[var(--border-color)] pt-4 mt-2">
                   <div className="flex flex-col gap-2">
