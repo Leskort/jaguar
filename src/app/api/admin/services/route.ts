@@ -100,8 +100,25 @@ export async function POST(request: Request) {
     if (!services[brand][model][year]) services[brand][model][year] = {};
     if (!services[brand][model][year][category]) services[brand][model][year][category] = [];
     
-    services[brand][model][year][category].push(service);
+    // IMPORTANT: Ensure all fields are preserved when adding service
+    const serviceToAdd = {
+      title: service.title,
+      image: service.image,
+      price: service.price,
+      requirements: service.requirements,
+      description: service.description,
+      descriptionEn: service.descriptionEn,
+      descriptionRu: service.descriptionRu,
+      status: service.status,
+    };
+    
+    services[brand][model][year][category].push(serviceToAdd);
     console.log(`[POST /api/admin/services] Service added to array. New length: ${services[brand][model][year][category].length}`);
+    console.log(`[POST /api/admin/services] Added service with descriptions:`, {
+      description: serviceToAdd.description,
+      descriptionEn: serviceToAdd.descriptionEn,
+      descriptionRu: serviceToAdd.descriptionRu
+    });
     console.log("[POST /api/admin/services] Saving to storage...");
     
     try {
@@ -205,8 +222,24 @@ export async function PUT(request: Request) {
     if (categoryArray.length === 0) {
       console.log("Category array is empty, adding as new service instead of updating");
       // If array is empty, add as new service instead of updating
-      categoryArray.push(service);
+      // IMPORTANT: Ensure all fields are preserved when adding service
+      const serviceToAdd = {
+        title: service.title,
+        image: service.image,
+        price: service.price,
+        requirements: service.requirements,
+        description: service.description,
+        descriptionEn: service.descriptionEn,
+        descriptionRu: service.descriptionRu,
+        status: service.status,
+      };
+      categoryArray.push(serviceToAdd);
       console.log("Service added as new (array was empty)");
+      console.log("Added service with descriptions:", {
+        description: serviceToAdd.description,
+        descriptionEn: serviceToAdd.descriptionEn,
+        descriptionRu: serviceToAdd.descriptionRu
+      });
     } else if (index >= categoryArray.length) {
       console.error("Index out of bounds:", {
         index,
@@ -227,12 +260,25 @@ export async function PUT(request: Request) {
         descriptionEn: oldService?.descriptionEn, 
         descriptionRu: oldService?.descriptionRu 
       });
-      categoryArray[index] = service;
-      console.log("New service:", JSON.stringify(service, null, 2));
+      
+      // IMPORTANT: Replace the entire service object to preserve all fields including descriptionEn and descriptionRu
+      // Don't use spread operator as it might lose properties
+      categoryArray[index] = {
+        title: service.title,
+        image: service.image,
+        price: service.price,
+        requirements: service.requirements,
+        description: service.description,
+        descriptionEn: service.descriptionEn,
+        descriptionRu: service.descriptionRu,
+        status: service.status,
+      };
+      
+      console.log("New service after update:", JSON.stringify(categoryArray[index], null, 2));
       console.log("New service descriptions:", { 
-        description: service?.description, 
-        descriptionEn: service?.descriptionEn, 
-        descriptionRu: service?.descriptionRu 
+        description: categoryArray[index]?.description, 
+        descriptionEn: categoryArray[index]?.descriptionEn, 
+        descriptionRu: categoryArray[index]?.descriptionRu 
       });
     }
     
