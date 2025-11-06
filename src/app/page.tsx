@@ -182,24 +182,37 @@ function VehicleSelector() {
         
         {/* Vehicle Image */}
         {selectedVehicle && selectedVehicle.image && (
-          <div className="relative w-full lg:w-64 h-48 lg:h-64 rounded-xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
-            <Image
-              src={selectedVehicle.image}
-              alt={selectedVehicle.title}
-              fill
-              className="object-cover"
-              unoptimized
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                const parent = (e.target as HTMLImageElement).parentElement;
-                if (parent && !parent.querySelector('.no-image-message')) {
-                  const errorMsg = document.createElement("div");
-                  errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
-                  errorMsg.textContent = "No image";
-                  parent.appendChild(errorMsg);
-                }
-              }}
-            />
+          <div className="flex flex-col gap-3 w-full lg:w-64 flex-shrink-0">
+            <div className="relative w-full h-48 lg:h-64 rounded-xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
+              <Image
+                src={selectedVehicle.image}
+                alt={selectedVehicle.title}
+                fill
+                className="object-cover"
+                unoptimized
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  const parent = (e.target as HTMLImageElement).parentElement;
+                  if (parent && !parent.querySelector('.no-image-message')) {
+                    const errorMsg = document.createElement("div");
+                    errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
+                    errorMsg.textContent = "No image";
+                    parent.appendChild(errorMsg);
+                  }
+                }}
+              />
+            </div>
+            {selectedBrand && selectedModel && selectedYear && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleGoToServices(e);
+                }}
+                className="w-full h-12 sm:h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              >
+                {t('goToServices')}
+              </button>
+            )}
           </div>
         )}
       </div>
