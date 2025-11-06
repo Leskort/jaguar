@@ -113,71 +113,96 @@ function VehicleSelector() {
   return (
     <div className="space-y-4">
       <div className="text-sm font-medium">{t('selectVehicleModel')}</div>
-      <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3">
-        <select
-          value={selectedBrand}
-          onChange={(e) => {
-            const newBrand = e.target.value;
-            setSelectedBrand(newBrand);
-            // Force clear model and year immediately
-            setSelectedModel("");
-            setSelectedYear("");
-          }}
-          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0"
-          required
-        >
-          <option value="">{t('selectBrand')}</option>
-          {allBrands.map(brand => {
-            const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-            return (
-              <option key={brand} value={brand}>{displayName}</option>
-            );
-          })}
-        </select>
+      <div className="flex flex-col lg:flex-row gap-4 lg:items-start">
+        <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3 flex-1">
+          <select
+            value={selectedBrand}
+            onChange={(e) => {
+              const newBrand = e.target.value;
+              setSelectedBrand(newBrand);
+              // Force clear model and year immediately
+              setSelectedModel("");
+              setSelectedYear("");
+            }}
+            className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0"
+            required
+          >
+            <option value="">{t('selectBrand')}</option>
+            {allBrands.map(brand => {
+              const displayName = brand.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+              return (
+                <option key={brand} value={brand}>{displayName}</option>
+              );
+            })}
+          </select>
 
-        <select
-          value={selectedModel}
-          onChange={(e) => {
-            setSelectedModel(e.target.value);
-            setSelectedYear("");
-          }}
-          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          required
-          disabled={!selectedBrand || availableModels.length === 0}
-          key={selectedBrand} // Force re-render when brand changes
-        >
-          <option value="">{t('selectModel')}</option>
-          {availableModels.map((vehicle) => (
-            <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
-              {vehicle.title}
-            </option>
-          ))}
-        </select>
+          <select
+            value={selectedModel}
+            onChange={(e) => {
+              setSelectedModel(e.target.value);
+              setSelectedYear("");
+            }}
+            className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            required
+            disabled={!selectedBrand || availableModels.length === 0}
+            key={selectedBrand} // Force re-render when brand changes
+          >
+            <option value="">{t('selectModel')}</option>
+            {availableModels.map((vehicle) => (
+              <option key={`${selectedBrand}-${vehicle.value}`} value={vehicle.value}>
+                {vehicle.title}
+              </option>
+            ))}
+          </select>
 
-        <select
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(e.target.value)}
-          className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
-          required
-          disabled={!selectedModel || availableYears.length === 0}
-          key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
-        >
-          <option value="">{t('selectYear')}</option>
-          {availableYears.map((year, index) => (
-            <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
-              {year.label}
-            </option>
-          ))}
-        </select>
+          <select
+            value={selectedYear}
+            onChange={(e) => setSelectedYear(e.target.value)}
+            className="h-12 sm:h-10 rounded-full border-2 border-[var(--border-color)] px-4 sm:px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 disabled:opacity-50 disabled:cursor-not-allowed"
+            required
+            disabled={!selectedModel || availableYears.length === 0}
+            key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
+          >
+            <option value="">{t('selectYear')}</option>
+            {availableYears.map((year, index) => (
+              <option key={`${selectedBrand}-${selectedModel}-${index}`} value={year.value}>
+                {year.label}
+              </option>
+            ))}
+          </select>
 
-        <button
-          type="submit"
-          disabled={!selectedBrand || !selectedModel || !selectedYear}
-          className="h-12 sm:h-10 px-6 sm:px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-        >
-          {t('goToServices')}
-        </button>
-      </form>
+          <button
+            type="submit"
+            disabled={!selectedBrand || !selectedModel || !selectedYear}
+            className="h-12 sm:h-10 px-6 sm:px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+          >
+            {t('goToServices')}
+          </button>
+        </form>
+        
+        {/* Vehicle Image */}
+        {selectedVehicle && selectedVehicle.image && (
+          <div className="relative w-full lg:w-64 h-48 lg:h-64 rounded-xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
+            <Image
+              src={selectedVehicle.image}
+              alt={selectedVehicle.title}
+              fill
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                const parent = (e.target as HTMLImageElement).parentElement;
+                if (parent && !parent.querySelector('.no-image-message')) {
+                  const errorMsg = document.createElement("div");
+                  errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
+                  errorMsg.textContent = "No image";
+                  parent.appendChild(errorMsg);
+                }
+              }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -966,15 +991,15 @@ export default function Home() {
       {offerOpen && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60" onClick={() => setOfferOpen(false)} />
-          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-[var(--space-black)] border-2 border-[var(--border-color)] p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-400 hover:text-zinc-200 text-xl transition-colors" onClick={() => setOfferOpen(false)}>✕</button>
+          <div className="relative z-[61] w-full max-w-2xl rounded-2xl bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] p-4 sm:p-6 max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <button aria-label="Close" className="absolute right-3 top-3 sm:right-4 sm:top-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200 text-xl transition-colors" onClick={() => setOfferOpen(false)}>✕</button>
             <h3 className="text-lg sm:text-xl font-semibold pr-8 text-[var(--foreground)]">{t('getAnOfferTitle')}</h3>
             <form onSubmit={handleOfferSubmit} className="mt-4 sm:mt-6 grid gap-3">
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('yourName')}
                 required
               />
@@ -982,7 +1007,7 @@ export default function Home() {
                 type="text"
                 value={formData.vin}
                 onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('vehicleVINNumber')}
                 required
               />
@@ -990,7 +1015,7 @@ export default function Home() {
                 type="text"
                 value={formData.contact}
                 onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-500"
+                className="h-12 sm:h-12 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('mobileNumberOrEmail')}
                 required
               />

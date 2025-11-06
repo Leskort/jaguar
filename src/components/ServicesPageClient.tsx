@@ -264,10 +264,10 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
       {showOrderForm && (
         <div className="fixed inset-0 z-[60] flex items-center justify-center">
           <div className="absolute inset-0 bg-black/60" onClick={() => setShowOrderForm(false)} />
-          <div className="relative z-[61] w-[92vw] max-w-2xl rounded-2xl bg-white text-black p-6" onClick={(e) => e.stopPropagation()}>
+          <div className="relative z-[61] w-[92vw] max-w-2xl rounded-2xl bg-white dark:bg-[var(--space-black)] text-black dark:text-[var(--foreground)] p-6" onClick={(e) => e.stopPropagation()}>
             <button
               aria-label="Close"
-              className="absolute right-4 top-4 text-zinc-500 hover:text-black"
+              className="absolute right-4 top-4 text-zinc-500 dark:text-zinc-400 hover:text-zinc-800 dark:hover:text-zinc-200"
               onClick={() => setShowOrderForm(false)}
             >
               ✕
@@ -278,7 +278,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                 type="text"
                 value={orderFormData.name}
                 onChange={(e) => setOrderFormData({ ...orderFormData, name: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 dark:border-zinc-700 px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('yourName')}
                 required
               />
@@ -286,7 +286,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                 type="text"
                 value={orderFormData.vin}
                 onChange={(e) => setOrderFormData({ ...orderFormData, vin: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 dark:border-zinc-700 px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('vehicleVINNumber')}
                 required
               />
@@ -294,20 +294,20 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                 type="text"
                 value={orderFormData.contact}
                 onChange={(e) => setOrderFormData({ ...orderFormData, contact: e.target.value })}
-                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 px-4 text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
+                className="h-12 sm:h-12 rounded-md border-2 border-zinc-200 dark:border-zinc-700 px-4 bg-white dark:bg-[var(--space-black)] text-[var(--foreground)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none placeholder:text-zinc-400 dark:placeholder:text-zinc-500"
                 placeholder={t('mobileNumberOrEmail')}
                 required
               />
-              <div className="mt-2 p-4 bg-zinc-50 rounded-lg">
-                <div className="text-sm text-zinc-600 mb-2">{t('orderSummary')}:</div>
-                <div className="text-xs text-zinc-500 space-y-1">
+              <div className="mt-2 p-4 bg-zinc-50 dark:bg-zinc-800 rounded-lg">
+                <div className="text-sm text-zinc-600 dark:text-zinc-400 mb-2">{t('orderSummary')}:</div>
+                <div className="text-xs text-zinc-500 dark:text-zinc-400 space-y-1">
                   {items.map((item) => (
                     <div key={item.id}>
                       {item.title} - {item.price}
                     </div>
                   ))}
                 </div>
-                <div className="mt-3 pt-3 border-t border-zinc-200 flex justify-between items-center">
+                <div className="mt-3 pt-3 border-t border-zinc-200 dark:border-zinc-700 flex justify-between items-center">
                   <span className="font-semibold">Total:</span>
                   <span className="text-lg font-bold">{totalPrice}</span>
                 </div>
