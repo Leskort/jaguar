@@ -799,9 +799,9 @@ export default function ServicesAdminPage() {
                             <button
                               onClick={async () => {
                                 // Reload services to ensure we have latest data
-                                await loadServices();
-                                // Verify the service still exists at this index
-                                const brandData = services[service.brand];
+                                const freshServices = await loadServices();
+                                // Verify the service still exists at this index using FRESH data
+                                const brandData = freshServices[service.brand];
                                 const modelData = brandData?.[service.model];
                                 const yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
                                 const categoryArray = yearData?.[service.category];
@@ -811,22 +811,44 @@ export default function ServicesAdminPage() {
                                   return;
                                 }
                                 
+                                // Get the FRESH service data from the server
+                                const freshService = categoryArray[service.index];
+                                
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
                                 setSelectedYear(service.year);
                                 setSelectedCategory(service.category);
+                                
                                 // Load service data, ensuring descriptionEn and descriptionRu are set
-                                // If they don't exist but description does, use description as fallback
-                                // BUT: if descriptionEn/descriptionRu already exist, keep them (don't overwrite with description)
-                                setFormData({
-                                  ...service,
-                                  descriptionEn: service.descriptionEn !== undefined && service.descriptionEn !== null 
-                                    ? service.descriptionEn 
-                                    : (service.description || ''),
-                                  descriptionRu: service.descriptionRu !== undefined && service.descriptionRu !== null 
-                                    ? service.descriptionRu 
-                                    : (service.description || ''),
+                                // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
+                                // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
+                                console.log("=== CLIENT: Loading service for editing (desktop table) ===");
+                                console.log("Service data from list:", JSON.stringify(service, null, 2));
+                                console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
+                                console.log("Description fields in fresh service:", { 
+                                  description: freshService?.description, 
+                                  descriptionEn: freshService?.descriptionEn, 
+                                  descriptionRu: freshService?.descriptionRu 
                                 });
+                                
+                                const loadedFormData = {
+                                  ...freshService,
+                                  descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
+                                    ? freshService.descriptionEn 
+                                    : (freshService?.description || ''),
+                                  descriptionRu: (freshService?.descriptionRu !== undefined && freshService?.descriptionRu !== null) 
+                                    ? freshService.descriptionRu 
+                                    : (freshService?.description || ''),
+                                };
+                                
+                                console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
+                                console.log("Description fields in loaded form data:", { 
+                                  description: loadedFormData.description, 
+                                  descriptionEn: loadedFormData.descriptionEn, 
+                                  descriptionRu: loadedFormData.descriptionRu 
+                                });
+                                
+                                setFormData(loadedFormData);
                                 setEditingIndex(service.index);
                                 setShowAddForm(true);
                                 setViewMode("filtered");
@@ -978,11 +1000,44 @@ export default function ServicesAdminPage() {
                           return;
                         }
                         
+                        // Get the FRESH service data from the server
+                        const freshService = categoryArray[service.index];
+                        
                         setSelectedBrand(service.brand);
                         setSelectedModel(service.model);
                         setSelectedYear(service.year);
                         setSelectedCategory(service.category);
-                        setFormData(service);
+                        
+                        // Load service data, ensuring descriptionEn and descriptionRu are set
+                        // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
+                        // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
+                        console.log("=== CLIENT: Loading service for editing (mobile card) ===");
+                        console.log("Service data from list:", JSON.stringify(service, null, 2));
+                        console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
+                        console.log("Description fields in fresh service:", { 
+                          description: freshService?.description, 
+                          descriptionEn: freshService?.descriptionEn, 
+                          descriptionRu: freshService?.descriptionRu 
+                        });
+                        
+                        const loadedFormData = {
+                          ...freshService,
+                          descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
+                            ? freshService.descriptionEn 
+                            : (freshService?.description || ''),
+                          descriptionRu: (freshService?.descriptionRu !== undefined && freshService?.descriptionRu !== null) 
+                            ? freshService.descriptionRu 
+                            : (freshService?.description || ''),
+                        };
+                        
+                        console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
+                        console.log("Description fields in loaded form data:", { 
+                          description: loadedFormData.description, 
+                          descriptionEn: loadedFormData.descriptionEn, 
+                          descriptionRu: loadedFormData.descriptionRu 
+                        });
+                        
+                        setFormData(loadedFormData);
                         setEditingIndex(service.index);
                         setShowAddForm(true);
                         setViewMode("filtered");
@@ -1441,18 +1496,39 @@ export default function ServicesAdminPage() {
                           return;
                         }
                         
+                        // Get the FRESH service data from the server
+                        const freshService = categoryArray[index];
+                        
                         // Load service data, ensuring descriptionEn and descriptionRu are set
-                        // If they don't exist but description does, use description as fallback
-                        // BUT: if descriptionEn/descriptionRu already exist, keep them (don't overwrite with description)
-                        setFormData({
-                          ...service,
-                          descriptionEn: service.descriptionEn !== undefined && service.descriptionEn !== null 
-                            ? service.descriptionEn 
-                            : (service.description || ''),
-                          descriptionRu: service.descriptionRu !== undefined && service.descriptionRu !== null 
-                            ? service.descriptionRu 
-                            : (service.description || ''),
+                        // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
+                        // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
+                        console.log("=== CLIENT: Loading service for editing (existing services section) ===");
+                        console.log("Service data from list:", JSON.stringify(service, null, 2));
+                        console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
+                        console.log("Description fields in fresh service:", { 
+                          description: freshService?.description, 
+                          descriptionEn: freshService?.descriptionEn, 
+                          descriptionRu: freshService?.descriptionRu 
                         });
+                        
+                        const loadedFormData = {
+                          ...freshService,
+                          descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
+                            ? freshService.descriptionEn 
+                            : (freshService?.description || ''),
+                          descriptionRu: (freshService?.descriptionRu !== undefined && freshService?.descriptionRu !== null) 
+                            ? freshService.descriptionRu 
+                            : (freshService?.description || ''),
+                        };
+                        
+                        console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
+                        console.log("Description fields in loaded form data:", { 
+                          description: loadedFormData.description, 
+                          descriptionEn: loadedFormData.descriptionEn, 
+                          descriptionRu: loadedFormData.descriptionRu 
+                        });
+                        
+                        setFormData(loadedFormData);
                         setEditingIndex(index);
                         setShowAddForm(true);
                       }}
