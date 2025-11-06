@@ -317,9 +317,19 @@ export default function ServicesAdminPage() {
         // Ensure image path is properly formatted
         image: formData.image || "",
         // Ensure descriptionEn and descriptionRu are included
-        descriptionEn: formData.descriptionEn || "",
-        descriptionRu: formData.descriptionRu || "",
+        // Use explicit check to preserve empty strings
+        descriptionEn: formData.descriptionEn !== undefined ? formData.descriptionEn : "",
+        descriptionRu: formData.descriptionRu !== undefined ? formData.descriptionRu : "",
       };
+      
+      console.log("=== CLIENT: Preparing service data ===");
+      console.log("formData:", JSON.stringify(formData, null, 2));
+      console.log("serviceData:", JSON.stringify(serviceData, null, 2));
+      console.log("Description fields in serviceData:", { 
+        description: serviceData.description, 
+        descriptionEn: serviceData.descriptionEn, 
+        descriptionRu: serviceData.descriptionRu 
+      });
       
 
       if (editingIndex !== null) {
@@ -496,7 +506,23 @@ export default function ServicesAdminPage() {
       }
       
       // Reload services to show updated data
-      await loadServices();
+      const reloadedServices = await loadServices();
+      console.log("=== CLIENT: After reload, checking saved data ===");
+      if (editingIndex !== null) {
+        const brandData = reloadedServices[selectedBrand];
+        const modelData = brandData?.[selectedModel];
+        const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
+        const categoryArray = yearData?.[selectedCategory];
+        const savedService = categoryArray?.[editingIndex];
+        if (savedService) {
+          console.log("Saved service data:", JSON.stringify(savedService, null, 2));
+          console.log("Description fields in saved service:", { 
+            description: savedService.description, 
+            descriptionEn: savedService.descriptionEn, 
+            descriptionRu: savedService.descriptionRu 
+          });
+        }
+      }
       await loadVehicles(); // Also reload vehicles to get any new brands/models
       setFormData({
         title: "",

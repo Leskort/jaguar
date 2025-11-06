@@ -208,9 +208,33 @@ export async function PUT(request: Request) {
     
     console.log("Service updated in memory, saving to storage...");
     
+    // Verify the service was saved correctly before writing to storage
+    const savedServiceInMemory = services[brand]?.[model]?.[year]?.[category]?.[index];
+    if (savedServiceInMemory) {
+      console.log("Service in memory before save:", JSON.stringify(savedServiceInMemory, null, 2));
+      console.log("Description fields in memory:", { 
+        description: savedServiceInMemory.description, 
+        descriptionEn: savedServiceInMemory.descriptionEn, 
+        descriptionRu: savedServiceInMemory.descriptionRu 
+      });
+    }
+    
     try {
       await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
       console.log("✅ Service saved successfully to storage");
+      
+      // Verify the service was saved correctly after writing to storage
+      const reloadedServices = await getServices();
+      const reloadedService = reloadedServices[brand]?.[model]?.[year]?.[category]?.[index];
+      if (reloadedService) {
+        console.log("Service after reload from storage:", JSON.stringify(reloadedService, null, 2));
+        console.log("Description fields after reload:", { 
+          description: reloadedService.description, 
+          descriptionEn: reloadedService.descriptionEn, 
+          descriptionRu: reloadedService.descriptionRu 
+        });
+      }
+      
       return NextResponse.json({ success: true });
     } catch (saveError) {
       console.error("❌ Error saving to storage:", saveError);
