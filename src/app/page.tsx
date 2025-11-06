@@ -5,6 +5,17 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
+type Work = {
+  id: string;
+  image: string;
+  titleEn: string;
+  titleRu: string;
+  descriptionEn: string;
+  descriptionRu: string;
+  order: number;
+  createdAt: string;
+};
+
 type Vehicle = {
   brand: string;
   value: string;
@@ -168,6 +179,93 @@ function VehicleSelector() {
         </button>
       </form>
     </div>
+  );
+}
+
+function OurWorksSection() {
+  const { t, language } = useLanguage();
+  const [works, setWorks] = useState<Work[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadWorks();
+  }, []);
+
+  const loadWorks = async () => {
+    try {
+      const res = await fetch("/api/admin/works");
+      const data = await res.json();
+      const worksArray = Array.isArray(data) ? data : [];
+      // Show only first 8 works on homepage
+      setWorks(worksArray.slice(0, 8));
+    } catch (error) {
+      console.error("Failed to load works:", error);
+      setWorks([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
+          <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
+            {t('seeAll')}
+          </Link>
+        </div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-video rounded-xl bg-silver/20 dark:bg-zinc-800/30" />
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (works.length === 0) {
+    return null; // Don't show section if no works
+  }
+
+  return (
+    <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+      <div className="flex items-center justify-between mb-8">
+        <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
+        <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
+          {t('seeAll')}
+        </Link>
+      </div>
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+        {works.map((work) => (
+          <Link
+            key={work.id}
+            href="/our-works"
+            className="group rounded-xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow"
+          >
+            <div className="relative aspect-video bg-silver/20 dark:bg-zinc-800/30">
+              {work.image ? (
+                <Image
+                  src={work.image}
+                  alt={language === 'ru' ? work.titleRu : work.titleEn}
+                  fill
+                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  unoptimized
+                />
+              ) : null}
+            </div>
+            <div className="p-4">
+              <h3 className="text-sm font-medium line-clamp-2 mb-1">
+                {language === 'ru' ? work.titleRu : work.titleEn}
+              </h3>
+              <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
+                {language === 'ru' ? work.descriptionRu : work.descriptionEn}
+              </p>
+            </div>
+          </Link>
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -558,20 +656,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* OUR WORKS */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
-          <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
-            {t('seeAll')}
-          </Link>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="aspect-video rounded-xl bg-silver/20 dark:bg-zinc-800/30" />
-          ))}
-        </div>
-      </section>
+      <OurWorksSection />
 
       {/* LATEST ARTICLES */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
