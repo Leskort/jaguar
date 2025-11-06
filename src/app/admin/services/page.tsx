@@ -900,37 +900,83 @@ export default function ServicesAdminPage() {
                                   }
                                 }
                                 
-                                // Final validation
+                                // Final validation with detailed logging
+                                console.log("=== CLIENT: Service search result ===");
+                                console.log("Service from list:", {
+                                  brand: service.brand,
+                                  model: service.model,
+                                  year: service.year,
+                                  category: service.category,
+                                  index: service.index
+                                });
+                                console.log("Normalized keys:", {
+                                  normalizedBrand,
+                                  normalizedModel
+                                });
+                                console.log("Search result:", {
+                                  foundBrandData: !!brandData,
+                                  foundModelData: !!modelData,
+                                  foundYearData: !!yearData,
+                                  foundCategoryArray: !!categoryArray,
+                                  categoryArrayLength: categoryArray?.length,
+                                  categoryArrayType: Array.isArray(categoryArray) ? 'array' : typeof categoryArray
+                                });
+                                
+                                if (brandData) {
+                                  console.log("Brand data keys:", Object.keys(brandData));
+                                }
+                                if (modelData) {
+                                  console.log("Model data keys:", Object.keys(modelData));
+                                }
+                                if (yearData) {
+                                  console.log("Year data keys:", Object.keys(yearData));
+                                }
+                                
                                 if (!categoryArray || !Array.isArray(categoryArray)) {
-                                  console.error("Category array not found:", {
+                                  console.error("❌ Category array not found or invalid:", {
                                     service,
                                     normalizedBrand,
                                     normalizedModel,
                                     availableBrands: Object.keys(freshServices),
                                     brandDataKeys: brandData ? Object.keys(brandData) : null,
                                     modelDataKeys: modelData ? Object.keys(modelData) : null,
-                                    yearDataKeys: yearData ? Object.keys(yearData) : null
+                                    yearDataKeys: yearData ? Object.keys(yearData) : null,
+                                    categoryArrayValue: categoryArray
                                   });
                                   alert(t('serviceDataChanged'));
                                   return;
                                 }
                                 
                                 if (categoryArray.length === 0) {
+                                  console.error("❌ Category array is empty:", {
+                                    service,
+                                    brand: service.brand,
+                                    model: service.model,
+                                    year: service.year,
+                                    category: service.category
+                                  });
                                   alert(t('cannotEditCategoryEmpty'));
                                   return;
                                 }
                                 
                                 if (service.index >= categoryArray.length) {
+                                  console.error("❌ Index out of bounds:", {
+                                    serviceIndex: service.index,
+                                    arrayLength: categoryArray.length,
+                                    service
+                                  });
                                   alert(t('invalidIndexCategory').replace('{count}', categoryArray.length.toString()));
                                   return;
                                 }
                                 
                                 // Validate category exists
                                 if (!service.category) {
-                                  console.error("Service category is missing:", service);
+                                  console.error("❌ Service category is missing:", service);
                                   alert(t('cannotEditCategoryEmpty'));
                                   return;
                                 }
+                                
+                                console.log("✅ Service found successfully, proceeding to edit");
                                 
                                 // Get the FRESH service data from the server
                                 const freshService = categoryArray[service.index];
