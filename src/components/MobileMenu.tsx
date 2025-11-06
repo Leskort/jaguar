@@ -182,6 +182,7 @@ export default function MobileMenu() {
                 <div className="pt-4">
                   <button
                     onClick={() => {
+                      setIsOpen(false);
                       setOfferOpen(true);
                     }}
                     className="block w-full text-center px-6 py-3 rounded-lg bg-[var(--accent-gold)] text-black font-semibold hover:opacity-90 transition-opacity min-h-[44px]"
