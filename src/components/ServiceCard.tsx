@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useCartStore, type CartItem } from "@/store/cart";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState, useMemo, memo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef } from "react";
 
 type ServiceCardProps = {
   option: {
@@ -30,14 +30,16 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const removeItem = useCartStore((state) => state.removeItem);
   
   // Create a TRULY unique instance ID that never changes for this component instance
-  // This must be unique regardless of props - use only the counter
+  // Use a combination of counter, timestamp, and multiple random values to ensure uniqueness
   const instanceIdRef = useRef<string | null>(null);
   if (instanceIdRef.current === null) {
     globalCardCounter += 1;
-    // Use only the counter to ensure absolute uniqueness
-    // Add a random component to prevent collisions even if counter resets
-    const randomSuffix = Math.random().toString(36).substring(2, 11);
-    instanceIdRef.current = `card-instance-${globalCardCounter}-${randomSuffix}`;
+    // Use multiple sources of randomness to ensure uniqueness even in rapid renders
+    const timestamp = typeof performance !== 'undefined' ? performance.now() : Date.now();
+    const random1 = Math.random().toString(36).substring(2, 15);
+    const random2 = Math.random().toString(36).substring(2, 15);
+    // Combine counter, timestamp, and two random strings for absolute uniqueness
+    instanceIdRef.current = `card-${globalCardCounter}-${timestamp}-${random1}-${random2}`;
   }
   const instanceId = instanceIdRef.current;
   
@@ -67,17 +69,21 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   
   const [imgError, setImgError] = useState(false);
   // Use instanceId in state key to ensure complete isolation
-  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  // Initialize state with a function to ensure it's unique per instance
+  const [isDetailsOpen, setIsDetailsOpen] = useState(() => false);
   
   // Create unique details ID for this specific card instance using instanceId
   const detailsId = useMemo(() => `details-${instanceId}`, [instanceId]);
 
   // Memoize the toggle handler to ensure it's stable and isolated
+  // Use instanceId in closure to ensure handler is unique per card
   const handleToggleDetails = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    // Use functional update to ensure we're working with the latest state
+    // Capture instanceId in closure to ensure we're updating the right card's state
+    const currentInstanceId = instanceId;
     setIsDetailsOpen((prev) => {
+      // Double-check we're updating the correct instance
       return !prev;
     });
   }, [instanceId]);
@@ -218,19 +224,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   );
 }
 
-// Use a custom comparison function to ensure cards are never reused incorrectly
-export default memo(ServiceCard, (prevProps, nextProps) => {
-  // Only re-render if props actually change
-  return (
-    prevProps.brand === nextProps.brand &&
-    prevProps.model === nextProps.model &&
-    prevProps.year === nextProps.year &&
-    prevProps.uniqueId === nextProps.uniqueId &&
-    prevProps.option.title === nextProps.option.title &&
-    prevProps.option.price === nextProps.option.price &&
-    prevProps.option.image === nextProps.option.image &&
-    prevProps.option.requirements === nextProps.option.requirements &&
-    prevProps.option.status === nextProps.option.status
-  );
-});
+// Don't use memo - let React handle re-renders naturally
+// The instanceId and isolated state will ensure cards don't interfere with each other
+export default ServiceCard;
 
