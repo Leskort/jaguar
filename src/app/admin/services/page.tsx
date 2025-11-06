@@ -846,22 +846,82 @@ export default function ServicesAdminPage() {
                                 const normalizedBrand = service.brand.trim().toLowerCase().replace(/\s+/g, '-');
                                 const normalizedModel = service.model.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                                 
-                                // Try normalized keys first
-                                let brandData = freshServices[normalizedBrand] || freshServices[service.brand];
-                                let modelData = brandData?.[normalizedModel] || brandData?.[service.model];
-                                let yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                                let categoryArray = yearData?.[service.category];
+                                // Try all possible key combinations
+                                let brandData: any = null;
+                                let modelData: any = null;
+                                let yearData: Record<string, ServiceOption[]> | undefined = undefined;
+                                let categoryArray: ServiceOption[] | undefined = undefined;
                                 
-                                // If not found, try original keys
-                                if (!categoryArray) {
-                                  brandData = freshServices[service.brand];
-                                  modelData = brandData?.[service.model];
-                                  yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                                  categoryArray = yearData?.[service.category];
+                                // Try normalized keys first
+                                brandData = freshServices[normalizedBrand] || freshServices[service.brand];
+                                if (brandData) {
+                                  modelData = brandData[normalizedModel] || brandData[service.model];
+                                  if (modelData) {
+                                    yearData = modelData[service.year] as Record<string, ServiceOption[]> | undefined;
+                                    if (yearData) {
+                                      categoryArray = yearData[service.category];
+                                    }
+                                  }
                                 }
                                 
-                                if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
+                                // If not found, try all brand/model combinations
+                                if (!categoryArray) {
+                                  for (const brandKey in freshServices) {
+                                    const brand = freshServices[brandKey];
+                                    if (!brand || typeof brand !== 'object') continue;
+                                    
+                                    // Check if this brand matches (normalized or original)
+                                    const brandNormalized = brandKey.trim().toLowerCase().replace(/\s+/g, '-');
+                                    if (brandNormalized !== normalizedBrand && brandKey !== service.brand) continue;
+                                    
+                                    for (const modelKey in brand) {
+                                      const model = brand[modelKey];
+                                      if (!model || typeof model !== 'object') continue;
+                                      
+                                      // Check if this model matches (normalized or original)
+                                      const modelNormalized = modelKey.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                                      if (modelNormalized !== normalizedModel && modelKey !== service.model) continue;
+                                      
+                                      // Check year
+                                      if (model[service.year] && typeof model[service.year] === 'object') {
+                                        const year = model[service.year] as Record<string, ServiceOption[]>;
+                                        
+                                        // Check category
+                                        if (year[service.category] && Array.isArray(year[service.category])) {
+                                          brandData = brand;
+                                          modelData = model;
+                                          yearData = year;
+                                          categoryArray = year[service.category];
+                                          break;
+                                        }
+                                      }
+                                    }
+                                    if (categoryArray) break;
+                                  }
+                                }
+                                
+                                // Final validation
+                                if (!categoryArray || !Array.isArray(categoryArray)) {
+                                  console.error("Category array not found:", {
+                                    service,
+                                    normalizedBrand,
+                                    normalizedModel,
+                                    availableBrands: Object.keys(freshServices),
+                                    brandDataKeys: brandData ? Object.keys(brandData) : null,
+                                    modelDataKeys: modelData ? Object.keys(modelData) : null,
+                                    yearDataKeys: yearData ? Object.keys(yearData) : null
+                                  });
                                   alert(t('serviceDataChanged'));
+                                  return;
+                                }
+                                
+                                if (categoryArray.length === 0) {
+                                  alert(t('cannotEditCategoryEmpty'));
+                                  return;
+                                }
+                                
+                                if (service.index >= categoryArray.length) {
+                                  alert(t('invalidIndexCategory').replace('{count}', categoryArray.length.toString()));
                                   return;
                                 }
                                 
@@ -1070,22 +1130,79 @@ export default function ServicesAdminPage() {
                         const normalizedBrand = service.brand.trim().toLowerCase().replace(/\s+/g, '-');
                         const normalizedModel = service.model.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
                         
-                        // Try normalized keys first
-                        let brandData = freshServices[normalizedBrand] || freshServices[service.brand];
-                        let modelData = brandData?.[normalizedModel] || brandData?.[service.model];
-                        let yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                        let categoryArray = yearData?.[service.category];
+                        // Try all possible key combinations
+                        let brandData: any = null;
+                        let modelData: any = null;
+                        let yearData: Record<string, ServiceOption[]> | undefined = undefined;
+                        let categoryArray: ServiceOption[] | undefined = undefined;
                         
-                        // If not found, try original keys
-                        if (!categoryArray) {
-                          brandData = freshServices[service.brand];
-                          modelData = brandData?.[service.model];
-                          yearData = modelData?.[service.year] as Record<string, ServiceOption[]> | undefined;
-                          categoryArray = yearData?.[service.category];
+                        // Try normalized keys first
+                        brandData = freshServices[normalizedBrand] || freshServices[service.brand];
+                        if (brandData) {
+                          modelData = brandData[normalizedModel] || brandData[service.model];
+                          if (modelData) {
+                            yearData = modelData[service.year] as Record<string, ServiceOption[]> | undefined;
+                            if (yearData) {
+                              categoryArray = yearData[service.category];
+                            }
+                          }
                         }
                         
-                        if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
+                        // If not found, try all brand/model combinations
+                        if (!categoryArray) {
+                          for (const brandKey in freshServices) {
+                            const brand = freshServices[brandKey];
+                            if (!brand || typeof brand !== 'object') continue;
+                            
+                            // Check if this brand matches (normalized or original)
+                            const brandNormalized = brandKey.trim().toLowerCase().replace(/\s+/g, '-');
+                            if (brandNormalized !== normalizedBrand && brandKey !== service.brand) continue;
+                            
+                            for (const modelKey in brand) {
+                              const model = brand[modelKey];
+                              if (!model || typeof model !== 'object') continue;
+                              
+                              // Check if this model matches (normalized or original)
+                              const modelNormalized = modelKey.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+                              if (modelNormalized !== normalizedModel && modelKey !== service.model) continue;
+                              
+                              // Check year
+                              if (model[service.year] && typeof model[service.year] === 'object') {
+                                const year = model[service.year] as Record<string, ServiceOption[]>;
+                                
+                                // Check category
+                                if (year[service.category] && Array.isArray(year[service.category])) {
+                                  brandData = brand;
+                                  modelData = model;
+                                  yearData = year;
+                                  categoryArray = year[service.category];
+                                  break;
+                                }
+                              }
+                            }
+                            if (categoryArray) break;
+                          }
+                        }
+                        
+                        // Final validation
+                        if (!categoryArray || !Array.isArray(categoryArray)) {
+                          console.error("Category array not found (mobile):", {
+                            service,
+                            normalizedBrand,
+                            normalizedModel,
+                            availableBrands: Object.keys(freshServices)
+                          });
                           alert(t('serviceDataChanged'));
+                          return;
+                        }
+                        
+                        if (categoryArray.length === 0) {
+                          alert(t('cannotEditCategoryEmpty'));
+                          return;
+                        }
+                        
+                        if (service.index >= categoryArray.length) {
+                          alert(t('invalidIndexCategory').replace('{count}', categoryArray.length.toString()));
                           return;
                         }
                         
