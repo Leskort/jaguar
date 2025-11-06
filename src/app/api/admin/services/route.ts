@@ -27,8 +27,126 @@ async function getServices() {
   }
 }
 
+// Function to clean up duplicate entries with empty model/year keys
+function cleanupDuplicates(services: any): { cleaned: boolean; saved: boolean } {
+  let cleaned = false;
+  let saved = false;
+  
+  if (!services || typeof services !== 'object') {
+    return { cleaned: false, saved: false };
+  }
+  
+  for (const brand in services) {
+    if (!services[brand] || typeof services[brand] !== 'object') continue;
+    
+    // Check for empty model key
+    const emptyModelKey = '';
+    if (services[brand][emptyModelKey] && typeof services[brand][emptyModelKey] === 'object') {
+      const emptyModelData = services[brand][emptyModelKey];
+      
+      // Iterate through all years in empty model
+      for (const year in emptyModelData) {
+        if (!emptyModelData[year] || typeof emptyModelData[year] !== 'object') continue;
+        
+        // Iterate through all categories in empty model/year
+        for (const category in emptyModelData[year]) {
+          const emptyKeyArray = emptyModelData[year][category];
+          if (!Array.isArray(emptyKeyArray)) continue;
+          
+          // For each service in empty key array, try to find and merge with normal key entry
+          for (let i = emptyKeyArray.length - 1; i >= 0; i--) {
+            const duplicateService = emptyKeyArray[i];
+            if (!duplicateService || !duplicateService.title) continue;
+            
+            // Try to find matching service in normal structure (iterate through all models)
+            for (const model in services[brand]) {
+              if (model === emptyModelKey) continue; // Skip empty model key
+              if (!services[brand][model] || typeof services[brand][model] !== 'object') continue;
+              
+              // Check if this model has the same year
+              if (services[brand][model][year] && typeof services[brand][model][year] === 'object') {
+                if (services[brand][model][year][category] && Array.isArray(services[brand][model][year][category])) {
+                  const normalArray = services[brand][model][year][category];
+                  
+                  // Find service with same title
+                  const matchingIndex = normalArray.findIndex((svc: any) => svc?.title === duplicateService.title);
+                  if (matchingIndex >= 0) {
+                    const normalService = normalArray[matchingIndex];
+                    console.log(`[GET] Found duplicate: "${duplicateService.title}" in [${brand}][${emptyModelKey}][${year}][${category}]`);
+                    console.log(`[GET] Matching service found in [${brand}][${model}][${year}][${category}][${matchingIndex}]`);
+                    
+                    // Merge descriptionEn and descriptionRu from duplicate
+                    if (!normalService.descriptionEn && duplicateService.descriptionEn) {
+                      normalService.descriptionEn = duplicateService.descriptionEn;
+                      console.log(`[GET] Merged descriptionEn from duplicate`);
+                      cleaned = true;
+                    }
+                    if (!normalService.descriptionRu && duplicateService.descriptionRu) {
+                      normalService.descriptionRu = duplicateService.descriptionRu;
+                      console.log(`[GET] Merged descriptionRu from duplicate: "${duplicateService.descriptionRu}"`);
+                      cleaned = true;
+                    }
+                    
+                    // Remove duplicate from empty key array
+                    emptyKeyArray.splice(i, 1);
+                    console.log(`[GET] Removed duplicate entry`);
+                    cleaned = true;
+                    break; // Found and merged, move to next duplicate
+                  }
+                }
+              }
+            }
+          }
+          
+          // If array is now empty, clean up structure
+          if (emptyKeyArray.length === 0) {
+            delete emptyModelData[year][category];
+            cleaned = true;
+          }
+        }
+        
+        // If year has no categories, remove it
+        if (Object.keys(emptyModelData[year]).length === 0) {
+          delete emptyModelData[year];
+          cleaned = true;
+        }
+      }
+      
+      // If empty model has no years, remove it
+      if (Object.keys(emptyModelData).length === 0) {
+        delete services[brand][emptyModelKey];
+        cleaned = true;
+      }
+    }
+  }
+  
+  // If we cleaned anything, save the cleaned data
+  if (cleaned) {
+    console.log("[GET] Duplicates cleaned, saving to storage...");
+    try {
+      // We'll save asynchronously, but return immediately
+      saveStorageData(STORAGE_KEY, FALLBACK_PATH, services).then(() => {
+        console.log("[GET] ✅ Cleaned data saved to storage");
+      }).catch((err) => {
+        console.error("[GET] ❌ Error saving cleaned data:", err);
+      });
+      saved = true;
+    } catch (err) {
+      console.error("[GET] ❌ Error initiating save:", err);
+    }
+  }
+  
+  return { cleaned, saved };
+}
+
 export async function GET() {
   const services = await getServices();
+  
+  // Clean up duplicates before returning
+  const { cleaned } = cleanupDuplicates(services);
+  if (cleaned) {
+    console.log("[GET] Duplicates were found and cleaned");
+  }
   
   // Log a sample service to verify descriptionEn and descriptionRu are present
   if (services && typeof services === 'object') {
