@@ -136,6 +136,37 @@ export async function getStorageData(key: string, fallbackPath: string): Promise
         const data = await store.get(key, { type: "json" });
         if (data !== null && data !== undefined) {
           console.log(`[getStorageData] ✅ Successfully loaded ${key} from Netlify Blobs`);
+          
+          // Log a sample of the data to verify descriptionEn and descriptionRu are present
+          if (key === "services" && data && typeof data === 'object') {
+            // Find a sample service to log
+            for (const brand in data) {
+              if (data[brand] && typeof data[brand] === 'object') {
+                for (const model in data[brand]) {
+                  if (data[brand][model] && typeof data[brand][model] === 'object') {
+                    for (const year in data[brand][model]) {
+                      if (data[brand][model][year] && typeof data[brand][model][year] === 'object') {
+                        for (const category in data[brand][model][year]) {
+                          const services = data[brand][model][year][category];
+                          if (Array.isArray(services) && services.length > 0) {
+                            const sampleService = services[0];
+                            console.log("[getStorageData] Sample service after load:", JSON.stringify(sampleService, null, 2));
+                            console.log("[getStorageData] Sample service description fields:", {
+                              description: sampleService?.description,
+                              descriptionEn: sampleService?.descriptionEn,
+                              descriptionRu: sampleService?.descriptionRu
+                            });
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          
           return data;
         } else {
           console.log(`[getStorageData] Key ${key} not found in Blobs, returning null`);
@@ -210,13 +241,82 @@ export async function saveStorageData(key: string, fallbackPath: string, data: a
         throw new Error(errorMsg);
       }
       
+      // Log a sample of the data to verify descriptionEn and descriptionRu are included
+      if (key === "services" && data && typeof data === 'object') {
+        // Find a sample service to log
+        for (const brand in data) {
+          if (data[brand] && typeof data[brand] === 'object') {
+            for (const model in data[brand]) {
+              if (data[brand][model] && typeof data[brand][model] === 'object') {
+                for (const year in data[brand][model]) {
+                  if (data[brand][model][year] && typeof data[brand][model][year] === 'object') {
+                    for (const category in data[brand][model][year]) {
+                      const services = data[brand][model][year][category];
+                      if (Array.isArray(services) && services.length > 0) {
+                        const sampleService = services[0];
+                        console.log("[saveStorageData] Sample service before save:", JSON.stringify(sampleService, null, 2));
+                        console.log("[saveStorageData] Sample service description fields:", {
+                          description: sampleService?.description,
+                          descriptionEn: sampleService?.descriptionEn,
+                          descriptionRu: sampleService?.descriptionRu
+                        });
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
       console.log("[saveStorageData] Serializing data to JSON...");
       const jsonData = JSON.stringify(data, null, 2);
       console.log(`[saveStorageData] Data size: ${jsonData.length} characters`);
       
       console.log("[saveStorageData] Calling store.set()...");
+      // Try saving as JSON string first (for compatibility)
       await store.set(key, jsonData);
       console.log(`[saveStorageData] ✅ Successfully saved ${key} to Netlify Blobs`);
+      
+      // Verify by reading back immediately
+      try {
+        const verifyData = await store.get(key, { type: "json" });
+        if (verifyData) {
+          console.log("[saveStorageData] Verification: Data read back successfully");
+          // Check if descriptionEn and descriptionRu are preserved
+          if (key === "services" && verifyData && typeof verifyData === 'object') {
+            for (const brand in verifyData) {
+              if (verifyData[brand] && typeof verifyData[brand] === 'object') {
+                for (const model in verifyData[brand]) {
+                  if (verifyData[brand][model] && typeof verifyData[brand][model] === 'object') {
+                    for (const year in verifyData[brand][model]) {
+                      if (verifyData[brand][model][year] && typeof verifyData[brand][model][year] === 'object') {
+                        for (const category in verifyData[brand][model][year]) {
+                          const services = verifyData[brand][model][year][category];
+                          if (Array.isArray(services) && services.length > 0) {
+                            const sampleService = services[0];
+                            console.log("[saveStorageData] Verification: Sample service after save:", JSON.stringify(sampleService, null, 2));
+                            console.log("[saveStorageData] Verification: Sample service description fields:", {
+                              description: sampleService?.description,
+                              descriptionEn: sampleService?.descriptionEn,
+                              descriptionRu: sampleService?.descriptionRu
+                            });
+                            break;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      } catch (verifyError) {
+        console.error("[saveStorageData] Verification read failed:", verifyError);
+      }
       return; // Success, exit early
     } catch (error) {
       console.error("[saveStorageData] ❌ Error writing to Netlify Blobs:", error);
