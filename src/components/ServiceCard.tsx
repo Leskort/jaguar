@@ -43,6 +43,9 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   }
   const instanceId = instanceIdRef.current;
   
+  // Debug: log when component renders
+  console.log('ServiceCard render:', instanceId, 'title:', option.title);
+  
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   // Use useMemo to ensure stable reference
   // Include all identifying fields to ensure absolute uniqueness
@@ -129,7 +132,8 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
       data-instance-id={instanceId}
       style={{ 
         isolation: 'isolate',
-        contain: 'layout style paint'
+        contain: 'layout style paint',
+        willChange: 'auto'
       }}
     >
       <div className="relative h-40 w-full bg-silver/20">
