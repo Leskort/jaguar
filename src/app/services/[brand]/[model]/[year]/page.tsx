@@ -1,4 +1,5 @@
 import ServicesPageClient from '@/components/ServicesPageClient';
+import NoServicesFound from '@/components/NoServicesFound';
 import { getStorageData } from '@/lib/storage';
 
 type ServiceOption = {
@@ -66,15 +67,7 @@ export default async function ServiceCatalogPage({ params }: { params: Promise<{
   }
   
   if (!categoriesData || Object.keys(categoriesData).length === 0) {
-    return (
-      <div className="container-padded mx-auto max-w-6xl py-24 text-lg text-center">
-        <p>No options found for your vehicle.</p>
-        <div className="text-sm text-zinc-500 mt-4 space-y-1">
-          <p>Received: Brand={brand}, Model={model}, Year={year}</p>
-          <p>Please add services for this vehicle in the admin panel.</p>
-        </div>
-      </div>
-    );
+    return <NoServicesFound />;
   }
   return (
     <ServicesPageClient
