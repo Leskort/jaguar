@@ -132,9 +132,13 @@ export default function ServiceCard({ option, brand, model, year }: ServiceCardP
             {t('details')} <span>↓</span>
           </summary>
           <div className="pt-2 text-xs text-zinc-700 dark:text-zinc-300">
-            {language === 'ru' 
-              ? (option.descriptionRu || option.description || '') 
-              : (option.descriptionEn || option.description || '')}
+            {(() => {
+              if (language === 'ru') {
+                return option.descriptionRu || option.description || '';
+              } else {
+                return option.descriptionEn || option.description || '';
+              }
+            })()}
           </div>
         </details>
       </div>

@@ -341,13 +341,13 @@ export default function ServicesAdminPage() {
         
         // Validate index before sending
         if (!categoryArray || !Array.isArray(categoryArray) || categoryArray.length === 0) {
-          alert("Cannot edit: The service category is empty. Please add it as a new service instead.");
+          alert(t('cannotEditCategoryEmpty'));
           setEditingIndex(null);
           return;
         }
         
         if (editingIndex < 0 || editingIndex >= categoryArray.length) {
-          alert(`Invalid index. The category has ${categoryArray.length} items. Please select the service again to edit.`);
+          alert(t('invalidIndexCategory').replace('{count}', categoryArray.length.toString()));
           setEditingIndex(null);
           return;
         }
@@ -761,7 +761,7 @@ export default function ServicesAdminPage() {
                                 const categoryArray = yearData?.[service.category];
                                 
                                 if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
-                                  alert("Service data may have changed. Please refresh and try again.");
+                                  alert(t('serviceDataChanged'));
                                   return;
                                 }
                                 
@@ -769,7 +769,13 @@ export default function ServicesAdminPage() {
                                 setSelectedModel(service.model);
                                 setSelectedYear(service.year);
                                 setSelectedCategory(service.category);
-                                setFormData(service);
+                                // Load service data, ensuring descriptionEn and descriptionRu are set
+                                // If they don't exist but description does, use description as fallback
+                                setFormData({
+                                  ...service,
+                                  descriptionEn: service.descriptionEn || service.description || '',
+                                  descriptionRu: service.descriptionRu || service.description || '',
+                                });
                                 setEditingIndex(service.index);
                                 setShowAddForm(true);
                                 setViewMode("filtered");
@@ -917,7 +923,7 @@ export default function ServicesAdminPage() {
                         const categoryArray = yearData?.[service.category];
                         
                         if (!categoryArray || !Array.isArray(categoryArray) || service.index >= categoryArray.length) {
-                          alert("Service data may have changed. Please refresh and try again.");
+                          alert(t('serviceDataChanged'));
                           return;
                         }
                         
@@ -1380,11 +1386,17 @@ export default function ServicesAdminPage() {
                         const categoryArray = yearData?.[selectedCategory];
                         
                         if (!categoryArray || !Array.isArray(categoryArray) || index >= categoryArray.length) {
-                          alert("Service data may have changed. Please refresh and try again.");
+                          alert(t('serviceDataChanged'));
                           return;
                         }
                         
-                        setFormData(service);
+                        // Load service data, ensuring descriptionEn and descriptionRu are set
+                        // If they don't exist but description does, use description as fallback
+                        setFormData({
+                          ...service,
+                          descriptionEn: service.descriptionEn || service.description || '',
+                          descriptionRu: service.descriptionRu || service.description || '',
+                        });
                         setEditingIndex(index);
                         setShowAddForm(true);
                       }}
