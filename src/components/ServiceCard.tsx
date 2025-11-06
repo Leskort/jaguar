@@ -29,17 +29,15 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
   
-  // Create a unique instance ID that never changes for this component instance
-  // Use uniqueId from props if available, otherwise generate a truly unique one
+  // Create a TRULY unique instance ID that never changes for this component instance
+  // This must be unique regardless of props - use only the counter
   const instanceIdRef = useRef<string | null>(null);
   if (instanceIdRef.current === null) {
     globalCardCounter += 1;
-    if (uniqueId) {
-      instanceIdRef.current = `card-${uniqueId}-${globalCardCounter}`;
-    } else {
-      // Fallback: use combination of all identifying fields + counter
-      instanceIdRef.current = `card-${brand}-${model}-${year}-${option.title}-${option.price}-${globalCardCounter}`;
-    }
+    // Use only the counter to ensure absolute uniqueness
+    // Add a random component to prevent collisions even if counter resets
+    const randomSuffix = Math.random().toString(36).substring(2, 11);
+    instanceIdRef.current = `card-instance-${globalCardCounter}-${randomSuffix}`;
   }
   const instanceId = instanceIdRef.current;
   
@@ -80,10 +78,9 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
     e.stopPropagation();
     // Use functional update to ensure we're working with the latest state
     setIsDetailsOpen((prev) => {
-      // Log for debugging (can be removed later)
       return !prev;
     });
-  }, []);
+  }, [instanceId]);
 
   const handleAddToCart = useCallback(() => {
     const cartItem: CartItem = {
@@ -100,11 +97,11 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
       year,
     };
     addItem(cartItem);
-  }, [itemId, option, brand, model, year, addItem]);
+  }, [itemId, option.title, option.image, option.price, option.requirements, option.description, option.descriptionEn, option.descriptionRu, brand, model, year, addItem, instanceId]);
 
   const handleRemoveFromCart = useCallback(() => {
     removeItem(itemId);
-  }, [itemId, removeItem]);
+  }, [itemId, removeItem, instanceId]);
 
   const status = option.status;
   const isUnavailable = status === "unavailable" || status === "coming-soon";
