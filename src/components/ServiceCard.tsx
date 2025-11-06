@@ -31,13 +31,26 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
 
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   // Use useMemo to ensure stable reference
+  // Include all identifying fields to ensure absolute uniqueness
   const itemId = useMemo(() => {
-    return uniqueId 
-      ? `${brand}-${model}-${year}-${uniqueId}`
-      : `${brand}-${model}-${year}-${option.title}-${option.price}-${option.image}`;
-  }, [brand, model, year, uniqueId, option.title, option.price, option.image]);
+    if (uniqueId) {
+      return `${brand}-${model}-${year}-${uniqueId}`;
+    }
+    // Create a hash-like string from all identifying fields
+    const identifier = `${brand}-${model}-${year}-${option.title}-${option.price}-${option.image}-${option.requirements}`;
+    return identifier;
+  }, [brand, model, year, uniqueId, option.title, option.price, option.image, option.requirements]);
   
-  const alreadyInCart = items.some((item) => item.id === itemId);
+  // Use a more specific check to ensure we're checking the exact item
+  const alreadyInCart = useMemo(() => {
+    return items.some((item) => {
+      // Strict comparison: check all identifying fields
+      return item.id === itemId && 
+             item.title === option.title && 
+             item.price === option.price &&
+             item.image === option.image;
+    });
+  }, [items, itemId, option.title, option.price, option.image]);
   
   // Create unique details ID for this specific card instance using itemId
   const detailsId = useMemo(() => `details-${itemId}`, [itemId]);
@@ -181,5 +194,19 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   );
 }
 
-export default memo(ServiceCard);
+// Use a custom comparison function to ensure cards are never reused incorrectly
+export default memo(ServiceCard, (prevProps, nextProps) => {
+  // Only re-render if props actually change
+  return (
+    prevProps.brand === nextProps.brand &&
+    prevProps.model === nextProps.model &&
+    prevProps.year === nextProps.year &&
+    prevProps.uniqueId === nextProps.uniqueId &&
+    prevProps.option.title === nextProps.option.title &&
+    prevProps.option.price === nextProps.option.price &&
+    prevProps.option.image === nextProps.option.image &&
+    prevProps.option.requirements === nextProps.option.requirements &&
+    prevProps.option.status === nextProps.option.status
+  );
+});
 

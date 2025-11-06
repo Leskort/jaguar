@@ -166,8 +166,10 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
         {currentOptions.map((opt: ServiceOption, index: number) => {
           // Create a truly unique identifier for each card
-          const cardUniqueId = `${opt.title}-${opt.price}-${opt.image}-${index}-${activeCategory}`;
-          const cardKey = `card-${brand}-${model}-${year}-${activeCategory}-${index}-${opt.title}-${opt.price}`;
+          // Include all identifying fields plus index and category to ensure uniqueness
+          const cardUniqueId = `${opt.title}-${opt.price}-${opt.image}-${opt.requirements}-${index}-${activeCategory}`;
+          // Create a more unique key that includes all identifying information
+          const cardKey = `card-${brand}-${model}-${year}-${activeCategory}-${index}-${opt.title}-${opt.price}-${opt.image}`;
           
           return (
             <ServiceCard 
