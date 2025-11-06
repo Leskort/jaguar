@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useCartStore, type CartItem } from "@/store/cart";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState } from "react";
+import { useState, useMemo, memo, useCallback } from "react";
 
 type ServiceCardProps = {
   option: {
@@ -21,7 +21,7 @@ type ServiceCardProps = {
   uniqueId?: string; // Optional unique identifier to ensure uniqueness
 };
 
-export default function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps) {
+function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps) {
   const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
@@ -30,10 +30,24 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
-  const itemId = uniqueId 
-    ? `${brand}-${model}-${year}-${uniqueId}`
-    : `${brand}-${model}-${year}-${option.title}-${option.price}-${option.image}`;
+  // Use useMemo to ensure stable reference
+  const itemId = useMemo(() => {
+    return uniqueId 
+      ? `${brand}-${model}-${year}-${uniqueId}`
+      : `${brand}-${model}-${year}-${option.title}-${option.price}-${option.image}`;
+  }, [brand, model, year, uniqueId, option.title, option.price, option.image]);
+  
   const alreadyInCart = items.some((item) => item.id === itemId);
+  
+  // Create unique details ID for this specific card instance using itemId
+  const detailsId = useMemo(() => `details-${itemId}`, [itemId]);
+
+  // Memoize the toggle handler to ensure it's stable
+  const handleToggleDetails = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDetailsOpen((prev) => !prev);
+  }, []);
 
   const handleAddToCart = () => {
     const cartItem: CartItem = {
@@ -65,7 +79,10 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
     : null;
 
   return (
-    <div className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col">
+    <div 
+      className="rounded-2xl border border-[var(--border-color)] bg-white overflow-hidden shadow-sm flex flex-col isolate"
+      data-service-card={itemId}
+    >
       <div className="relative h-40 w-full bg-silver/20">
         {imagePath && !imgError ? (
           <Image 
@@ -132,19 +149,23 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
             </button>
           )}
         </div>
-        <div className="mt-auto">
+        <div className="mt-auto" id={detailsId} data-card-id={itemId}>
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setIsDetailsOpen(!isDetailsOpen);
-            }}
-            className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1 hover:text-zinc-800 dark:hover:text-zinc-400 transition-colors"
+            type="button"
+            onClick={handleToggleDetails}
+            className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1 hover:text-zinc-800 dark:hover:text-zinc-400 transition-colors w-full text-left bg-transparent border-0 p-0"
+            aria-expanded={isDetailsOpen}
+            aria-controls={`${detailsId}-content`}
+            data-card-id={itemId}
           >
-            {t('details')} <span className={isDetailsOpen ? 'rotate-180 transition-transform' : 'transition-transform'}>↓</span>
+            {t('details')} <span className={`inline-block transition-transform duration-200 ${isDetailsOpen ? 'rotate-180' : ''}`}>↓</span>
           </button>
           {isDetailsOpen && (
-            <div className="pt-2 text-xs text-zinc-700 dark:text-zinc-300">
+            <div 
+              id={`${detailsId}-content`} 
+              className="pt-2 text-xs text-zinc-700 dark:text-zinc-300"
+              data-card-id={itemId}
+            >
               {(() => {
                 if (language === 'ru') {
                   return option.descriptionRu || option.description || '';
@@ -159,4 +180,6 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
     </div>
   );
 }
+
+export default memo(ServiceCard);
 
