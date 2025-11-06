@@ -133,36 +133,6 @@ export default function ServicesAdminPage() {
       const data = await res.json();
       const servicesData = data || {};
       
-      console.log("=== CLIENT: loadServices called ===");
-      console.log("Services data loaded:", Object.keys(servicesData));
-      // Log ALL services to check descriptionEn and descriptionRu
-      if (servicesData && typeof servicesData === 'object') {
-        for (const brand in servicesData) {
-          if (servicesData[brand] && typeof servicesData[brand] === 'object') {
-            for (const model in servicesData[brand]) {
-              if (servicesData[brand][model] && typeof servicesData[brand][model] === 'object') {
-                for (const year in servicesData[brand][model]) {
-                  if (servicesData[brand][model][year] && typeof servicesData[brand][model][year] === 'object') {
-                    for (const category in servicesData[brand][model][year]) {
-                      const services = servicesData[brand][model][year][category];
-                      if (Array.isArray(services)) {
-                        services.forEach((service, idx) => {
-                          console.log(`Service [${brand}][${model}][${year}][${category}][${idx}]:`, JSON.stringify(service, null, 2));
-                          console.log(`Description fields [${brand}][${model}][${year}][${category}][${idx}]:`, {
-                            description: service?.description,
-                            descriptionEn: service?.descriptionEn,
-                            descriptionRu: service?.descriptionRu
-                          });
-                        });
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
       
       // Only update if data actually changed OR if forceReload is true
       setServices((prevServices: any) => {
@@ -363,14 +333,6 @@ export default function ServicesAdminPage() {
         descriptionRu: formData.descriptionRu !== undefined ? formData.descriptionRu : "",
       };
       
-      console.log("=== CLIENT: Preparing service data ===");
-      console.log("formData:", JSON.stringify(formData, null, 2));
-      console.log("serviceData:", JSON.stringify(serviceData, null, 2));
-      console.log("Description fields in serviceData:", { 
-        description: serviceData.description, 
-        descriptionEn: serviceData.descriptionEn, 
-        descriptionRu: serviceData.descriptionRu 
-      });
       
 
       if (editingIndex !== null) {
@@ -411,13 +373,6 @@ export default function ServicesAdminPage() {
         const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
         const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         
-        console.log("=== CLIENT: Sending PUT request ===");
-        console.log("cleanServiceData:", JSON.stringify(cleanServiceData, null, 2));
-        console.log("Description fields:", { 
-          description: cleanServiceData.description, 
-          descriptionEn: cleanServiceData.descriptionEn, 
-          descriptionRu: cleanServiceData.descriptionRu 
-        });
         
         const response = await fetch("/api/admin/services", {
           method: "PUT",
@@ -485,13 +440,6 @@ export default function ServicesAdminPage() {
         const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
         const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
         
-        console.log("=== CLIENT: Sending POST request ===");
-        console.log("serviceData:", JSON.stringify(serviceData, null, 2));
-        console.log("Description fields:", { 
-          description: serviceData.description, 
-          descriptionEn: serviceData.descriptionEn, 
-          descriptionRu: serviceData.descriptionRu 
-        });
         
         const response = await fetch("/api/admin/services", {
           method: "POST",
@@ -547,23 +495,7 @@ export default function ServicesAdminPage() {
       }
       
       // Reload services to show updated data
-      const reloadedServices = await loadServices();
-      console.log("=== CLIENT: After reload, checking saved data ===");
-      if (editingIndex !== null) {
-        const brandData = reloadedServices[selectedBrand];
-        const modelData = brandData?.[selectedModel];
-        const yearData = modelData?.[selectedYear] as Record<string, ServiceOption[]> | undefined;
-        const categoryArray = yearData?.[selectedCategory];
-        const savedService = categoryArray?.[editingIndex];
-        if (savedService) {
-          console.log("Saved service data:", JSON.stringify(savedService, null, 2));
-          console.log("Description fields in saved service:", { 
-            description: savedService.description, 
-            descriptionEn: savedService.descriptionEn, 
-            descriptionRu: savedService.descriptionRu 
-          });
-        }
-      }
+      await loadServices();
       await loadVehicles(); // Also reload vehicles to get any new brands/models
       setFormData({
         title: "",
@@ -900,101 +832,30 @@ export default function ServicesAdminPage() {
                                   }
                                 }
                                 
-                                // Final validation with detailed logging
-                                console.log("=== CLIENT: Service search result ===");
-                                console.log("Service from list:", {
-                                  brand: service.brand,
-                                  model: service.model,
-                                  year: service.year,
-                                  category: service.category,
-                                  index: service.index
-                                });
-                                console.log("Normalized keys:", {
-                                  normalizedBrand,
-                                  normalizedModel
-                                });
-                                console.log("Search result:", {
-                                  foundBrandData: !!brandData,
-                                  foundModelData: !!modelData,
-                                  foundYearData: !!yearData,
-                                  foundCategoryArray: !!categoryArray,
-                                  categoryArrayLength: categoryArray?.length,
-                                  categoryArrayType: Array.isArray(categoryArray) ? 'array' : typeof categoryArray
-                                });
-                                
-                                if (brandData) {
-                                  console.log("Brand data keys:", Object.keys(brandData));
-                                }
-                                if (modelData) {
-                                  console.log("Model data keys:", Object.keys(modelData));
-                                }
-                                if (yearData) {
-                                  console.log("Year data keys:", Object.keys(yearData));
-                                }
-                                
+                                // Final validation
                                 if (!categoryArray || !Array.isArray(categoryArray)) {
-                                  console.error("❌ Category array not found or invalid:", {
-                                    service,
-                                    normalizedBrand,
-                                    normalizedModel,
-                                    availableBrands: Object.keys(freshServices),
-                                    brandDataKeys: brandData ? Object.keys(brandData) : null,
-                                    modelDataKeys: modelData ? Object.keys(modelData) : null,
-                                    yearDataKeys: yearData ? Object.keys(yearData) : null,
-                                    categoryArrayValue: categoryArray
-                                  });
                                   alert(t('serviceDataChanged'));
                                   return;
                                 }
                                 
                                 if (categoryArray.length === 0) {
-                                  console.error("❌ Category array is empty:", {
-                                    service,
-                                    brand: service.brand,
-                                    model: service.model,
-                                    year: service.year,
-                                    category: service.category
-                                  });
                                   alert(t('cannotEditCategoryEmpty'));
                                   return;
                                 }
                                 
                                 if (service.index >= categoryArray.length) {
-                                  console.error("❌ Index out of bounds:", {
-                                    serviceIndex: service.index,
-                                    arrayLength: categoryArray.length,
-                                    service
-                                  });
                                   alert(t('invalidIndexCategory').replace('{count}', categoryArray.length.toString()));
                                   return;
                                 }
                                 
                                 // Validate category exists
                                 if (!service.category) {
-                                  console.error("❌ Service category is missing:", service);
                                   alert(t('cannotEditCategoryEmpty'));
                                   return;
                                 }
                                 
-                                console.log("✅ Service found successfully, proceeding to edit");
-                                
                                 // Get the FRESH service data from the server
                                 const freshService = categoryArray[service.index];
-                                
-                                console.log("=== CLIENT: Fresh service from server (desktop table) ===");
-                                console.log("Looking for service:", { brand: service.brand, model: service.model, year: service.year, category: service.category, index: service.index });
-                                console.log("Normalized keys:", { normalizedBrand, normalizedModel });
-                                console.log("Found brandData:", !!brandData, "keys:", brandData ? Object.keys(brandData) : []);
-                                console.log("Found modelData:", !!modelData, "keys:", modelData ? Object.keys(modelData) : []);
-                                console.log("Found yearData:", !!yearData, "keys:", yearData ? Object.keys(yearData) : []);
-                                console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
-                                console.log("CategoryArray contents:", categoryArray?.map((s, i) => ({ index: i, title: s?.title, hasDescriptionEn: 'descriptionEn' in (s || {}), hasDescriptionRu: 'descriptionRu' in (s || {}) })));
-                                console.log("Fresh service raw:", freshService);
-                                console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
-                                console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
-                                console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
-                                console.log("Fresh service descriptionEn value:", freshService?.descriptionEn);
-                                console.log("Fresh service descriptionRu value:", freshService?.descriptionRu);
                                 
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
@@ -1004,15 +865,6 @@ export default function ServicesAdminPage() {
                                 // Load service data, ensuring descriptionEn and descriptionRu are set
                                 // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
                                 // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
-                                console.log("=== CLIENT: Loading service for editing (desktop table) ===");
-                                console.log("Service data from list:", JSON.stringify(service, null, 2));
-                                console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
-                                console.log("Description fields in fresh service:", { 
-                                  description: freshService?.description, 
-                                  descriptionEn: freshService?.descriptionEn, 
-                                  descriptionRu: freshService?.descriptionRu 
-                                });
-                                
                                 const loadedFormData = {
                                   ...freshService,
                                   descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
@@ -1022,13 +874,6 @@ export default function ServicesAdminPage() {
                                     ? freshService.descriptionRu 
                                     : (freshService?.description || ''),
                                 };
-                                
-                                console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
-                                console.log("Description fields in loaded form data:", { 
-                                  description: loadedFormData.description, 
-                                  descriptionEn: loadedFormData.descriptionEn, 
-                                  descriptionRu: loadedFormData.descriptionRu 
-                                });
                                 
                                 setFormData(loadedFormData);
                                 setEditingIndex(service.index);
@@ -1232,12 +1077,6 @@ export default function ServicesAdminPage() {
                         
                         // Final validation
                         if (!categoryArray || !Array.isArray(categoryArray)) {
-                          console.error("Category array not found (mobile):", {
-                            service,
-                            normalizedBrand,
-                            normalizedModel,
-                            availableBrands: Object.keys(freshServices)
-                          });
                           alert(t('serviceDataChanged'));
                           return;
                         }
@@ -1255,15 +1094,6 @@ export default function ServicesAdminPage() {
                         // Get the FRESH service data from the server
                         const freshService = categoryArray[service.index];
                         
-                        console.log("=== CLIENT: Fresh service from server (mobile card) ===");
-                        console.log("Looking for service:", { brand: service.brand, model: service.model, year: service.year, category: service.category, index: service.index });
-                        console.log("Normalized keys:", { normalizedBrand, normalizedModel });
-                        console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
-                        console.log("Fresh service raw:", freshService);
-                        console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
-                        console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
-                        console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
-                        
                         setSelectedBrand(service.brand);
                         setSelectedModel(service.model);
                         setSelectedYear(service.year);
@@ -1272,15 +1102,6 @@ export default function ServicesAdminPage() {
                         // Load service data, ensuring descriptionEn and descriptionRu are set
                         // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
                         // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
-                        console.log("=== CLIENT: Loading service for editing (mobile card) ===");
-                        console.log("Service data from list:", JSON.stringify(service, null, 2));
-                        console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
-                        console.log("Description fields in fresh service:", { 
-                          description: freshService?.description, 
-                          descriptionEn: freshService?.descriptionEn, 
-                          descriptionRu: freshService?.descriptionRu 
-                        });
-                        
                         const loadedFormData = {
                           ...freshService,
                           descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
@@ -1290,13 +1111,6 @@ export default function ServicesAdminPage() {
                             ? freshService.descriptionRu 
                             : (freshService?.description || ''),
                         };
-                        
-                        console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
-                        console.log("Description fields in loaded form data:", { 
-                          description: loadedFormData.description, 
-                          descriptionEn: loadedFormData.descriptionEn, 
-                          descriptionRu: loadedFormData.descriptionRu 
-                        });
                         
                         setFormData(loadedFormData);
                         setEditingIndex(service.index);
