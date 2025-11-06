@@ -865,6 +865,13 @@ export default function ServicesAdminPage() {
                                   return;
                                 }
                                 
+                                // Validate category exists
+                                if (!service.category) {
+                                  console.error("Service category is missing:", service);
+                                  alert(t('cannotEditCategoryEmpty'));
+                                  return;
+                                }
+                                
                                 // Get the FRESH service data from the server
                                 const freshService = categoryArray[service.index];
                                 
@@ -886,7 +893,7 @@ export default function ServicesAdminPage() {
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
                                 setSelectedYear(service.year);
-                                setSelectedCategory(service.category);
+                                setSelectedCategory(service.category || 'features-activation'); // Fallback to default category
                                 
                                 // Load service data, ensuring descriptionEn and descriptionRu are set
                                 // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)

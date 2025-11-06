@@ -28,7 +28,7 @@ async function getServices() {
 }
 
 // Function to clean up duplicate entries with empty model/year keys
-function cleanupDuplicates(services: any): { cleaned: boolean; saved: boolean } {
+async function cleanupDuplicates(services: any): Promise<{ cleaned: boolean; saved: boolean }> {
   let cleaned = false;
   let saved = false;
   
@@ -124,15 +124,12 @@ function cleanupDuplicates(services: any): { cleaned: boolean; saved: boolean } 
   if (cleaned) {
     console.log("[GET] Duplicates cleaned, saving to storage...");
     try {
-      // We'll save asynchronously, but return immediately
-      saveStorageData(STORAGE_KEY, FALLBACK_PATH, services).then(() => {
-        console.log("[GET] ✅ Cleaned data saved to storage");
-      }).catch((err) => {
-        console.error("[GET] ❌ Error saving cleaned data:", err);
-      });
+      // Save synchronously to ensure data is persisted before returning
+      await saveStorageData(STORAGE_KEY, FALLBACK_PATH, services);
+      console.log("[GET] ✅ Cleaned data saved to storage");
       saved = true;
     } catch (err) {
-      console.error("[GET] ❌ Error initiating save:", err);
+      console.error("[GET] ❌ Error saving cleaned data:", err);
     }
   }
   
@@ -140,12 +137,14 @@ function cleanupDuplicates(services: any): { cleaned: boolean; saved: boolean } 
 }
 
 export async function GET() {
-  const services = await getServices();
+  let services = await getServices();
   
   // Clean up duplicates before returning
-  const { cleaned } = cleanupDuplicates(services);
+  const { cleaned } = await cleanupDuplicates(services);
   if (cleaned) {
-    console.log("[GET] Duplicates were found and cleaned");
+    console.log("[GET] Duplicates were found and cleaned, reloading services...");
+    // Reload services after cleanup to ensure we return the cleaned data
+    services = await getServices();
   }
   
   // Log a sample service to verify descriptionEn and descriptionRu are present
