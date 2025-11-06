@@ -115,7 +115,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
 
   return (
     <div 
-      className="rounded-2xl border border-[var(--border-color)] bg-white dark:bg-zinc-800 overflow-hidden shadow-sm flex flex-col h-full"
+      className="rounded-2xl border border-[var(--border-color)] bg-white dark:bg-zinc-800 overflow-hidden shadow-sm flex flex-col"
       data-service-card={itemId}
       data-instance-id={instanceId}
       style={{ 
@@ -123,7 +123,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
         contain: 'layout style paint',
         position: 'relative',
         transform: 'translateZ(0)',
-        minHeight: '100%'
+        minHeight: '400px'
       }}
     >
       <div className="relative h-40 w-full bg-silver/20">
@@ -162,7 +162,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
           </div>
         )}
       </div>
-      <div className="p-4 flex-1 flex flex-col min-h-[200px]">
+      <div className="p-4 flex-1 flex flex-col" style={{ minHeight: '240px' }}>
         <div className="font-medium mb-2 text-sm text-zinc-900 dark:text-zinc-100">{option.title}</div>
         <div className="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-1">
           {option.requirements === "Yes" && <span className="text-orange-500">▲</span>}
