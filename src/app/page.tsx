@@ -114,7 +114,7 @@ function VehicleSelector() {
     <div className="space-y-4">
       <div className="text-sm font-medium">{t('selectVehicleModel')}</div>
       <div className="flex flex-col lg:flex-row gap-4 lg:items-start">
-        <form onSubmit={handleGoToServices} className="flex flex-col sm:flex-row gap-3 flex-1">
+        <div className="flex flex-col sm:flex-row gap-3 flex-1">
           <select
             value={selectedBrand}
             onChange={(e) => {
@@ -170,15 +170,7 @@ function VehicleSelector() {
               </option>
             ))}
           </select>
-
-          <button
-            type="submit"
-            disabled={!selectedBrand || !selectedModel || !selectedYear}
-            className="h-12 sm:h-10 px-6 sm:px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold md:ml-auto disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-          >
-            {t('goToServices')}
-          </button>
-        </form>
+        </div>
         
         {/* Vehicle Image */}
         {selectedVehicle && selectedVehicle.image && (
@@ -202,17 +194,18 @@ function VehicleSelector() {
                 }}
               />
             </div>
-            {selectedBrand && selectedModel && selectedYear && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault();
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (selectedBrand && selectedModel && selectedYear) {
                   handleGoToServices(e);
-                }}
-                className="w-full h-12 sm:h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-              >
-                {t('goToServices')}
-              </button>
-            )}
+                }
+              }}
+              disabled={!selectedBrand || !selectedModel || !selectedYear}
+              className="w-full h-12 sm:h-10 px-6 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+            >
+              {t('goToServices')}
+            </button>
           </div>
         )}
       </div>
