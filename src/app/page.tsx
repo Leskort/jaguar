@@ -447,13 +447,14 @@ function TopOrdersSection() {
       <div className="relative">
         <div id="top-orders-carousel" className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[calc((100vw-85vw-3rem)/2)] sm:px-0">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl border border-[var(--border-color)] overflow-hidden flex-shrink-0 snap-center">
-              <div className="h-48 bg-silver/20 animate-pulse" />
-              <div className="p-4">
-                <div className="h-4 bg-silver/20 rounded animate-pulse mb-3" />
-                <div className="flex gap-2">
-                  <div className="flex-1 h-8 bg-silver/20 rounded animate-pulse" />
-                  <div className="flex-1 h-8 bg-silver/20 rounded animate-pulse" />
+            <div key={i} className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center">
+              <div className="h-48 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
+              <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50">
+                <div className="h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3" />
+                <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-4 w-1/3" />
+                <div className="flex gap-2.5">
+                  <div className="flex-1 h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+                  <div className="flex-1 h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
                 </div>
               </div>
             </div>
@@ -478,44 +479,64 @@ function TopOrdersSection() {
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
-            className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow"
+            className="carousel-card group w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm"
           >
-            <div className="relative h-48 sm:h-56 bg-silver/20 dark:bg-zinc-800/30">
+            {/* Image container with overlay gradient */}
+            <div className="relative h-48 sm:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
               {service.image ? (
-                <Image
-                  src={service.image}
-                  alt={service.title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  unoptimized
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
+                <>
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    unoptimized
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                </>
               ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 text-xs px-2 text-center">
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs px-2 text-center">
                   {service.title}
                 </div>
               )}
               {service.status === "in-stock" && (
-                <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-2 sm:px-3 py-1 rounded text-[10px] sm:text-xs font-bold">
+                <div className="absolute top-3 right-3 bg-[var(--accent-gold)] text-black px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg backdrop-blur-sm">
                   {t('inStock')}
                 </div>
               )}
             </div>
-            <div className="p-3 sm:p-4">
-              <h3 className="font-medium mb-2 sm:mb-3 text-xs sm:text-sm line-clamp-2">{service.title}</h3>
-              <div className="flex flex-col sm:flex-row gap-2">
+            
+            {/* Content */}
+            <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50">
+              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300">
+                {service.title}
+              </h3>
+              
+              {/* Price if available */}
+              {service.price && (
+                <div className="mb-3 sm:mb-4">
+                  <span className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                    {service.price}
+                  </span>
+                </div>
+              )}
+              
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2.5">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full bg-[var(--accent-gold)] text-black text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg active:scale-95 transition-all"
+                  className="flex-1 h-11 sm:h-10 px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-sm font-bold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)]"
                 >
                   {t('addToCart')}
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-10 sm:h-9 px-4 sm:px-4 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-sm sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
+                  className="flex-1 h-11 sm:h-10 px-4 rounded-full border-2 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] active:scale-95 transition-all duration-200"
                 >
                   {t('details')}
                 </Link>
@@ -530,17 +551,17 @@ function TopOrdersSection() {
         <>
           <button
             onClick={scrollLeft}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
+            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 min-h-[44px] sm:min-h-0 group"
             aria-label="Previous"
           >
-            <span className="text-xl">←</span>
+            <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-white dark:bg-[var(--space-black)] border-2 border-[var(--border-color)] shadow-xl flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 active:bg-zinc-100 dark:active:bg-zinc-700 active:scale-95 transition-all z-10 min-h-[44px] sm:min-h-0"
+            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 min-h-[44px] sm:min-h-0 group"
             aria-label="Next"
           >
-            <span className="text-xl">→</span>
+            <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">→</span>
           </button>
         </>
       )}
