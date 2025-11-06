@@ -2,7 +2,7 @@
 import Image from "next/image";
 import { useCartStore, type CartItem } from "@/store/cart";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useCallback, useRef, memo } from "react";
 
 type ServiceCardProps = {
   option: {
@@ -43,9 +43,6 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   }
   const instanceId = instanceIdRef.current;
   
-  // Debug: log when component renders
-  console.log('ServiceCard render:', instanceId, 'title:', option.title);
-  
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   // Use useMemo to ensure stable reference
   // Include all identifying fields to ensure absolute uniqueness
@@ -83,18 +80,9 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   const handleToggleDetails = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    // Use the captured instanceId to ensure we're updating the right card
-    const cardInstanceId = instanceId;
-    // Debug: log which card is being toggled
-    console.log('Toggling details for instanceId:', cardInstanceId, 'itemId:', itemId);
-    // Use functional update with explicit instance check
-    setIsDetailsOpen((prev) => {
-      // This state update is scoped to this specific component instance
-      // React will only update the state for this specific card
-      console.log('State update for instanceId:', cardInstanceId, 'prev:', prev, 'new:', !prev);
-      return !prev;
-    });
-  }, [instanceId, itemId]);
+    // Use functional update to ensure we're working with the latest state
+    setIsDetailsOpen((prev) => !prev);
+  }, []);
 
   const handleAddToCart = useCallback(() => {
     const cartItem: CartItem = {
@@ -245,7 +233,23 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
   );
 }
 
-// Don't use memo - let React handle re-renders naturally
-// The instanceId and isolated state will ensure cards don't interfere with each other
-export default ServiceCard;
+// Use memo with shallow comparison to prevent unnecessary re-renders
+// This ensures that cards only re-render when their props actually change
+export default memo(ServiceCard, (prevProps, nextProps) => {
+  // Return true if props are equal (skip re-render), false if different (re-render)
+  return (
+    prevProps.brand === nextProps.brand &&
+    prevProps.model === nextProps.model &&
+    prevProps.year === nextProps.year &&
+    prevProps.uniqueId === nextProps.uniqueId &&
+    prevProps.option.title === nextProps.option.title &&
+    prevProps.option.price === nextProps.option.price &&
+    prevProps.option.image === nextProps.option.image &&
+    prevProps.option.requirements === nextProps.option.requirements &&
+    prevProps.option.status === nextProps.option.status &&
+    prevProps.option.description === nextProps.option.description &&
+    prevProps.option.descriptionEn === nextProps.option.descriptionEn &&
+    prevProps.option.descriptionRu === nextProps.option.descriptionRu
+  );
+});
 
