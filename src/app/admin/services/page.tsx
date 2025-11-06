@@ -316,6 +316,9 @@ export default function ServicesAdminPage() {
         ...formData,
         // Ensure image path is properly formatted
         image: formData.image || "",
+        // Ensure descriptionEn and descriptionRu are included
+        descriptionEn: formData.descriptionEn || "",
+        descriptionRu: formData.descriptionRu || "",
       };
       
 
@@ -328,8 +331,9 @@ export default function ServicesAdminPage() {
           price: serviceData.price,
           requirements: serviceData.requirements,
           description: serviceData.description,
-          descriptionEn: serviceData.descriptionEn,
-          descriptionRu: serviceData.descriptionRu,
+          // Preserve descriptionEn and descriptionRu even if they are empty strings
+          descriptionEn: serviceData.descriptionEn !== undefined ? serviceData.descriptionEn : '',
+          descriptionRu: serviceData.descriptionRu !== undefined ? serviceData.descriptionRu : '',
           status: serviceData.status,
         };
         
@@ -355,6 +359,14 @@ export default function ServicesAdminPage() {
         // Normalize brand and model before sending
         const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
         const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        
+        console.log("=== CLIENT: Sending PUT request ===");
+        console.log("cleanServiceData:", JSON.stringify(cleanServiceData, null, 2));
+        console.log("Description fields:", { 
+          description: cleanServiceData.description, 
+          descriptionEn: cleanServiceData.descriptionEn, 
+          descriptionRu: cleanServiceData.descriptionRu 
+        });
         
         const response = await fetch("/api/admin/services", {
           method: "PUT",
@@ -421,6 +433,14 @@ export default function ServicesAdminPage() {
         // Normalize brand and model before sending
         const normalizedBrand = selectedBrand.trim().toLowerCase().replace(/\s+/g, '-');
         const normalizedModel = selectedModel.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        
+        console.log("=== CLIENT: Sending POST request ===");
+        console.log("serviceData:", JSON.stringify(serviceData, null, 2));
+        console.log("Description fields:", { 
+          description: serviceData.description, 
+          descriptionEn: serviceData.descriptionEn, 
+          descriptionRu: serviceData.descriptionRu 
+        });
         
         const response = await fetch("/api/admin/services", {
           method: "POST",
@@ -771,10 +791,15 @@ export default function ServicesAdminPage() {
                                 setSelectedCategory(service.category);
                                 // Load service data, ensuring descriptionEn and descriptionRu are set
                                 // If they don't exist but description does, use description as fallback
+                                // BUT: if descriptionEn/descriptionRu already exist, keep them (don't overwrite with description)
                                 setFormData({
                                   ...service,
-                                  descriptionEn: service.descriptionEn || service.description || '',
-                                  descriptionRu: service.descriptionRu || service.description || '',
+                                  descriptionEn: service.descriptionEn !== undefined && service.descriptionEn !== null 
+                                    ? service.descriptionEn 
+                                    : (service.description || ''),
+                                  descriptionRu: service.descriptionRu !== undefined && service.descriptionRu !== null 
+                                    ? service.descriptionRu 
+                                    : (service.description || ''),
                                 });
                                 setEditingIndex(service.index);
                                 setShowAddForm(true);
@@ -1392,10 +1417,15 @@ export default function ServicesAdminPage() {
                         
                         // Load service data, ensuring descriptionEn and descriptionRu are set
                         // If they don't exist but description does, use description as fallback
+                        // BUT: if descriptionEn/descriptionRu already exist, keep them (don't overwrite with description)
                         setFormData({
                           ...service,
-                          descriptionEn: service.descriptionEn || service.description || '',
-                          descriptionRu: service.descriptionRu || service.description || '',
+                          descriptionEn: service.descriptionEn !== undefined && service.descriptionEn !== null 
+                            ? service.descriptionEn 
+                            : (service.description || ''),
+                          descriptionRu: service.descriptionRu !== undefined && service.descriptionRu !== null 
+                            ? service.descriptionRu 
+                            : (service.description || ''),
                         });
                         setEditingIndex(index);
                         setShowAddForm(true);

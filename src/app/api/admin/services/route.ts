@@ -49,6 +49,12 @@ export async function POST(request: Request) {
     const service = rawRequest.service;
     
     console.log("[POST /api/admin/services] Request received:", { brand, model, year, category, serviceTitle: service?.title });
+    console.log("[POST /api/admin/services] Service data:", JSON.stringify(service, null, 2));
+    console.log("[POST /api/admin/services] Description fields:", { 
+      description: service?.description, 
+      descriptionEn: service?.descriptionEn, 
+      descriptionRu: service?.descriptionRu 
+    });
     console.log("[POST /api/admin/services] Environment check:", {
       isNetlify: isNetlifyEnvironment(),
       NETLIFY: process.env.NETLIFY,
@@ -111,6 +117,12 @@ export async function PUT(request: Request) {
     console.log("=== PUT REQUEST ===");
     console.log("Request body:", JSON.stringify(requestBody, null, 2));
     console.log("Extracted values:", { brand, model, year, category, index, serviceTitle: service?.title });
+    console.log("Service data:", JSON.stringify(service, null, 2));
+    console.log("Description fields:", { 
+      description: service?.description, 
+      descriptionEn: service?.descriptionEn, 
+      descriptionRu: service?.descriptionRu 
+    });
     console.log("Index type:", typeof index, "Index value:", index);
     
     // Validate input
@@ -179,9 +191,19 @@ export async function PUT(request: Request) {
       // Update the service
       console.log(`Updating service at index ${index}...`);
       const oldService = categoryArray[index];
-      console.log("Old service:", oldService?.title);
+      console.log("Old service:", JSON.stringify(oldService, null, 2));
+      console.log("Old service descriptions:", { 
+        description: oldService?.description, 
+        descriptionEn: oldService?.descriptionEn, 
+        descriptionRu: oldService?.descriptionRu 
+      });
       categoryArray[index] = service;
-      console.log("New service:", service.title);
+      console.log("New service:", JSON.stringify(service, null, 2));
+      console.log("New service descriptions:", { 
+        description: service?.description, 
+        descriptionEn: service?.descriptionEn, 
+        descriptionRu: service?.descriptionRu 
+      });
     }
     
     console.log("Service updated in memory, saving to storage...");
