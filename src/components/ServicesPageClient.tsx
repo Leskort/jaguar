@@ -187,11 +187,11 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
 
       {/* Total + CTA Footer */}
       {itemCount > 0 && (
-        <div className="sticky bottom-0 bg-white border-t border-[var(--border-color)] py-6 mt-8">
+        <div className="sticky bottom-0 bg-white dark:bg-zinc-800 border-t border-[var(--border-color)] py-6 mt-8">
           <div className="flex items-center justify-between">
             <div className="text-right">
-              <div className="text-sm text-zinc-500 mb-1">{t('total')}</div>
-              <div className="text-2xl font-semibold">{totalPrice}</div>
+              <div className="text-sm text-zinc-600 dark:text-zinc-400 mb-1">{t('total')}</div>
+              <div className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">{totalPrice}</div>
             </div>
             <button
               onClick={() => {
