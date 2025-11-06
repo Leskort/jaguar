@@ -15,7 +15,7 @@ function isNetlifyEnvironment() {
 
 type Work = {
   id: string;
-  image: string;
+  images: string[]; // Array of image paths
   titleEn: string;
   titleRu: string;
   descriptionEn: string;
@@ -28,7 +28,17 @@ async function getWorks(): Promise<Work[]> {
   try {
     const data = await getStorageData(STORAGE_KEY, FALLBACK_PATH);
     if (Array.isArray(data) && data.length > 0) {
-      return data.sort((a: Work, b: Work) => a.order - b.order);
+      // Migrate old format (image -> images) for backward compatibility
+      const migrated = data.map((work: any) => {
+        if (work.image && !work.images) {
+          return { ...work, images: [work.image] };
+        }
+        if (!work.images) {
+          return { ...work, images: [] };
+        }
+        return work;
+      });
+      return migrated.sort((a: Work, b: Work) => a.order - b.order);
     }
     return [];
   } catch {

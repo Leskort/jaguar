@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 type Work = {
   id: string;
-  image: string;
+  images: string[]; // Array of image paths
   titleEn: string;
   titleRu: string;
   descriptionEn: string;
@@ -60,14 +60,21 @@ export default function OurWorksPage() {
           {works.map((work) => (
             <article key={work.id} className="rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow">
               <div className="relative h-48 bg-silver/20 dark:bg-zinc-800/30">
-                {work.image ? (
-                  <Image
-                    src={work.image}
-                    alt={language === 'ru' ? work.titleRu : work.titleEn}
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+                {work.images && work.images.length > 0 && work.images[0] ? (
+                  <>
+                    <Image
+                      src={work.images[0]}
+                      alt={language === 'ru' ? work.titleRu : work.titleEn}
+                      fill
+                      className="object-cover"
+                      unoptimized
+                    />
+                    {work.images.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+                        +{work.images.length - 1}
+                      </div>
+                    )}
+                  </>
                 ) : null}
               </div>
               <div className="p-4">

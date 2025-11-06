@@ -6,7 +6,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 type Work = {
   id: string;
-  image: string;
+  images: string[]; // Array of image paths
   titleEn: string;
   titleRu: string;
   descriptionEn: string;
@@ -27,7 +27,7 @@ export default function WorksAdminPage() {
   const [loadingImages, setLoadingImages] = useState(false);
 
   const [formData, setFormData] = useState<Omit<Work, "id" | "createdAt" | "order">>({
-    image: "",
+    images: [],
     titleEn: "",
     titleRu: "",
     descriptionEn: "",
@@ -105,15 +105,30 @@ export default function WorksAdminPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that at least one image is added
+    if (formData.images.length === 0 || formData.images.every(img => !img || img.trim() === "")) {
+      alert(t('noImagesAdded') || "Please add at least one image.");
+      return;
+    }
+    
+    // Filter out empty images
+    const filteredImages = formData.images.filter(img => img && img.trim() !== "");
+    if (filteredImages.length === 0) {
+      alert(t('noImagesAdded') || "Please add at least one image.");
+      return;
+    }
+    
     setSaving(true);
 
     try {
+      const workData = { ...formData, images: filteredImages };
       if (editingId) {
         // Update existing work
         const res = await fetch("/api/admin/works", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: editingId, ...formData }),
+          body: JSON.stringify({ id: editingId, ...workData }),
         });
 
         if (!res.ok) {
@@ -125,7 +140,7 @@ export default function WorksAdminPage() {
         const res = await fetch("/api/admin/works", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(workData),
         });
 
         if (!res.ok) {
@@ -138,7 +153,7 @@ export default function WorksAdminPage() {
       setShowAddForm(false);
       setEditingId(null);
       setFormData({
-        image: "",
+        images: [],
         titleEn: "",
         titleRu: "",
         descriptionEn: "",
@@ -156,7 +171,7 @@ export default function WorksAdminPage() {
 
   const handleEdit = (work: Work) => {
     setFormData({
-      image: work.image,
+      images: work.images || [],
       titleEn: work.titleEn,
       titleRu: work.titleRu,
       descriptionEn: work.descriptionEn,
@@ -164,6 +179,20 @@ export default function WorksAdminPage() {
     });
     setEditingId(work.id);
     setShowAddForm(true);
+  };
+
+  const addImage = () => {
+    setFormData({ ...formData, images: [...formData.images, ""] });
+  };
+
+  const removeImage = (index: number) => {
+    setFormData({ ...formData, images: formData.images.filter((_, i) => i !== index) });
+  };
+
+  const updateImage = (index: number, value: string) => {
+    const newImages = [...formData.images];
+    newImages[index] = value;
+    setFormData({ ...formData, images: newImages });
   };
 
   const handleDelete = async (id: string) => {
@@ -237,7 +266,7 @@ export default function WorksAdminPage() {
             setShowAddForm(true);
             setEditingId(null);
             setFormData({
-              image: "",
+              images: [],
               titleEn: "",
               titleRu: "",
               descriptionEn: "",
@@ -258,35 +287,59 @@ export default function WorksAdminPage() {
 
           <div className="grid gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium mb-2">{t('selectImage')}</label>
-              {loadingImages ? (
-                <div className="text-sm text-zinc-500">{t('loadingImages')}</div>
-              ) : (
-                <select
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
-                  required
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium">{t('selectImage')} ({formData.images.length})</label>
+                <button
+                  type="button"
+                  onClick={addImage}
+                  className="px-4 py-2 rounded-lg border-2 border-[var(--border-color)] text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors min-h-[36px] active:scale-95"
                 >
-                  <option value="">{t('selectAnImage')}</option>
-                  {availableImages.map((img) => (
-                    <option key={img} value={img}>
-                      {img}
-                    </option>
-                  ))}
-                </select>
+                  + {t('addImage')}
+                </button>
+              </div>
+              {formData.images.length === 0 && (
+                <div className="text-sm text-zinc-500 mb-2">{t('noImagesAdded')}</div>
               )}
-              {formData.image && (
-                <div className="mt-2 relative w-full h-48 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
-                  <Image
-                    src={formData.image}
-                    alt="Preview"
-                    fill
-                    className="object-cover"
-                    unoptimized
-                  />
+              {formData.images.map((img, index) => (
+                <div key={index} className="mb-4 space-y-2">
+                  <div className="flex gap-2">
+                    {loadingImages ? (
+                      <div className="flex-1 text-sm text-zinc-500">{t('loadingImages')}</div>
+                    ) : (
+                      <select
+                        value={img}
+                        onChange={(e) => updateImage(index, e.target.value)}
+                        className="flex-1 h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
+                      >
+                        <option value="">{t('selectAnImage')}</option>
+                        {availableImages.map((availableImg) => (
+                          <option key={availableImg} value={availableImg}>
+                            {availableImg}
+                          </option>
+                        ))}
+                      </select>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="px-4 py-2 rounded-lg border-2 border-red-300 text-red-600 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors min-h-[44px] sm:min-h-0 active:scale-95"
+                    >
+                      {t('removeImage')}
+                    </button>
+                  </div>
+                  {img && (
+                    <div className="relative w-full h-48 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30">
+                      <Image
+                        src={img}
+                        alt={`Preview ${index + 1}`}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
+              ))}
             </div>
 
             <div>
@@ -347,7 +400,7 @@ export default function WorksAdminPage() {
                   setShowAddForm(false);
                   setEditingId(null);
                   setFormData({
-                    image: "",
+                    images: [],
                     titleEn: "",
                     titleRu: "",
                     descriptionEn: "",
@@ -376,14 +429,21 @@ export default function WorksAdminPage() {
             >
               <div className="flex gap-4 flex-1 min-w-0">
                 <div className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-lg overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 flex-shrink-0">
-                  {work.image ? (
-                    <Image
-                      src={work.image}
-                      alt={language === 'ru' ? work.titleRu : work.titleEn}
-                      fill
-                      className="object-cover"
-                      unoptimized
-                    />
+                  {work.images && work.images.length > 0 && work.images[0] ? (
+                    <>
+                      <Image
+                        src={work.images[0]}
+                        alt={language === 'ru' ? work.titleRu : work.titleEn}
+                        fill
+                        className="object-cover"
+                        unoptimized
+                      />
+                      {work.images.length > 1 && (
+                        <div className="absolute top-1 right-1 bg-black/60 text-white text-xs px-2 py-1 rounded">
+                          +{work.images.length - 1}
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-xs">
                       {t('noImage')}
@@ -436,4 +496,5 @@ export default function WorksAdminPage() {
     </div>
   );
 }
+
 

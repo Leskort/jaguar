@@ -155,6 +155,9 @@ export const translations = {
     areYouSureDeleteWork: 'Are you sure you want to delete this work?',
     noWorksFound: 'No works found. Add works using the button above.',
     noImage: 'No image',
+    addImage: 'Add Image',
+    removeImage: 'Remove Image',
+    noImagesAdded: 'No images added. Click "Add Image" to add images.',
     
     // Order statuses
     all: 'ALL',
@@ -468,6 +471,9 @@ export const translations = {
     areYouSureDeleteWork: 'Вы уверены, что хотите удалить эту работу?',
     noWorksFound: 'Работы не найдены. Добавьте работы с помощью кнопки выше.',
     noImage: 'Нет изображения',
+    addImage: 'Добавить изображение',
+    removeImage: 'Удалить изображение',
+    noImagesAdded: 'Изображения не добавлены. Нажмите "Добавить изображение" для добавления.',
     
     // Order statuses
     all: 'ВСЕ',
