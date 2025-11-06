@@ -82,13 +82,16 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
     e.stopPropagation();
     // Use the captured instanceId to ensure we're updating the right card
     const cardInstanceId = instanceId;
+    // Debug: log which card is being toggled
+    console.log('Toggling details for instanceId:', cardInstanceId, 'itemId:', itemId);
     // Use functional update with explicit instance check
     setIsDetailsOpen((prev) => {
       // This state update is scoped to this specific component instance
       // React will only update the state for this specific card
+      console.log('State update for instanceId:', cardInstanceId, 'prev:', prev, 'new:', !prev);
       return !prev;
     });
-  }, [instanceId]);
+  }, [instanceId, itemId]);
 
   const handleAddToCart = useCallback(() => {
     const cartItem: CartItem = {
