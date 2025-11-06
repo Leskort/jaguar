@@ -55,7 +55,7 @@ export default function Footer() {
                 href="https://t.me/lr_chip"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                 aria-label="Telegram"
               >
                 <TelegramIcon size={24} />
@@ -64,7 +64,7 @@ export default function Footer() {
                 href="https://instagram.com/ir_chip"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                 aria-label="Instagram"
               >
                 <InstagramIcon size={24} />
@@ -73,7 +73,7 @@ export default function Footer() {
                 href="https://wa.me/447840000321"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-zinc-600 dark:text-zinc-400 hover:text-[var(--accent-gold)] transition-colors"
+                className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                 aria-label="WhatsApp"
               >
                 <WhatsAppIcon size={24} />
