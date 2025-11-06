@@ -21,13 +21,26 @@ type ServiceCardProps = {
   uniqueId?: string; // Optional unique identifier to ensure uniqueness
 };
 
+// Global counter to ensure uniqueness across all card instances
+let globalCardCounter = 0;
+
 function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps) {
   const { t, language } = useLanguage();
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
   
   // Create a unique instance ID that never changes for this component instance
-  const instanceIdRef = useRef<string>(`card-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
+  // Use uniqueId from props if available, otherwise generate a truly unique one
+  const instanceIdRef = useRef<string | null>(null);
+  if (instanceIdRef.current === null) {
+    globalCardCounter += 1;
+    if (uniqueId) {
+      instanceIdRef.current = `card-${uniqueId}-${globalCardCounter}`;
+    } else {
+      // Fallback: use combination of all identifying fields + counter
+      instanceIdRef.current = `card-${brand}-${model}-${year}-${option.title}-${option.price}-${globalCardCounter}`;
+    }
+  }
   const instanceId = instanceIdRef.current;
   
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
