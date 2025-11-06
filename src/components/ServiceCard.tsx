@@ -27,6 +27,7 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
   const removeItem = useCartStore((state) => state.removeItem);
   const items = useCartStore((state) => state.items);
   const [imgError, setImgError] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   // Create unique itemId using uniqueId if provided, otherwise use a combination of fields
   const itemId = uniqueId 
@@ -131,20 +132,29 @@ export default function ServiceCard({ option, brand, model, year, uniqueId }: Se
             </button>
           )}
         </div>
-        <details className="mt-auto" id={`details-${itemId}`}>
-          <summary className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1">
-            {t('details')} <span>↓</span>
-          </summary>
-          <div className="pt-2 text-xs text-zinc-700 dark:text-zinc-300">
-            {(() => {
-              if (language === 'ru') {
-                return option.descriptionRu || option.description || '';
-              } else {
-                return option.descriptionEn || option.description || '';
-              }
-            })()}
-          </div>
-        </details>
+        <div className="mt-auto">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsDetailsOpen(!isDetailsOpen);
+            }}
+            className="cursor-pointer text-xs select-none text-zinc-600 underline flex items-center gap-1 hover:text-zinc-800 dark:hover:text-zinc-400 transition-colors"
+          >
+            {t('details')} <span className={isDetailsOpen ? 'rotate-180 transition-transform' : 'transition-transform'}>↓</span>
+          </button>
+          {isDetailsOpen && (
+            <div className="pt-2 text-xs text-zinc-700 dark:text-zinc-300">
+              {(() => {
+                if (language === 'ru') {
+                  return option.descriptionRu || option.description || '';
+                } else {
+                  return option.descriptionEn || option.description || '';
+                }
+              })()}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
