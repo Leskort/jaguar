@@ -122,17 +122,54 @@ export default function ServicesAdminPage() {
     }
   }, [selectedModel, selectedBrand, vehicles]);
 
-  const loadServices = async (showLoading = true) => {
+  const loadServices = async (showLoading = true, forceReload = false) => {
     try {
       if (showLoading) {
         setLoading(true);
       }
-      const res = await fetch("/api/admin/services");
+      // Add cache-busting parameter to force fresh data from server
+      const cacheBuster = forceReload ? `?t=${Date.now()}` : '';
+      const res = await fetch(`/api/admin/services${cacheBuster}`);
       const data = await res.json();
       const servicesData = data || {};
       
-      // Only update if data actually changed
+      console.log("=== CLIENT: loadServices called ===");
+      console.log("Services data loaded:", Object.keys(servicesData));
+      // Log a sample service to check descriptionEn and descriptionRu
+      if (servicesData && typeof servicesData === 'object') {
+        for (const brand in servicesData) {
+          if (servicesData[brand] && typeof servicesData[brand] === 'object') {
+            for (const model in servicesData[brand]) {
+              if (servicesData[brand][model] && typeof servicesData[brand][model] === 'object') {
+                for (const year in servicesData[brand][model]) {
+                  if (servicesData[brand][model][year] && typeof servicesData[brand][model][year] === 'object') {
+                    for (const category in servicesData[brand][model][year]) {
+                      const services = servicesData[brand][model][year][category];
+                      if (Array.isArray(services) && services.length > 0) {
+                        const sampleService = services[0];
+                        console.log("Sample service in loadServices:", JSON.stringify(sampleService, null, 2));
+                        console.log("Sample service description fields:", {
+                          description: sampleService?.description,
+                          descriptionEn: sampleService?.descriptionEn,
+                          descriptionRu: sampleService?.descriptionRu
+                        });
+                        break;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      
+      // Only update if data actually changed OR if forceReload is true
       setServices((prevServices: any) => {
+        if (forceReload) {
+          setRefreshKey(prev => prev + 1);
+          return servicesData;
+        }
         const prevStr = JSON.stringify(prevServices);
         const newStr = JSON.stringify(servicesData);
         if (prevStr !== newStr) {
@@ -798,8 +835,9 @@ export default function ServicesAdminPage() {
                           <div className="flex gap-2">
                             <button
                               onClick={async () => {
-                                // Reload services to ensure we have latest data
-                                const freshServices = await loadServices();
+                                // Force reload services from server (bypass cache)
+                                const freshServices = await loadServices(false, true);
+                                
                                 // Verify the service still exists at this index using FRESH data
                                 const brandData = freshServices[service.brand];
                                 const modelData = brandData?.[service.model];
@@ -813,6 +851,10 @@ export default function ServicesAdminPage() {
                                 
                                 // Get the FRESH service data from the server
                                 const freshService = categoryArray[service.index];
+                                
+                                console.log("=== CLIENT: Fresh service from server (desktop table) ===");
+                                console.log("Fresh service raw:", freshService);
+                                console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
                                 
                                 setSelectedBrand(service.brand);
                                 setSelectedModel(service.model);
@@ -1483,8 +1525,9 @@ export default function ServicesAdminPage() {
                   <div className="flex gap-2">
                     <button
                       onClick={async () => {
-                        // Reload services to ensure we have latest data
-                        const freshServices = await loadServices();
+                        // Force reload services from server (bypass cache)
+                        const freshServices = await loadServices(false, true);
+                        
                         // Verify the service still exists at this index
                         const brandData = freshServices[selectedBrand];
                         const modelData = brandData?.[selectedModel];
@@ -1498,6 +1541,10 @@ export default function ServicesAdminPage() {
                         
                         // Get the FRESH service data from the server
                         const freshService = categoryArray[index];
+                        
+                        console.log("=== CLIENT: Fresh service from server (existing services) ===");
+                        console.log("Fresh service raw:", freshService);
+                        console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
                         
                         // Load service data, ensuring descriptionEn and descriptionRu are set
                         // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)

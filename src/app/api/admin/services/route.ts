@@ -29,6 +29,36 @@ async function getServices() {
 
 export async function GET() {
   const services = await getServices();
+  
+  // Log a sample service to verify descriptionEn and descriptionRu are present
+  if (services && typeof services === 'object') {
+    for (const brand in services) {
+      if (services[brand] && typeof services[brand] === 'object') {
+        for (const model in services[brand]) {
+          if (services[brand][model] && typeof services[brand][model] === 'object') {
+            for (const year in services[brand][model]) {
+              if (services[brand][model][year] && typeof services[brand][model][year] === 'object') {
+                for (const category in services[brand][model][year]) {
+                  const serviceArray = services[brand][model][year][category];
+                  if (Array.isArray(serviceArray) && serviceArray.length > 0) {
+                    const sampleService = serviceArray[0];
+                    console.log("[GET /api/admin/services] Sample service:", JSON.stringify(sampleService, null, 2));
+                    console.log("[GET /api/admin/services] Sample service description fields:", {
+                      description: sampleService?.description,
+                      descriptionEn: sampleService?.descriptionEn,
+                      descriptionRu: sampleService?.descriptionRu
+                    });
+                    break;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
   return NextResponse.json(services);
 }
 
