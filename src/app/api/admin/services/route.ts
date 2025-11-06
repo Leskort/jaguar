@@ -183,6 +183,24 @@ export async function PUT(request: Request) {
     
     console.log("Loading services from storage...");
     const services = await getServices();
+    
+    // DEBUG: Check for duplicate entries with empty model/year
+    if (services[brand]) {
+      const emptyModelKey = '';
+      if (services[brand][emptyModelKey] && services[brand][emptyModelKey][year] && services[brand][emptyModelKey][year][category]) {
+        const emptyKeyArray = services[brand][emptyModelKey][year][category];
+        console.log(`[PUT] WARNING: Found ${emptyKeyArray.length} service(s) with empty model key in [${brand}][${emptyModelKey}][${year}][${category}]`);
+        emptyKeyArray.forEach((svc: any, idx: number) => {
+          console.log(`[PUT] Empty key service [${idx}]:`, {
+            title: svc?.title,
+            hasDescriptionEn: !!svc?.descriptionEn,
+            hasDescriptionRu: !!svc?.descriptionRu,
+            descriptionRu: svc?.descriptionRu
+          });
+        });
+      }
+    }
+    
     console.log("Services loaded:", {
       hasData: !!services && typeof services === 'object',
       brands: Object.keys(services || {}),
@@ -191,7 +209,13 @@ export async function PUT(request: Request) {
       hasYear: !!services[brand]?.[model]?.[year],
       hasCategory: !!services[brand]?.[model]?.[year]?.[category],
       categoryLength: services[brand]?.[model]?.[year]?.[category]?.length,
-      requestedIndex: index
+      requestedIndex: index,
+      // Check what's at the requested index
+      serviceAtIndex: services[brand]?.[model]?.[year]?.[category]?.[index] ? {
+        title: services[brand][model][year][category][index].title,
+        hasDescriptionEn: !!services[brand][model][year][category][index].descriptionEn,
+        hasDescriptionRu: !!services[brand][model][year][category][index].descriptionRu
+      } : null
     });
     
     // Ensure structure exists
@@ -280,6 +304,48 @@ export async function PUT(request: Request) {
         descriptionEn: categoryArray[index]?.descriptionEn, 
         descriptionRu: categoryArray[index]?.descriptionRu 
       });
+      
+      // CLEANUP: If there's a duplicate entry with empty model/year keys, merge the descriptionRu/descriptionEn from it
+      // and then remove the duplicate
+      if (services[brand]) {
+        const emptyModelKey = '';
+        if (services[brand][emptyModelKey] && services[brand][emptyModelKey][year] && services[brand][emptyModelKey][year][category]) {
+          const emptyKeyArray = services[brand][emptyModelKey][year][category];
+          // Find service with same title
+          const duplicateIndex = emptyKeyArray.findIndex((svc: any) => svc?.title === service.title);
+          if (duplicateIndex >= 0) {
+            const duplicate = emptyKeyArray[duplicateIndex];
+            console.log(`[PUT] Found duplicate service with empty keys, merging descriptions...`);
+            console.log(`[PUT] Duplicate has descriptionEn: ${!!duplicate?.descriptionEn}, descriptionRu: ${!!duplicate?.descriptionRu}`);
+            
+            // If the current service doesn't have descriptionEn/descriptionRu but duplicate does, use duplicate's values
+            if (!categoryArray[index].descriptionEn && duplicate?.descriptionEn) {
+              categoryArray[index].descriptionEn = duplicate.descriptionEn;
+              console.log(`[PUT] Merged descriptionEn from duplicate`);
+            }
+            if (!categoryArray[index].descriptionRu && duplicate?.descriptionRu) {
+              categoryArray[index].descriptionRu = duplicate.descriptionRu;
+              console.log(`[PUT] Merged descriptionRu from duplicate: "${duplicate.descriptionRu}"`);
+            }
+            
+            // Remove the duplicate entry
+            emptyKeyArray.splice(duplicateIndex, 1);
+            console.log(`[PUT] Removed duplicate entry with empty keys`);
+            
+            // If the array is now empty, clean up the structure
+            if (emptyKeyArray.length === 0) {
+              delete services[brand][emptyModelKey][year][category];
+              if (Object.keys(services[brand][emptyModelKey][year]).length === 0) {
+                delete services[brand][emptyModelKey][year];
+                if (Object.keys(services[brand][emptyModelKey]).length === 0) {
+                  delete services[brand][emptyModelKey];
+                }
+              }
+              console.log(`[PUT] Cleaned up empty structure`);
+            }
+          }
+        }
+      }
     }
     
     console.log("Service updated in memory, saving to storage...");
