@@ -712,19 +712,25 @@ function TopOrdersSection() {
 export default function Home() {
   const { t } = useLanguage();
   const [offerOpen, setOfferOpen] = useState(false);
-  // Initialize cookieAccepted from localStorage immediately to prevent flash
-  const [cookieAccepted, setCookieAccepted] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('lr-chip-cookie-accepted') === 'true';
-    }
-    return false;
-  });
+  const [cookieAccepted, setCookieAccepted] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
     contact: "",
   });
   const [submitting, setSubmitting] = useState(false);
+
+  // Check localStorage only after component mounts on client
+  useEffect(() => {
+    setMounted(true);
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lr-chip-cookie-accepted');
+      if (saved === 'true') {
+        setCookieAccepted(true);
+      }
+    }
+  }, []);
 
   // Handle cookie acceptance
   const handleCookieAccept = () => {
@@ -1182,7 +1188,7 @@ export default function Home() {
       )}
 
       {/* COOKIE BAR */}
-      {!cookieAccepted && (
+      {mounted && !cookieAccepted && (
         <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-[10px] sm:text-xs flex-1">{t('cookieMessage')}</div>
@@ -1192,7 +1198,7 @@ export default function Home() {
       )}
       
       {/* Add padding to main content when cookie bar is visible */}
-      {!cookieAccepted && (
+      {mounted && !cookieAccepted && (
         <style jsx global>{`
           main {
             padding-bottom: 60px;
