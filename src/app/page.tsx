@@ -445,7 +445,7 @@ function TopOrdersSection() {
   if (loading) {
     return (
       <div className="relative">
-        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-4 sm:px-0">
+        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-10 sm:pl-12 md:pl-4 pr-10 sm:pr-12 md:pr-4">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="carousel-card w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col h-full" style={{ minHeight: '380px' }}>
               <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
@@ -476,7 +476,7 @@ function TopOrdersSection() {
   return (
     <div className="relative w-full">
       {/* Carousel */}
-      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-4 sm:px-0">
+      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-10 sm:pl-12 md:pl-4 pr-10 sm:pr-12 md:pr-4">
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
@@ -553,22 +553,22 @@ function TopOrdersSection() {
         ))}
       </div>
 
-      {/* Navigation arrows - hidden on mobile, visible on larger screens */}
-      {topServices.length > 0 && (
+      {/* Navigation arrows - visible on all screens */}
+      {topServices.length > 1 && (
         <>
           <button
             onClick={scrollLeft}
-            className="hidden sm:flex absolute left-2 md:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 group"
+            className="absolute left-1 sm:left-2 md:-left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 z-10 group touch-manipulation"
             aria-label="Previous"
           >
-            <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">←</span>
+            <span className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="hidden sm:flex absolute right-2 md:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 group"
+            className="absolute right-1 sm:right-2 md:-right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 z-10 group touch-manipulation"
             aria-label="Next"
           >
-            <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">→</span>
+            <span className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">→</span>
           </button>
         </>
       )}
