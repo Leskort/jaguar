@@ -22,8 +22,10 @@ export default function Footer() {
             <h3 className="font-semibold mb-4 text-sm">{t('aboutUs')}</h3>
             <ul className="space-y-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
               <li><Link href="/our-works" className="hover:text-[var(--accent-gold)]">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</Link></li>
-              <li><Link href="/services" className="hover:text-[var(--accent-gold)]">{t('retrofits').replace('RETROFITS', 'Retrofits').replace('РЕТРОФИТЫ', 'Ретрофиты')}</Link></li>
-              <li><Link href="/services" className="hover:text-[var(--accent-gold)]">{t('featuresActivation').replace('FEATURES ACTIVATION', 'Features activation').replace('АКТИВАЦИЯ ФУНКЦИЙ', 'Активация функций')}</Link></li>
+              <li><Link href="/retrofits" className="hover:text-[var(--accent-gold)]">{t('retrofits').replace('RETROFITS', 'Retrofits').replace('РЕТРОФИТЫ', 'Ретрофиты')}</Link></li>
+              <li><Link href="/features-activation" className="hover:text-[var(--accent-gold)]">{t('featuresActivation').replace('FEATURES ACTIVATION', 'Features activation').replace('АКТИВАЦИЯ ФУНКЦИЙ', 'Активация функций')}</Link></li>
+              <li><Link href="/power-upgrade" className="hover:text-[var(--accent-gold)]">{t('powerUpgrade').replace('POWER UPGRADE', 'Power upgrade').replace('УСИЛЕНИЕ МОЩНОСТИ', 'Усиление мощности')}</Link></li>
+              <li><Link href="/accessories" className="hover:text-[var(--accent-gold)]">{t('accessories').replace('ACCESSORIES', 'Accessories').replace('АКСЕССУАРЫ', 'Аксессуары')}</Link></li>
             </ul>
           </div>
           <div>
