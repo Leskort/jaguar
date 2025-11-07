@@ -23,8 +23,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased bg-[var(--background)] text-[var(--foreground)]">
+    <html lang="en" style={{ backgroundColor: '#1d1d1f' }}>
+      <body className="antialiased bg-[var(--background)] text-[var(--foreground)]" style={{ backgroundColor: '#1d1d1f' }}>
         <LanguageProvider>
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-16 items-center justify-between px-4 sm:px-6">

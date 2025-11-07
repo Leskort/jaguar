@@ -960,7 +960,12 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
+      <section 
+        className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center text-white overflow-hidden"
+        style={{ 
+          backgroundColor: '#1d1d1f', // --space-black, applied immediately to prevent white flash
+        }}
+      >
         {/* Video Background */}
         {!videoError && (
           <video
@@ -975,7 +980,7 @@ export default function Home() {
             disableRemotePlayback
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             style={{ 
-              zIndex: 0, 
+              zIndex: 1, 
               WebkitPlaysinline: true,
               // Hide all video controls including play button
               outline: 'none',
@@ -996,14 +1001,20 @@ export default function Home() {
         
         {/* Fallback background if video fails to load */}
         {videoError && (
-          <div className="absolute inset-0 bg-[var(--space-black)] z-[0]" />
+          <div className="absolute inset-0 z-[0]" style={{ backgroundColor: '#1d1d1f' }} />
         )}
         
+        {/* Initial dark background to prevent white flash on load */}
+        <div 
+          className="absolute inset-0 z-[0]" 
+          style={{ backgroundColor: '#1d1d1f' }}
+        />
+        
         {/* Dark overlay for text readability */}
-        <div className={`absolute inset-0 z-[1] ${videoError ? 'bg-black/30' : 'bg-black/50'}`} />
+        <div className={`absolute inset-0 z-[2] ${videoError ? 'bg-black/30' : 'bg-black/50'}`} />
         
         {/* Content */}
-        <div className="relative z-10 container-padded mx-auto max-w-6xl py-12 sm:py-20 px-4">
+        <div className="relative z-[3] container-padded mx-auto max-w-6xl py-12 sm:py-20 px-4">
           <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-tight max-w-4xl mb-4">
             {t('heroTitle')}
           </h1>
