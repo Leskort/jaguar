@@ -51,12 +51,70 @@ export default async function ServiceCatalogPage({ params }: { params: Promise<{
   // Normalize URL parameters to match stored data format
   const brand = normalizeUrlParam(rawParams.brand);
   const model = normalizeUrlParam(rawParams.model);
-  const year = rawParams.year; // Year can contain hyphens, so we keep it as is but trim
+  const year = rawParams.year.trim(); // Year can contain hyphens, so we keep it as is but trim
   
   const servicesData = await getServices();
-  const brandData = servicesData[brand];
-  const modelData = brandData?.[model];
-  const allCategoriesData = (modelData?.[year] as Record<string, ServiceOption[]>) ?? {};
+  
+  // Try to find services with normalized keys first
+  let brandData = servicesData[brand];
+  let modelData = brandData?.[model];
+  let allCategoriesData = (modelData?.[year] as Record<string, ServiceOption[]>) ?? {};
+  
+  // If not found, try to find with alternative normalizations or original keys
+  if (!allCategoriesData || Object.keys(allCategoriesData).length === 0) {
+    // Try to find by iterating through all brands and models
+    for (const serviceBrand in servicesData) {
+      if (!serviceBrand || typeof servicesData[serviceBrand] !== 'object') continue;
+      
+      // Normalize service brand for comparison
+      const normalizedServiceBrand = normalizeUrlParam(serviceBrand);
+      if (normalizedServiceBrand !== brand && serviceBrand.toLowerCase() !== brand) {
+        continue;
+      }
+      
+      for (const serviceModel in servicesData[serviceBrand]) {
+        if (!serviceModel || typeof servicesData[serviceBrand][serviceModel] !== 'object') continue;
+        
+        // Normalize service model for comparison
+        const normalizedServiceModel = normalizeUrlParam(serviceModel);
+        if (normalizedServiceModel !== model && serviceModel.toLowerCase() !== model) {
+          continue;
+        }
+        
+        // Check all years for this model (year might be stored differently)
+        const modelYearData = servicesData[serviceBrand][serviceModel];
+        if (modelYearData && typeof modelYearData === 'object') {
+          // Try exact year match first
+          let yearData = modelYearData[year];
+          
+          // If not found, try trimmed year
+          if (!yearData) {
+            yearData = modelYearData[year.trim()];
+          }
+          
+          // If still not found, try to find any year that contains the requested year
+          if (!yearData) {
+            for (const storedYear in modelYearData) {
+              if (storedYear.includes(year) || year.includes(storedYear)) {
+                yearData = modelYearData[storedYear];
+                break;
+              }
+            }
+          }
+          
+          if (yearData && typeof yearData === 'object') {
+            brandData = servicesData[serviceBrand];
+            modelData = servicesData[serviceBrand][serviceModel];
+            allCategoriesData = yearData as Record<string, ServiceOption[]>;
+            break;
+          }
+        }
+      }
+      if (allCategoriesData && Object.keys(allCategoriesData).length > 0) {
+        break;
+      }
+    }
+  }
   
   // Filter out empty categories (only keep categories with at least one service)
   const categoriesData: Record<string, ServiceOption[]> = {};
