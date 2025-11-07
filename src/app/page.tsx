@@ -1329,65 +1329,70 @@ export default function Home() {
       </section>
 
       {/* FINAL CTA */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">{t('finalCTATitle')}</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-            {t('finalCTADesc')}
-          </p>
-          <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
-            <input
-              type="hidden"
-              name="honeypot"
-              value=""
-            />
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('name')}
-              required
-            />
-            <input
-              type="text"
-              value={formData.contact}
-              onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('phone')}
-              required
-            />
-            <input
-              type="text"
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('vehicleModel')}
-            />
-            <textarea
-              className="h-24 sm:h-24 rounded-md border-2 border-[var(--border-color)] px-4 py-3 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[100px] focus:border-[var(--accent-gold)] focus:outline-none resize-none"
-              placeholder={t('comment')}
-            />
-            <div className="flex flex-col sm:flex-row gap-3">
-              <button
-                type="submit"
-                disabled={submitting}
-                className="flex-1 h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-              >
-                {submitting ? t('submitting') : t('submitRequest')}
-              </button>
-              <a
-                href="tel:+447840000321"
-                className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
-              >
-                {t('callUs')}
-          </a>
-          <a
-                href="https://wa.me/447840000321"
-                className="flex-1 h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-900 active:scale-95 transition-all"
-              >
-                {t('whatsapp')}
-              </a>
-            </div>
-          </form>
+      <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 lg:py-20 px-4">
+        <div className="rounded-2xl lg:rounded-3xl border-2 border-[var(--border-color)] p-6 sm:p-8 lg:p-12 xl:p-16 bg-white dark:bg-[var(--space-black)] shadow-lg lg:shadow-xl">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-4 lg:mb-6 text-zinc-900 dark:text-white">{t('finalCTATitle')}</h2>
+            <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-zinc-600 dark:text-zinc-400 mb-6 lg:mb-10">
+              {t('finalCTADesc')}
+            </p>
+            <form onSubmit={handleOfferSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+              <input
+                type="hidden"
+                name="honeypot"
+                value=""
+              />
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors"
+                placeholder={t('name')}
+                required
+              />
+              <input
+                type="text"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors"
+                placeholder={t('phone')}
+                required
+              />
+              <input
+                type="text"
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors md:col-span-2"
+                placeholder={t('vehicleModel')}
+              />
+              <textarea
+                className="h-32 lg:h-40 xl:h-44 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 py-3 lg:py-4 xl:py-5 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[120px] lg:min-h-[160px] xl:min-h-[180px] focus:border-[var(--accent-gold)] focus:outline-none resize-none transition-colors md:col-span-2"
+                placeholder={t('comment')}
+                rows={4}
+              />
+              <div className="flex flex-col sm:flex-row gap-3 lg:gap-4 md:col-span-2">
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-black text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all"
+                >
+                  {submitting ? t('submitting') : t('submitRequest')}
+                </button>
+                <a
+                  href="tel:+447840000321"
+                  className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-semibold min-h-[44px] sm:min-h-0 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] active:scale-95 transition-all"
+                >
+                  {t('callUs')}
+                </a>
+                <a
+                  href="https://wa.me/447840000321"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-semibold min-h-[44px] sm:min-h-0 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] active:scale-95 transition-all"
+                >
+                  {t('whatsapp')}
+                </a>
+              </div>
+            </form>
+          </div>
         </div>
       </section>
 
