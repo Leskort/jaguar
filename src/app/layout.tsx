@@ -28,13 +28,13 @@ export default function RootLayout({
         <LanguageProvider>
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-              <Link href="/" className="font-medium tracking-tight text-sm sm:text-base">LR-CHIP</Link>
-              <div className="hidden md:flex items-center gap-6 lg:gap-8 text-sm">
+              <Link href="/" className="font-medium tracking-tight text-sm sm:text-base shrink-0">LR-CHIP</Link>
+              <div className="hidden md:flex items-center gap-3 xl:gap-6 lg:gap-8 text-xs lg:text-sm">
                 <NavLinksClient />
               </div>
-              <div className="hidden md:flex items-center gap-3 lg:gap-4">
+              <div className="hidden md:flex items-center gap-2 xl:gap-3 lg:gap-4 shrink-0">
                 <LanguageSwitcher />
-                <div className="flex items-center gap-2 lg:gap-3">
+                <div className="flex items-center gap-1.5 xl:gap-2 lg:gap-3">
                   <a
                     href="https://t.me/lr_chip"
                     target="_blank"
@@ -42,7 +42,7 @@ export default function RootLayout({
                     className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                     aria-label="Telegram"
                   >
-                    <TelegramIcon size={20} />
+                    <TelegramIcon size={18} />
                   </a>
                   <a
                     href="https://instagram.com/ir_chip"
@@ -51,7 +51,7 @@ export default function RootLayout({
                     className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                     aria-label="Instagram"
                   >
-                    <InstagramIcon size={20} />
+                    <InstagramIcon size={18} />
                   </a>
                   <a
                     href="https://wa.me/447840000321"
@@ -60,10 +60,10 @@ export default function RootLayout({
                     className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
                     aria-label="WhatsApp"
                   >
-                    <WhatsAppIcon size={20} />
+                    <WhatsAppIcon size={18} />
                   </a>
                 </div>
-                <div className="flex items-center gap-3 lg:gap-4 text-xs sm:text-sm font-medium">
+                <div className="hidden lg:flex items-center gap-2 xl:gap-3 lg:gap-4 text-xs lg:text-sm font-medium">
                   <a href="tel:+447840000321" className="hover:opacity-80 transition-opacity whitespace-nowrap">0784 0000 321</a>
                   <a href="tel:+441622801501" className="hover:opacity-80 transition-opacity whitespace-nowrap">01622 801 501</a>
                 </div>

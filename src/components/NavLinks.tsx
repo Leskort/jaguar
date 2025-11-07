@@ -7,10 +7,10 @@ export default function NavLinks() {
   
   return (
     <>
-      <Link href="/vehicles" className="hover:opacity-80 transition-opacity">{t('vehicles')}</Link>
-      <Link href="/our-works" className="hover:opacity-80 transition-opacity">{t('ourWorks')}</Link>
-      <Link href="/car-projects" className="hover:opacity-80 transition-opacity">{t('carProjects')}</Link>
-      <Link href="/contact" className="hover:opacity-80 transition-opacity">{t('contacts')}</Link>
+      <Link href="/vehicles" className="hover:opacity-80 transition-opacity whitespace-nowrap">{t('vehicles')}</Link>
+      <Link href="/our-works" className="hover:opacity-80 transition-opacity whitespace-nowrap">{t('ourWorks')}</Link>
+      <Link href="/car-projects" className="hover:opacity-80 transition-opacity whitespace-nowrap">{t('carProjects')}</Link>
+      <Link href="/contact" className="hover:opacity-80 transition-opacity whitespace-nowrap">{t('contacts')}</Link>
     </>
   );
 }
