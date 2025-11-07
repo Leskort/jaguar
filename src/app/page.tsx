@@ -712,23 +712,19 @@ function TopOrdersSection() {
 export default function Home() {
   const { t } = useLanguage();
   const [offerOpen, setOfferOpen] = useState(false);
-  const [cookieAccepted, setCookieAccepted] = useState(false);
+  // Initialize cookieAccepted from localStorage immediately to prevent flash
+  const [cookieAccepted, setCookieAccepted] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('lr-chip-cookie-accepted') === 'true';
+    }
+    return false;
+  });
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
     contact: "",
   });
   const [submitting, setSubmitting] = useState(false);
-
-  // Load cookie acceptance status from localStorage on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('lr-chip-cookie-accepted');
-      if (saved === 'true') {
-        setCookieAccepted(true);
-      }
-    }
-  }, []);
 
   // Handle cookie acceptance
   const handleCookieAccept = () => {
