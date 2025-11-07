@@ -113,12 +113,12 @@ function VehicleSelector() {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6">
-      <div className="text-base sm:text-lg font-semibold text-center">{t('selectVehicleModel')}</div>
+    <div className="flex flex-col space-y-6">
+      <div className="text-2xl sm:text-3xl font-semibold text-left text-zinc-900 dark:text-white">{t('selectVehicleModel')}</div>
       
       {/* Selectors Section */}
       <div className="w-full max-w-4xl">
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3">
           <select
             value={selectedBrand}
             onChange={(e) => {
@@ -128,7 +128,7 @@ function VehicleSelector() {
               setSelectedModel("");
               setSelectedYear("");
             }}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1 max-w-xs mx-auto sm:mx-0"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1 w-full sm:w-auto"
             required
           >
             <option value="">{t('selectBrand')}</option>
@@ -146,7 +146,7 @@ function VehicleSelector() {
               setSelectedModel(e.target.value);
               setSelectedYear("");
             }}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs mx-auto sm:mx-0"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full sm:w-auto"
             required
             disabled={!selectedBrand || availableModels.length === 0}
             key={selectedBrand} // Force re-render when brand changes
@@ -162,7 +162,7 @@ function VehicleSelector() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 max-w-xs mx-auto sm:mx-0"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full sm:w-auto"
             required
             disabled={!selectedModel || availableYears.length === 0}
             key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
@@ -210,7 +210,7 @@ function VehicleSelector() {
             }
           }}
           disabled={!selectedBrand || !selectedModel || !selectedYear}
-          className="w-full max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+          className="w-full sm:w-auto sm:max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
         >
           {t('goToServices')}
         </button>
