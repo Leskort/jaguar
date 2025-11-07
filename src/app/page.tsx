@@ -243,8 +243,111 @@ function OurWorksSection() {
     }
   };
 
+  const scrollLeft = () => {
+    const container = document.getElementById('our-works-carousel');
+    if (container) {
+      const cards = container.querySelectorAll('.carousel-card');
+      if (cards.length === 0) return;
+      
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      
+      // Find the card that is currently closest to center
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      // Scroll to previous card
+      if (closestIndex > 0) {
+        const prevCard = cards[closestIndex - 1] as HTMLElement;
+        const cardRect = prevCard.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2 - containerRect.left;
+        const scrollTarget = container.scrollLeft + cardCenter - containerRect.width / 2;
+        
+        container.scrollTo({
+          left: Math.max(0, scrollTarget),
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
+  const scrollRight = () => {
+    const container = document.getElementById('our-works-carousel');
+    if (container) {
+      const cards = container.querySelectorAll('.carousel-card');
+      if (cards.length === 0) return;
+      
+      const containerRect = container.getBoundingClientRect();
+      const containerCenter = containerRect.left + containerRect.width / 2;
+      
+      // Find the card that is currently closest to center
+      let closestIndex = 0;
+      let closestDistance = Infinity;
+      
+      cards.forEach((card, index) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const distance = Math.abs(cardCenter - containerCenter);
+        
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestIndex = index;
+        }
+      });
+      
+      // Determine next card index
+      const nextIndex = closestIndex === 0 ? 1 : closestIndex + 1;
+      
+      // Scroll to the target card
+      if (nextIndex < cards.length) {
+        const nextCard = cards[nextIndex] as HTMLElement;
+        const cardRect = nextCard.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2 - containerRect.left;
+        const scrollTarget = container.scrollLeft + cardCenter - containerRect.width / 2;
+        
+        container.scrollTo({
+          left: Math.max(0, scrollTarget),
+          behavior: 'smooth'
+        });
+      }
+    }
+  };
+
   if (loading) {
-    return null; // Don't show section while loading
+    return (
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <div className="flex items-center justify-between mb-6 sm:mb-8">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
+          <Link href="/our-works" className="text-sm sm:text-base text-[var(--accent-gold)] hover:underline font-medium whitespace-nowrap ml-4">
+            {t('seeAll')}
+          </Link>
+        </div>
+        <div className="relative">
+          <div id="our-works-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="carousel-card w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] xl:min-w-[calc(25%-18px)] rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center bg-white dark:bg-zinc-900/50">
+                <div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
+                <div className="p-4 sm:p-4">
+                  <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2" />
+                  <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
   }
 
   if (works.length === 0) {
@@ -259,48 +362,71 @@ function OurWorksSection() {
           {t('seeAll')}
         </Link>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
-        {works.map((work) => (
-          <Link
-            key={work.id}
-            href={`/our-works/${work.id}`}
-            className="group rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0"
-          >
-            <div className="relative aspect-video sm:aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
-              {work.images && work.images.length > 0 && work.images[0] ? (
-                <>
-                  <Image
-                    src={work.images[0]}
-                    alt={language === 'ru' ? work.titleRu : work.titleEn}
-                    fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                    unoptimized
-                  />
-                  {/* Gradient overlay on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  {work.images.length > 1 && (
-                    <div className="absolute top-2 right-2 bg-black/70 text-white text-xs sm:text-[10px] px-2.5 py-1.5 rounded-full backdrop-blur-md font-semibold shadow-lg">
-                      +{work.images.length - 1}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
+      <div className="relative">
+        {/* Carousel */}
+        <div id="our-works-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+          {works.map((work) => (
+            <Link
+              key={work.id}
+              href={`/our-works/${work.id}`}
+              className="carousel-card group w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] xl:min-w-[calc(25%-18px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0"
+            >
+              <div className="relative aspect-video sm:aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
+                {work.images && work.images.length > 0 && work.images[0] ? (
+                  <>
+                    <Image
+                      src={work.images[0]}
+                      alt={language === 'ru' ? work.titleRu : work.titleEn}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      unoptimized
+                    />
+                    {/* Gradient overlay on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    {work.images.length > 1 && (
+                      <div className="absolute top-2 right-2 bg-black/70 text-white text-xs sm:text-[10px] px-2.5 py-1.5 rounded-full backdrop-blur-md font-semibold shadow-lg">
+                        +{work.images.length - 1}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
+                    {language === 'ru' ? work.titleRu : work.titleEn}
+                  </div>
+                )}
+              </div>
+              <div className="p-4 sm:p-4 bg-white dark:bg-zinc-900/50">
+                <h3 className="text-base sm:text-sm font-semibold line-clamp-2 mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-[var(--accent-gold)] transition-colors duration-300 leading-tight">
                   {language === 'ru' ? work.titleRu : work.titleEn}
-                </div>
-              )}
-            </div>
-            <div className="p-4 sm:p-4 bg-white dark:bg-zinc-900/50">
-              <h3 className="text-base sm:text-sm font-semibold line-clamp-2 mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-[var(--accent-gold)] transition-colors duration-300 leading-tight">
-                {language === 'ru' ? work.titleRu : work.titleEn}
-              </h3>
-              <p className="text-sm sm:text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">
-                {language === 'ru' ? work.descriptionRu : work.descriptionEn}
-              </p>
-            </div>
-          </Link>
-        ))}
+                </h3>
+                <p className="text-sm sm:text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">
+                  {language === 'ru' ? work.descriptionRu : work.descriptionEn}
+                </p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        {/* Navigation arrows */}
+        {works.length > 1 && (
+          <>
+            <button
+              onClick={scrollLeft}
+              className="absolute left-2 sm:left-3 md:-left-4 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
+              aria-label="Previous"
+            >
+              <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">←</span>
+            </button>
+            <button
+              onClick={scrollRight}
+              className="absolute right-2 sm:right-3 md:-right-4 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
+              aria-label="Next"
+            >
+              <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">→</span>
+            </button>
+          </>
+        )}
       </div>
     </section>
   );
@@ -721,8 +847,6 @@ export default function Home() {
         </div>
       </section>
 
-      <OurWorksSection />
-
       {/* FEW FACTS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('fewFactsAboutUs')}</h2>
@@ -740,6 +864,8 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <OurWorksSection />
 
       {/* CONTACTS UK */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
