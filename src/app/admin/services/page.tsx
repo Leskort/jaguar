@@ -1581,27 +1581,9 @@ export default function ServicesAdminPage() {
                         // Get the FRESH service data from the server
                         const freshService = categoryArray[index];
                         
-                        console.log("=== CLIENT: Fresh service from server (existing services) ===");
-                        console.log("Looking for service:", { brand: selectedBrand, model: selectedModel, year: selectedYear, category: selectedCategory, index });
-                        console.log("Normalized keys:", { normalizedBrand, normalizedModel });
-                        console.log("Found categoryArray:", !!categoryArray, "length:", categoryArray?.length);
-                        console.log("Fresh service raw:", freshService);
-                        console.log("Fresh service JSON:", JSON.stringify(freshService, null, 2));
-                        console.log("Fresh service has descriptionEn:", 'descriptionEn' in (freshService || {}));
-                        console.log("Fresh service has descriptionRu:", 'descriptionRu' in (freshService || {}));
-                        
                         // Load service data, ensuring descriptionEn and descriptionRu are set
                         // IMPORTANT: Always use descriptionEn/descriptionRu if they exist (even if empty string)
                         // Only use description as fallback if descriptionEn/descriptionRu are undefined or null
-                        console.log("=== CLIENT: Loading service for editing (existing services section) ===");
-                        console.log("Service data from list:", JSON.stringify(service, null, 2));
-                        console.log("Fresh service data from server:", JSON.stringify(freshService, null, 2));
-                        console.log("Description fields in fresh service:", { 
-                          description: freshService?.description, 
-                          descriptionEn: freshService?.descriptionEn, 
-                          descriptionRu: freshService?.descriptionRu 
-                        });
-                        
                         const loadedFormData = {
                           ...freshService,
                           descriptionEn: (freshService?.descriptionEn !== undefined && freshService?.descriptionEn !== null) 
@@ -1611,13 +1593,6 @@ export default function ServicesAdminPage() {
                             ? freshService.descriptionRu 
                             : (freshService?.description || ''),
                         };
-                        
-                        console.log("Loaded form data:", JSON.stringify(loadedFormData, null, 2));
-                        console.log("Description fields in loaded form data:", { 
-                          description: loadedFormData.description, 
-                          descriptionEn: loadedFormData.descriptionEn, 
-                          descriptionRu: loadedFormData.descriptionRu 
-                        });
                         
                         setFormData(loadedFormData);
                         setEditingIndex(index);
