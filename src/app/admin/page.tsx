@@ -74,6 +74,16 @@ export default function AdminPage() {
         </Link>
 
         <Link
+          href="/admin/car-projects"
+          className="rounded-2xl border-2 border-[var(--border-color)] p-6 sm:p-6 hover:shadow-lg active:scale-[0.98] transition-all min-h-[120px] sm:min-h-0 flex flex-col justify-center"
+        >
+          <h2 className="text-lg sm:text-xl font-semibold mb-2">{t('manageCarProjects')}</h2>
+          <p className="text-sm sm:text-sm text-zinc-600 dark:text-zinc-400">
+            {t('addEditOrRemoveCarProjects')}
+          </p>
+        </Link>
+
+        <Link
           href="/admin/orders"
           className="rounded-2xl border-2 border-[var(--border-color)] p-6 sm:p-6 hover:shadow-lg active:scale-[0.98] transition-all min-h-[120px] sm:min-h-0 flex flex-col justify-center sm:col-span-2 lg:col-span-1"
         >
