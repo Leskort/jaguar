@@ -445,9 +445,9 @@ function TopOrdersSection() {
   if (loading) {
     return (
       <div className="relative">
-        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-12 sm:pl-12 md:pl-4 pr-12 sm:pr-12 md:pr-4">
+        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-2 sm:px-4 md:px-0">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="carousel-card w-[calc(100vw-4rem)] min-w-[calc(100vw-4rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col h-full" style={{ minHeight: '380px' }}>
+            <div key={i} className="carousel-card w-[calc(100vw-1rem)] min-w-[calc(100vw-1rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col h-full" style={{ minHeight: '380px' }}>
               <div className="h-36 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
               <div className="p-4 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
                 <div className="h-4 sm:h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3 sm:mb-3 min-h-[2.5rem] sm:min-h-[3rem] px-1" />
@@ -476,11 +476,11 @@ function TopOrdersSection() {
   return (
     <div className="relative w-full">
       {/* Carousel */}
-      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-12 sm:pl-12 md:pl-4 pr-12 sm:pr-12 md:pr-4">
+      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-2 sm:px-4 md:px-0">
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
-            className="carousel-card group w-[calc(100vw-4rem)] min-w-[calc(100vw-4rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col h-full"
+            className="carousel-card group w-[calc(100vw-1rem)] min-w-[calc(100vw-1rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col h-full"
             style={{ minHeight: '380px' }}
           >
             {/* Image container with overlay gradient */}
@@ -553,22 +553,22 @@ function TopOrdersSection() {
         ))}
       </div>
 
-      {/* Navigation arrows - visible on all screens */}
+      {/* Navigation arrows - positioned over images, not over text */}
       {topServices.length > 1 && (
         <>
           <button
             onClick={scrollLeft}
-            className="absolute left-1 sm:left-2 md:-left-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 z-10 group touch-manipulation"
+            className="absolute left-2 sm:left-3 md:-left-4 top-[140px] sm:top-[180px] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/60 dark:bg-black/70 backdrop-blur-md border-2 border-white/30 dark:border-zinc-400/30 shadow-xl flex items-center justify-center hover:bg-black/80 dark:hover:bg-black/80 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-20 group touch-manipulation"
             aria-label="Previous"
           >
-            <span className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">←</span>
+            <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="absolute right-1 sm:right-2 md:-right-4 top-1/2 -translate-y-1/2 w-9 h-9 sm:w-10 sm:h-10 md:w-11 md:h-11 rounded-full bg-white/95 dark:bg-zinc-900/95 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 z-10 group touch-manipulation"
+            className="absolute right-2 sm:right-3 md:-right-4 top-[140px] sm:top-[180px] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/60 dark:bg-black/70 backdrop-blur-md border-2 border-white/30 dark:border-zinc-400/30 shadow-xl flex items-center justify-center hover:bg-black/80 dark:hover:bg-black/80 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-20 group touch-manipulation"
             aria-label="Next"
           >
-            <span className="text-lg sm:text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">→</span>
+            <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors">→</span>
           </button>
         </>
       )}
