@@ -258,7 +258,7 @@ export const translations = {
     submitRequest: 'Submit request',
     callUs: 'Call us',
     whatsapp: 'WhatsApp',
-    cookieMessage: 'This website stores cookies on your computer to provide more personalized services to you.',
+    cookieMessage: 'This website stores cookies to provide more personalized services.',
     accept: 'Accept',
     
     // Vehicles page
@@ -593,7 +593,7 @@ export const translations = {
     submitRequest: 'Отправить запрос',
     callUs: 'Позвонить нам',
     whatsapp: 'WhatsApp',
-    cookieMessage: 'Этот веб-сайт сохраняет файлы cookie на вашем компьютере для предоставления более персонализированных услуг.',
+    cookieMessage: 'Этот веб-сайт сохраняет файлы cookie для предоставления более персонализированных услуг.',
     accept: 'Принять',
     
     // Vehicles page
