@@ -479,10 +479,10 @@ function TopOrdersSection() {
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
-            className="carousel-card group w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm"
+            className="carousel-card group w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col"
           >
             {/* Image container with overlay gradient */}
-            <div className="relative h-48 sm:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
+            <div className="relative h-48 sm:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden flex-shrink-0">
               {service.image ? (
                 <>
                   <Image
@@ -511,32 +511,35 @@ function TopOrdersSection() {
               )}
             </div>
             
-            {/* Content */}
-            <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50">
-              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300">
+            {/* Content - flex-1 to push buttons to bottom */}
+            <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
+              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300 flex-shrink-0">
                 {service.title}
               </h3>
               
               {/* Price if available */}
               {service.price && (
-                <div className="mb-3 sm:mb-4">
+                <div className="mb-3 sm:mb-4 flex-shrink-0">
                   <span className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
                     {service.price}
                   </span>
                 </div>
               )}
               
-              {/* Buttons */}
-              <div className="flex flex-col sm:flex-row gap-2.5">
+              {/* Spacer to push buttons down */}
+              <div className="flex-1"></div>
+              
+              {/* Buttons - fixed height and width for uniformity */}
+              <div className="flex flex-col sm:flex-row gap-2.5 flex-shrink-0 mt-auto">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 sm:h-10 px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-sm font-bold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)]"
+                  className="flex-1 h-11 px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)]"
                 >
                   {t('addToCart')}
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 sm:h-10 px-4 rounded-full border-2 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] active:scale-95 transition-all duration-200"
+                  className="flex-1 h-11 px-4 rounded-full border-2 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-semibold inline-flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] active:scale-95 transition-all duration-200"
                 >
                   {t('details')}
                 </Link>
