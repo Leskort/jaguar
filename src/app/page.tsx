@@ -856,16 +856,16 @@ export default function Home() {
             <p>{t('heroPoint2')}</p>
             <p>{t('heroPoint3')}</p>
           </div>
-          <div className="flex flex-wrap gap-3 sm:gap-4">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <button 
               onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} 
-              className="h-12 sm:h-10 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              className="h-12 sm:h-11 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
               {t('getAnOffer')}
             </button>
             <Link 
               href="/contact"
-              className="h-12 sm:h-10 px-6 sm:px-5 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur text-base sm:text-sm font-semibold inline-flex items-center min-h-[44px] sm:min-h-0 hover:bg-white/20 active:scale-95 transition-all"
+              className="h-12 sm:h-11 px-6 sm:px-5 rounded-full border-2 border-white/30 bg-white/10 backdrop-blur text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 hover:bg-white/20 active:scale-95 transition-all"
             >
               {t('contacts')}
             </Link>
@@ -902,13 +902,15 @@ export default function Home() {
             <Link
               key={service.title}
               href={service.link}
-              className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow block"
+              className="rounded-2xl border border-[var(--border-color)] p-6 hover:shadow-lg transition-shadow flex flex-col h-full"
             >
               <h3 className="text-lg font-semibold mb-3">{service.title}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{service.description}</p>
-              <span className="text-sm text-[var(--accent-gold)] hover:underline">
-                {t('goToServices')}
-              </span>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 flex-1">{service.description}</p>
+              <div className="mt-auto pt-4">
+                <span className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-[var(--accent-gold)] text-black text-sm font-semibold hover:opacity-90 transition-opacity">
+                  {t('goToServices')}
+                </span>
+              </div>
             </Link>
           ))}
         </div>
@@ -932,14 +934,53 @@ export default function Home() {
         <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('fewFactsAboutUs')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
           {[
-            t('fact1'),
-            t('fact2'),
-            t('fact3'),
-            t('fact4'),
-            t('fact5')
-          ].map((fact, i) => (
-            <div key={i} className="text-sm text-zinc-600 dark:text-zinc-400">
-              * {fact}
+            {
+              icon: (
+                <svg className="w-6 h-6 text-[var(--accent-gold)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              ),
+              text: t('fact1')
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6 text-[var(--accent-gold)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              ),
+              text: t('fact2')
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6 text-[var(--accent-gold)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+              text: t('fact3')
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6 text-[var(--accent-gold)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              ),
+              text: t('fact4')
+            },
+            {
+              icon: (
+                <svg className="w-6 h-6 text-[var(--accent-gold)] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              ),
+              text: t('fact5')
+            }
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-3 text-sm text-zinc-600 dark:text-zinc-400">
+              <div className="mt-0.5">
+                {item.icon}
+              </div>
+              <span>{item.text}</span>
             </div>
           ))}
         </div>

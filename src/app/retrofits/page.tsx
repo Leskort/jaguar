@@ -44,19 +44,6 @@ export default function RetrofitsPage() {
           </div>
         </div>
       </section>
-
-      {/* CTA Section */}
-      <section className="relative min-h-[40dvh] flex items-center justify-center bg-[var(--space-black)] text-white">
-        <div className="absolute inset-0 opacity-30 bg-[url('/window.svg')] bg-cover bg-center pointer-events-none" />
-        <div className="relative z-10">
-          <Link
-            href="/contact"
-            className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
-          >
-            {t('getAnOffer')}
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }
