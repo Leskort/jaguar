@@ -254,7 +254,7 @@ function OurWorksSection() {
   return (
     <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
       <div className="flex items-center justify-between mb-8">
-        <h2 className="text-2xl sm:text-3xl font-semibold">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
         <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
           {t('seeAll')}
         </Link>
@@ -447,11 +447,11 @@ function TopOrdersSection() {
       <div className="relative">
         <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-4 sm:px-0">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="carousel-card w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col">
+            <div key={i} className="carousel-card w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col h-full" style={{ minHeight: '380px' }}>
               <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
-              <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1 min-h-[140px] sm:min-h-[160px]">
-                <div className="h-4 sm:h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3" />
-                <div className="h-3 sm:h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3 w-1/3" />
+              <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
+                <div className="h-4 sm:h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3 min-h-[2.5rem] sm:min-h-[3rem]" />
+                <div className="h-3 sm:h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3 w-1/3 min-h-[1.5rem] sm:min-h-[1.75rem]" />
                 <div className="flex-1"></div>
                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-auto">
                   <div className="flex-1 h-12 sm:h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
@@ -480,7 +480,8 @@ function TopOrdersSection() {
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
-            className="carousel-card group w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col"
+            className="carousel-card group w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col h-full"
+            style={{ minHeight: '380px' }}
           >
             {/* Image container with overlay gradient */}
             <div className="relative h-40 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden flex-shrink-0">
@@ -513,18 +514,20 @@ function TopOrdersSection() {
             </div>
             
             {/* Content - flex-1 to push buttons to bottom */}
-            <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1 min-h-[140px] sm:min-h-[160px]">
-              <h3 className="font-semibold mb-2 sm:mb-3 md:mb-4 text-xs sm:text-sm md:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300 flex-shrink-0">
+            <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
+              <h3 className="font-semibold mb-2 sm:mb-3 md:mb-4 text-xs sm:text-sm md:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300 flex-shrink-0 min-h-[2.5rem] sm:min-h-[3rem]">
                 {service.title}
               </h3>
               
               {/* Price if available */}
-              {service.price && (
-                <div className="mb-2 sm:mb-3 md:mb-4 flex-shrink-0">
+              {service.price ? (
+                <div className="mb-2 sm:mb-3 md:mb-4 flex-shrink-0 min-h-[1.5rem] sm:min-h-[1.75rem]">
                   <span className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 dark:text-zinc-100">
                     {service.price}
                   </span>
                 </div>
+              ) : (
+                <div className="mb-2 sm:mb-3 md:mb-4 flex-shrink-0 min-h-[1.5rem] sm:min-h-[1.75rem]"></div>
               )}
               
               {/* Spacer to push buttons down */}
@@ -659,7 +662,7 @@ export default function Home() {
 
       {/* SERVICES */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('services')}</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-zinc-900 dark:text-white">{t('services')}</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
@@ -705,7 +708,7 @@ export default function Home() {
 
       {/* TOP ORDERS */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('topOrders')}</h2>
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8 text-zinc-900 dark:text-white">{t('topOrders')}</h2>
         <div className="relative">
           <TopOrdersSection />
         </div>
@@ -716,7 +719,7 @@ export default function Home() {
       {/* LATEST ARTICLES */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold">{t('latestArticles')}</h2>
+          <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('latestArticles')}</h2>
           <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
             {t('seeMore')}
           </Link>
