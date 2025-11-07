@@ -116,9 +116,9 @@ function VehicleSelector() {
     <div className="flex flex-col space-y-6">
       <div className="text-2xl sm:text-3xl font-semibold text-left text-zinc-900 dark:text-white">{t('selectVehicleModel')}</div>
       
-      {/* Selectors Section */}
-      <div className="w-full max-w-4xl">
-        <div className="flex flex-col sm:flex-row gap-3">
+      {/* Selectors Section - Centered */}
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <select
             value={selectedBrand}
             onChange={(e) => {
@@ -177,43 +177,42 @@ function VehicleSelector() {
         </div>
       </div>
       
-      {/* Vehicle Image */}
+      {/* Vehicle Image and Button - Centered */}
       {selectedVehicle && selectedVehicle.image && (
-        <div className="relative w-full max-w-lg h-72 sm:h-80 xl:h-96 rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
-          <Image
-            src={selectedVehicle.image}
-            alt={selectedVehicle.title}
-            fill
-            className="object-cover"
-            unoptimized
-            onError={(e) => {
-              (e.target as HTMLImageElement).style.display = 'none';
-              const parent = (e.target as HTMLImageElement).parentElement;
-              if (parent && !parent.querySelector('.no-image-message')) {
-                const errorMsg = document.createElement("div");
-                errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
-                errorMsg.textContent = "No image";
-                parent.appendChild(errorMsg);
+        <div className="flex flex-col items-center space-y-4 mx-auto">
+          <div className="relative w-full max-w-lg h-72 sm:h-80 xl:h-96 rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
+            <Image
+              src={selectedVehicle.image}
+              alt={selectedVehicle.title}
+              fill
+              className="object-cover"
+              unoptimized
+              onError={(e) => {
+                (e.target as HTMLImageElement).style.display = 'none';
+                const parent = (e.target as HTMLImageElement).parentElement;
+                if (parent && !parent.querySelector('.no-image-message')) {
+                  const errorMsg = document.createElement("div");
+                  errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
+                  errorMsg.textContent = "No image";
+                  parent.appendChild(errorMsg);
+                }
+              }}
+            />
+          </div>
+          
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (selectedBrand && selectedModel && selectedYear) {
+                handleGoToServices(e);
               }
             }}
-          />
+            disabled={!selectedBrand || !selectedModel || !selectedYear}
+            className="w-full sm:w-auto sm:max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+          >
+            {t('goToServices')}
+          </button>
         </div>
-      )}
-      
-      {/* Button */}
-      {selectedVehicle && selectedVehicle.image && (
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (selectedBrand && selectedModel && selectedYear) {
-              handleGoToServices(e);
-            }
-          }}
-          disabled={!selectedBrand || !selectedModel || !selectedYear}
-          className="w-full sm:w-auto sm:max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
-        >
-          {t('goToServices')}
-        </button>
       )}
     </div>
   );
