@@ -723,6 +723,73 @@ export default function Home() {
 
       <OurWorksSection />
 
+      {/* FEW FACTS */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('fewFactsAboutUs')}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+          {[
+            t('fact1'),
+            t('fact2'),
+            t('fact3'),
+            t('fact4'),
+            t('fact5')
+          ].map((fact, i) => (
+            <div key={i} className="text-sm text-zinc-600 dark:text-zinc-400">
+              * {fact}
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* CONTACTS UK */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('contactsInUK')}</h2>
+        <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
+          <p>Unit 29 Integra:ME, Parkwood Industrial Estate, Bircholt Road, Maidstone, ME15 9GQ</p>
+          <p>
+            <a href="tel:+447840000321" className="hover:text-[var(--accent-gold)]">+44 784 0000 321</a>
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold mb-3">{t('schedule')}</h3>
+          <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
+            <li>* {t('monFri')}</li>
+            <li>* {t('satWorking')}</li>
+            <li>* {t('sunDayOff')}</li>
+          </ul>
+        </div>
+      </section>
+
+      {/* WHY CHOOSE */}
+      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
+        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('whyChooseTitle')}</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {[
+            {
+              title: t('powerAndTorque'),
+              description: t('powerAndTorqueDesc')
+            },
+            {
+              title: t('fuelSavings'),
+              description: t('fuelSavingsDesc')
+            },
+            {
+              title: t('safetyAndReliability'),
+              description: t('safetyAndReliabilityDesc')
+            },
+            {
+              title: t('comfortAndEase'),
+              description: t('comfortAndEaseDesc')
+            }
+          ].map((item) => (
+            <div key={item.title} className="rounded-2xl border border-[var(--border-color)] p-6">
+              <h3 className="font-semibold mb-3">{item.title}</h3>
+              <p className="text-sm text-zinc-600 dark:text-zinc-400">{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* CONTACT FORM */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
@@ -771,43 +838,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* FEW FACTS */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('fewFactsAboutUs')}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
-          {[
-            t('fact1'),
-            t('fact2'),
-            t('fact3'),
-            t('fact4'),
-            t('fact5')
-          ].map((fact, i) => (
-            <div key={i} className="text-sm text-zinc-600 dark:text-zinc-400">
-              * {fact}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* CONTACTS UK */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('contactsInUK')}</h2>
-        <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-          <p>Unit 29 Integra:ME, Parkwood Industrial Estate, Bircholt Road, Maidstone, ME15 9GQ</p>
-          <p>
-            <a href="tel:+447840000321" className="hover:text-[var(--accent-gold)]">+44 784 0000 321</a>
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold mb-3">{t('schedule')}</h3>
-          <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-            <li>* {t('monFri')}</li>
-            <li>* {t('satWorking')}</li>
-            <li>* {t('sunDayOff')}</li>
-          </ul>
-        </div>
-      </section>
-
       {/* TEAM */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('ourTeam')}</h2>
@@ -824,36 +854,6 @@ export default function Home() {
               <div className="font-medium text-sm mb-1">{member.name}</div>
               <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{member.role}</div>
               <div className="text-xs text-zinc-500">{member.details}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* WHY CHOOSE */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('whyChooseTitle')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              title: t('powerAndTorque'),
-              description: t('powerAndTorqueDesc')
-            },
-            {
-              title: t('fuelSavings'),
-              description: t('fuelSavingsDesc')
-            },
-            {
-              title: t('safetyAndReliability'),
-              description: t('safetyAndReliabilityDesc')
-            },
-            {
-              title: t('comfortAndEase'),
-              description: t('comfortAndEaseDesc')
-            }
-          ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-[var(--border-color)] p-6">
-              <h3 className="font-semibold mb-3">{item.title}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">{item.description}</p>
             </div>
           ))}
         </div>
