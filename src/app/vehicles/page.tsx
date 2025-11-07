@@ -24,6 +24,13 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
   
   // Extract model name without year (if title contains year info)
   const modelName = vehicle.title;
+  
+  // Normalize brand and model for URL - must match normalizeUrlParam function
+  const normalizeForUrl = (value: string) => {
+    return value.trim().toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+  };
+  const normalizedBrand = normalizeForUrl(vehicle.brand || '');
+  const normalizedModel = normalizeForUrl(vehicle.value || '');
 
   const handleCardClick = (e: React.MouseEvent) => {
     if (hasMultipleYears) {
@@ -95,7 +102,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
           {vehicle.years.map((year, index) => (
             <Link
               key={index}
-              href={`/services/${vehicle.brand}/${vehicle.value}/${year.value}`}
+              href={`/services/${normalizedBrand}/${normalizedModel}/${year.value}`}
               className="block px-4 py-3 text-[var(--foreground)] hover:bg-[var(--accent-gold)]/10 hover:text-[var(--accent-gold)] transition-colors text-sm font-medium"
               onClick={() => setShowYearDropdown(false)}
             >
@@ -108,7 +115,7 @@ const VehicleCard = ({ vehicle }: { vehicle: Vehicle }) => {
       {/* Direct link for single year */}
       {!hasMultipleYears && vehicle.years[0] && (
         <Link
-          href={`/services/${vehicle.brand}/${vehicle.value}/${vehicle.years[0].value}`}
+          href={`/services/${normalizedBrand}/${normalizedModel}/${vehicle.years[0].value}`}
           className="absolute inset-0"
           aria-label={`Go to services for ${vehicle.title}`}
         />
