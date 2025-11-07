@@ -253,9 +253,9 @@ function OurWorksSection() {
 
   return (
     <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
+      <div className="flex items-center justify-between mb-6 sm:mb-8">
         <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
-        <Link href="/our-works" className="text-sm sm:text-base text-[var(--accent-gold)] hover:underline font-medium">
+        <Link href="/our-works" className="text-sm sm:text-base text-[var(--accent-gold)] hover:underline font-medium whitespace-nowrap ml-4">
           {t('seeAll')}
         </Link>
       </div>
