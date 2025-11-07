@@ -723,43 +723,6 @@ export default function Home() {
 
       <OurWorksSection />
 
-      {/* LATEST ARTICLES */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('latestArticles')}</h2>
-          <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
-            {t('seeMore')}
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              title: t('article1Title'),
-              description: t('article1Description')
-            },
-            {
-              title: t('article2Title'),
-              description: t('article2Description')
-            },
-            {
-              title: t('article3Title'),
-              description: t('article3Description')
-            }
-          ].map((article) => (
-            <article key={article.title} className="rounded-2xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-shadow">
-              <div className="h-48 bg-silver/20 dark:bg-zinc-800/30" />
-              <div className="p-4 sm:p-6">
-                <h3 className="font-semibold mb-2">{article.title}</h3>
-                <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4">{article.description}</p>
-                <Link href="#" className="text-sm text-[var(--accent-gold)] hover:underline">
-                  {t('read')}
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
-      </section>
-
       {/* CONTACT FORM */}
       <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
         <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
