@@ -774,6 +774,7 @@ export default function Home() {
   const [offerOpen, setOfferOpen] = useState(false);
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
@@ -845,8 +846,32 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white">
-        <div className="absolute inset-0 opacity-30 bg-[url('/window.svg')] bg-cover bg-center pointer-events-none" />
+      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
+        {/* Video Background */}
+        {!videoError && (
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ zIndex: 0 }}
+            onError={() => setVideoError(true)}
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+            <source src="/videos/hero-video.webm" type="video/webm" />
+          </video>
+        )}
+        
+        {/* Fallback background if video fails to load */}
+        {videoError && (
+          <div className="absolute inset-0 bg-[var(--space-black)] z-[0]" />
+        )}
+        
+        {/* Dark overlay for text readability */}
+        <div className={`absolute inset-0 z-[1] ${videoError ? 'bg-black/30' : 'bg-black/50'}`} />
+        
+        {/* Content */}
         <div className="relative z-10 container-padded mx-auto max-w-6xl py-12 sm:py-20 px-4">
           <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-tight max-w-4xl mb-4">
             {t('heroTitle')}
