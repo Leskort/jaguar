@@ -776,12 +776,10 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const [isScrolling, setIsScrolling] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [videoMounted, setVideoMounted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroSectionRef = useRef<HTMLDivElement>(null);
-  const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
@@ -805,88 +803,49 @@ export default function Home() {
     }
   }, []);
 
-  // Handle scroll to hide video controls on iOS
+  // Simplified scroll handler - only hide controls, don't hide video
   useEffect(() => {
-    let scrollTimer: NodeJS.Timeout;
-    let lastScrollTop = 0;
-    let ticking = false;
-
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-          const scrollingDown = scrollTop > lastScrollTop;
-          
-          // Hide video when scrolling
-          setIsScrolling(true);
-          
-          // Clear existing timer
-          if (scrollTimer) {
-            clearTimeout(scrollTimer);
-          }
-          
-          // Show video after scroll stops (with delay to prevent iOS controls)
-          scrollTimer = setTimeout(() => {
-            setIsScrolling(false);
-            // Additional small delay before showing video
-            setTimeout(() => {
-              if (videoRef.current && !isScrolling) {
-                const video = videoRef.current;
-                video.controls = false;
-                video.removeAttribute('controls');
-              }
-            }, 200);
-          }, 500); // Increased delay after scroll stops
-          
-          lastScrollTop = scrollTop;
-          ticking = false;
-        });
-        ticking = true;
+      // Just ensure controls stay hidden during scroll
+      if (videoRef.current) {
+        const video = videoRef.current;
+        video.controls = false;
+        video.removeAttribute('controls');
       }
     };
 
-    // Throttled scroll handler
-    let scrollTimeout: NodeJS.Timeout;
-    const throttledScroll = () => {
-      if (scrollTimeout) return;
-      scrollTimeout = setTimeout(() => {
-        handleScroll();
-        scrollTimeout = 0 as any;
-      }, 10);
-    };
-
-    window.addEventListener('scroll', throttledScroll, { passive: true });
-    window.addEventListener('touchmove', throttledScroll, { passive: true });
-    window.addEventListener('wheel', throttledScroll, { passive: true });
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('touchmove', handleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', throttledScroll);
-      window.removeEventListener('touchmove', throttledScroll);
-      window.removeEventListener('wheel', throttledScroll);
-      if (scrollTimer) clearTimeout(scrollTimer);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('touchmove', handleScroll);
     };
   }, []);
 
-  // Intersection Observer to track video visibility
+  // Simplified Intersection Observer - show video when visible
   useEffect(() => {
-    if (!heroSectionRef.current || typeof IntersectionObserver === 'undefined') return;
+    if (!heroSectionRef.current || typeof IntersectionObserver === 'undefined') {
+      // If no IntersectionObserver, show video by default
+      setIsVideoVisible(true);
+      return;
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          // Only show video if it's fully visible and not scrolling
-          if (entry.isIntersecting && entry.intersectionRatio > 0.9 && !isScrolling) {
+          // Show video when section is visible (50% threshold)
+          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
             setIsVideoVisible(true);
-          } else {
-            // Hide video immediately when scrolling or not fully visible
+          } else if (!entry.isIntersecting) {
+            // Only hide when completely out of view
             setIsVideoVisible(false);
           }
         });
       },
       {
-        threshold: [0, 0.5, 0.9, 1],
-        rootMargin: '0px',
+        threshold: [0, 0.5, 1],
+        rootMargin: '50px', // Show video slightly before it's fully visible
       }
     );
 
@@ -895,7 +854,7 @@ export default function Home() {
     return () => {
       observer.disconnect();
     };
-  }, [isScrolling]);
+  }, []);
 
   // Handle video playback for iOS - aggressive autoplay
   useEffect(() => {
@@ -1113,7 +1072,7 @@ export default function Home() {
               webkit-playsinline="true"
               className="absolute inset-0 w-full h-full object-cover pointer-events-none"
               style={{ 
-                zIndex: (videoReady && isVideoVisible && !isScrolling) ? 0 : -1,
+                zIndex: (videoReady && isVideoVisible) ? 0 : -1,
                 WebkitPlaysinline: true,
                 outline: 'none',
                 border: 'none',
@@ -1121,12 +1080,11 @@ export default function Home() {
                 appearance: 'none',
                 WebkitUserSelect: 'none',
                 WebkitTouchCallout: 'none',
-                // Completely hide video when scrolling, not ready, or not visible
-                opacity: (videoReady && isVideoVisible && !isScrolling) ? 1 : 0,
-                visibility: (videoReady && isVideoVisible && !isScrolling) ? 'visible' : 'hidden',
-                display: (videoReady && isVideoVisible && !isScrolling) ? 'block' : 'none',
+                // Show video when ready and visible (use opacity for smooth transition)
+                opacity: (videoReady && isVideoVisible) ? 1 : 0,
+                visibility: (videoReady && isVideoVisible) ? 'visible' : 'hidden',
                 transform: 'translateZ(0)',
-                willChange: 'opacity',
+                transition: 'opacity 0.5s ease-in-out',
               } as React.CSSProperties}
               onError={() => setVideoError(true)}
               onLoadedMetadata={(e) => {
@@ -1184,19 +1142,17 @@ export default function Home() {
                 setTimeout(hideControls, 200);
                 setTimeout(hideControls, 300);
                 
-                // Much longer delay to ensure iOS controls are completely suppressed
+                // Shorter delay to ensure controls are hidden, then show video
                 setTimeout(() => {
                   hideControls();
                   // Start loading video only after controls are hidden
                   video.load();
                   setVideoReady(true);
-                  // Additional delay before making visible
+                  // Show video after a short delay
                   setTimeout(() => {
-                    if (!isScrolling) {
-                      setIsVideoVisible(true);
-                    }
-                  }, 800); // Increased delay
-                }, 1000); // 1 second delay to suppress iOS controls
+                    setIsVideoVisible(true);
+                  }, 300); // Reduced delay for faster video appearance
+                }, 500); // Reduced initial delay
               }}
               onPlay={(e) => {
                 // Hide controls when video starts playing
@@ -1205,29 +1161,27 @@ export default function Home() {
                 video.removeAttribute('controls');
                 video.setAttribute('controls', 'false');
                 setVideoReady(true);
-                if (!isScrolling) {
-                  setIsVideoVisible(true);
-                }
+                setIsVideoVisible(true);
               }}
             >
               <source src="/videos/hero-video.mp4" type="video/mp4" />
               <source src="/videos/hero-video.webm" type="video/webm" />
             </video>
-            {/* Overlay to hide video controls on iOS when scrolling or not ready */}
-            {(!videoReady || isScrolling || !isVideoVisible || !mounted || !videoMounted) && (
+            {/* Overlay to hide video controls on iOS when not ready */}
+            {(!videoReady || !mounted || !videoMounted) && (
               <div 
-                className="absolute inset-0 z-[1] bg-[var(--space-black)] transition-opacity duration-300"
+                className="absolute inset-0 z-[1] bg-[var(--space-black)] transition-opacity duration-500"
                 style={{ 
                   backgroundColor: '#1d1d1f',
                   pointerEvents: 'none',
-                  opacity: (!videoReady || isScrolling || !isVideoVisible || !mounted || !videoMounted) ? 1 : 0,
+                  opacity: (!videoReady || !mounted || !videoMounted) ? 1 : 0,
                 }}
               />
             )}
           </>
         )}
         
-        {/* Dark background overlay when video is not mounted or not ready - ALWAYS show until video is ready */}
+        {/* Dark background overlay when video is not mounted or not ready */}
         {(!mounted || !videoMounted || videoError || (!videoReady && !videoError)) && (
           <div 
             className="absolute inset-0 z-[0] bg-[var(--space-black)]"
