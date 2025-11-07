@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getStorageData, saveStorageData } from "@/lib/storage";
+import { sendTelegramNotification, formatOrderMessage } from "@/lib/telegram";
 
 const STORAGE_KEY = "orders";
 const FALLBACK_PATH = "src/data/orders.json";
@@ -44,6 +45,17 @@ export async function POST(request: Request) {
     console.log("[POST /api/admin/orders] Saving to storage...");
     await saveStorageData(STORAGE_KEY, FALLBACK_PATH, orders);
     console.log("[POST /api/admin/orders] ✅ Order saved successfully");
+    
+    // Send Telegram notification
+    try {
+      const message = formatOrderMessage(newOrder);
+      await sendTelegramNotification(message);
+      console.log("[POST /api/admin/orders] ✅ Telegram notification sent");
+    } catch (error) {
+      console.error("[POST /api/admin/orders] ⚠️ Failed to send Telegram notification:", error);
+      // Don't fail the request if Telegram fails
+    }
+    
     return NextResponse.json({ success: true, orderId: newOrder.id });
   } catch (error) {
     console.error("[POST /api/admin/orders] ❌ Error:", error);
