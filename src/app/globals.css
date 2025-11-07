@@ -74,3 +74,52 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari and Opera */
 }
+
+/* Hide video controls including play button on iOS */
+video::-webkit-media-controls {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+video::-webkit-media-controls-enclosure {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+video::-webkit-media-controls-panel {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+video::-webkit-media-controls-play-button {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  -webkit-appearance: none !important;
+}
+
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  -webkit-appearance: none !important;
+}
+
+video::-webkit-media-controls-overlay-play-button {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  -webkit-appearance: none !important;
+}
+
+/* Hide video controls in hero section */
+section video {
+  -webkit-appearance: none !important;
+}
+
+section video::-webkit-media-controls {
+  display: none !important;
+}

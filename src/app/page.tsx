@@ -794,49 +794,61 @@ export default function Home() {
     }
   }, []);
 
-  // Handle video playback for iOS
+  // Handle video playback for iOS - aggressive autoplay
   useEffect(() => {
     const video = videoRef.current;
     if (video && !videoError) {
-      // Set iOS-specific attributes
+      // Set iOS-specific attributes via DOM
       video.setAttribute('webkit-playsinline', 'true');
       video.setAttribute('playsinline', 'true');
       video.setAttribute('x5-playsinline', 'true');
-      video.setAttribute('x5-video-player-type', 'h5');
-      video.setAttribute('x5-video-player-fullscreen', 'true');
-      video.setAttribute('x5-video-orientation', 'portraint');
       
-      // Force muted for iOS
+      // Hide controls completely - multiple methods for iOS
+      video.controls = false;
+      video.removeAttribute('controls');
+      
+      // Force muted and no controls
       video.muted = true;
       video.volume = 0;
+      video.defaultMuted = true;
+      
+      // Disable controls via style and attributes
+      video.style.pointerEvents = 'none';
+      video.style.webkitAppearance = 'none';
+      
+      // Remove controls attribute completely
+      if (video.hasAttribute('controls')) {
+        video.removeAttribute('controls');
+      }
 
-      // Function to attempt playing video
+      // Aggressive play function
       const attemptPlay = async () => {
+        if (!video || video.ended) return;
+        
         try {
-          await video.play();
-        } catch (error) {
-          // Autoplay was prevented, wait for user interaction
-          const handleUserInteraction = async () => {
-            try {
-              await video.play();
-            } catch (e) {
-              // Ignore errors on user interaction
-            }
-          };
+          // Ensure video properties are set
+          video.muted = true;
+          video.volume = 0;
+          video.playsInline = true;
           
-          // Listen for any user interaction to start video
-          const events = ['touchstart', 'touchend', 'click', 'scroll'];
-          events.forEach(eventType => {
-            document.addEventListener(eventType, handleUserInteraction, { 
-              once: true, 
-              passive: true,
-              capture: true 
-            });
-          });
+          // Remove controls again before play
+          video.controls = false;
+          video.removeAttribute('controls');
+          
+          const playPromise = video.play();
+          
+          if (playPromise !== undefined) {
+            await playPromise;
+            // Video started playing - ensure controls stay hidden
+            video.controls = false;
+            video.removeAttribute('controls');
+          }
+        } catch (error) {
+          // Silently fail - will retry on user interaction
         }
       };
 
-      // Try to play when video metadata is loaded
+      // Event handlers
       const handleCanPlay = () => {
         attemptPlay();
       };
@@ -845,26 +857,52 @@ export default function Home() {
         attemptPlay();
       };
 
-      // Try immediately if video is already loaded
-      if (video.readyState >= 2) {
+      const handleLoadedMetadata = () => {
         attemptPlay();
-      }
+      };
 
-      // Add event listeners
+      // Try immediately and on multiple events
+      attemptPlay();
       video.addEventListener('canplay', handleCanPlay, { once: true });
+      video.addEventListener('canplaythrough', handleCanPlay, { once: true });
       video.addEventListener('loadeddata', handleLoadedData, { once: true });
-      video.addEventListener('loadedmetadata', handleCanPlay, { once: true });
+      video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
 
-      // Also try after a short delay for iOS
-      const timeoutId = setTimeout(() => {
-        attemptPlay();
-      }, 100);
+      // Global user interaction handler - start video on ANY interaction
+      let userInteracted = false;
+      const handleUserInteraction = async () => {
+        if (!userInteracted && video && video.paused) {
+          userInteracted = true;
+          await attemptPlay();
+        }
+      };
+
+      // Listen for ANY user interaction on the page
+      const interactionEvents = ['touchstart', 'touchend', 'click', 'scroll', 'wheel', 'keydown'];
+      interactionEvents.forEach(eventType => {
+        document.addEventListener(eventType, handleUserInteraction, { 
+          once: false,
+          passive: true 
+        });
+      });
+
+      // Try when page becomes visible
+      const handleVisibilityChange = () => {
+        if (!document.hidden && video.paused) {
+          attemptPlay();
+        }
+      };
+      document.addEventListener('visibilitychange', handleVisibilityChange);
 
       return () => {
-        clearTimeout(timeoutId);
         video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('canplaythrough', handleCanPlay);
         video.removeEventListener('loadeddata', handleLoadedData);
-        video.removeEventListener('loadedmetadata', handleCanPlay);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        interactionEvents.forEach(eventType => {
+          document.removeEventListener(eventType, handleUserInteraction);
+        });
       };
     }
   }, [videoError]);
@@ -922,23 +960,7 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section 
-        className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden"
-        onTouchStart={(e) => {
-          // Start video on touch for iOS
-          const video = videoRef.current;
-          if (video && video.paused) {
-            video.play().catch(() => {});
-          }
-        }}
-        onClick={(e) => {
-          // Start video on click for iOS
-          const video = videoRef.current;
-          if (video && video.paused) {
-            video.play().catch(() => {});
-          }
-        }}
-      >
+      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
         {/* Video Background */}
         {!videoError && (
           <video
@@ -948,9 +970,24 @@ export default function Home() {
             muted
             playsInline
             preload="auto"
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{ zIndex: 0, WebkitPlaysinline: true } as React.CSSProperties}
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ 
+              zIndex: 0, 
+              WebkitPlaysinline: true,
+              // Hide all video controls including play button
+              outline: 'none',
+              border: 'none',
+            } as React.CSSProperties}
             onError={() => setVideoError(true)}
+            onPlay={(e) => {
+              // Hide controls when video starts playing
+              const video = e.currentTarget;
+              video.controls = false;
+              video.setAttribute('controls', 'false');
+            }}
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
             <source src="/videos/hero-video.webm" type="video/webm" />
