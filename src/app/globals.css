@@ -169,9 +169,13 @@ video::-webkit-media-controls-fullscreen-button {
   display: none !important;
 }
 
-/* Hide video controls in hero section - SPECIFIC */
+/* Hide video controls in hero section - SPECIFIC AND AGGRESSIVE */
 section video {
   -webkit-appearance: none !important;
+  /* Prevent any native styling */
+  -webkit-user-select: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-tap-highlight-color: transparent !important;
 }
 
 section video::-webkit-media-controls,
@@ -186,4 +190,42 @@ section video::-webkit-media-controls-overlay-play-button {
   pointer-events: none !important;
   width: 0 !important;
   height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  z-index: -9999 !important;
+}
+
+/* Prevent loading of browser's internal video control stylesheet */
+video {
+  /* Force no native controls rendering */
+  -webkit-appearance: none !important;
+  appearance: none !important;
+}
+
+/* Additional iOS Safari specific hacks */
+@supports (-webkit-touch-callout: none) {
+  video {
+    -webkit-appearance: none !important;
+    -webkit-user-select: none !important;
+    -webkit-touch-callout: none !important;
+  }
+  
+  video::-webkit-media-controls,
+  video::-webkit-media-controls-enclosure,
+  video::-webkit-media-controls-panel,
+  video::-webkit-media-controls-play-button,
+  video::-webkit-media-controls-start-playback-button,
+  video::-webkit-media-controls-overlay-play-button {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    z-index: -9999 !important;
+  }
 }

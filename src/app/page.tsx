@@ -778,6 +778,7 @@ export default function Home() {
   const [videoReady, setVideoReady] = useState(false);
   const [isScrolling, setIsScrolling] = useState(false);
   const [isVideoVisible, setIsVideoVisible] = useState(false);
+  const [videoMounted, setVideoMounted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const heroSectionRef = useRef<HTMLDivElement>(null);
   const scrollTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -796,6 +797,11 @@ export default function Home() {
       if (saved === 'true') {
         setCookieAccepted(true);
       }
+      
+      // Delay video mounting to prevent iOS controls flash
+      setTimeout(() => {
+        setVideoMounted(true);
+      }, 500); // Wait 500ms after page load
     }
   }, []);
 
@@ -1091,7 +1097,7 @@ export default function Home() {
         className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden"
       >
         {/* Video Background */}
-        {!videoError && mounted && (
+        {!videoError && mounted && videoMounted && (
           <>
             <video
               ref={videoRef}
@@ -1099,7 +1105,7 @@ export default function Home() {
               loop
               muted
               playsInline
-              preload="auto"
+              preload="none"
               controls={false}
               disablePictureInPicture
               disableRemotePlayback
@@ -1112,52 +1118,85 @@ export default function Home() {
                 outline: 'none',
                 border: 'none',
                 WebkitAppearance: 'none',
+                appearance: 'none',
+                WebkitUserSelect: 'none',
+                WebkitTouchCallout: 'none',
                 // Completely hide video when scrolling, not ready, or not visible
                 opacity: (videoReady && isVideoVisible && !isScrolling) ? 1 : 0,
                 visibility: (videoReady && isVideoVisible && !isScrolling) ? 'visible' : 'hidden',
-                transform: (videoReady && isVideoVisible && !isScrolling) ? 'translateZ(0)' : 'translateZ(0) scale(0.99)',
-                transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out',
+                display: (videoReady && isVideoVisible && !isScrolling) ? 'block' : 'none',
+                transform: 'translateZ(0)',
+                willChange: 'opacity',
               } as React.CSSProperties}
               onError={() => setVideoError(true)}
               onLoadedMetadata={(e) => {
                 // Immediately hide controls when metadata loads
                 const video = e.currentTarget;
-                video.controls = false;
-                video.removeAttribute('controls');
-                video.setAttribute('controls', 'false');
                 
-                // Aggressively hide controls multiple times
+                // Aggressively hide controls multiple times with DOM manipulation
                 const hideControls = () => {
                   video.controls = false;
                   video.removeAttribute('controls');
                   video.setAttribute('controls', 'false');
-                  // Force hide via style
-                  const controls = video.querySelectorAll('*');
-                  controls.forEach((el: any) => {
-                    if (el.style) {
-                      el.style.display = 'none';
-                      el.style.visibility = 'hidden';
-                      el.style.opacity = '0';
+                  
+                  // Remove all possible control-related attributes
+                  video.removeAttribute('controlsList');
+                  
+                  // Force styles
+                  video.style.webkitAppearance = 'none';
+                  (video.style as any).appearance = 'none';
+                  (video.style as any).webkitUserSelect = 'none';
+                  (video.style as any).webkitTouchCallout = 'none';
+                  
+                  // Hide any shadow DOM controls (iOS Safari) - if accessible
+                  try {
+                    if (typeof (video as any).webkitGetShadowRoot === 'function') {
+                      const shadowRoot = (video as any).webkitGetShadowRoot();
+                      if (shadowRoot) {
+                        const controls = shadowRoot.querySelectorAll('*');
+                        controls.forEach((el: any) => {
+                          if (el && el.style) {
+                            el.style.display = 'none';
+                            el.style.visibility = 'hidden';
+                            el.style.opacity = '0';
+                            el.style.pointerEvents = 'none';
+                          }
+                        });
+                      }
                     }
-                  });
+                  } catch (e) {
+                    // Shadow DOM access may fail, ignore silently
+                  }
                 };
                 
+                // Hide controls immediately and repeatedly
                 hideControls();
+                requestAnimationFrame(() => {
+                  hideControls();
+                  requestAnimationFrame(() => {
+                    hideControls();
+                  });
+                });
+                
+                setTimeout(hideControls, 0);
                 setTimeout(hideControls, 50);
                 setTimeout(hideControls, 100);
                 setTimeout(hideControls, 200);
+                setTimeout(hideControls, 300);
                 
-                // Longer delay to ensure controls are completely hidden before showing video
+                // Much longer delay to ensure iOS controls are completely suppressed
                 setTimeout(() => {
                   hideControls();
+                  // Start loading video only after controls are hidden
+                  video.load();
                   setVideoReady(true);
-                  // Additional delay before making visible - wait for scroll to settle
+                  // Additional delay before making visible
                   setTimeout(() => {
                     if (!isScrolling) {
                       setIsVideoVisible(true);
                     }
-                  }, 500); // Increased delay
-                }, 800); // Increased initial delay
+                  }, 800); // Increased delay
+                }, 1000); // 1 second delay to suppress iOS controls
               }}
               onPlay={(e) => {
                 // Hide controls when video starts playing
@@ -1175,24 +1214,27 @@ export default function Home() {
               <source src="/videos/hero-video.webm" type="video/webm" />
             </video>
             {/* Overlay to hide video controls on iOS when scrolling or not ready */}
-            {(!videoReady || isScrolling || !isVideoVisible || !mounted) && (
+            {(!videoReady || isScrolling || !isVideoVisible || !mounted || !videoMounted) && (
               <div 
                 className="absolute inset-0 z-[1] bg-[var(--space-black)] transition-opacity duration-300"
                 style={{ 
                   backgroundColor: '#1d1d1f',
                   pointerEvents: 'none',
-                  opacity: (!videoReady || isScrolling || !isVideoVisible || !mounted) ? 1 : 0,
+                  opacity: (!videoReady || isScrolling || !isVideoVisible || !mounted || !videoMounted) ? 1 : 0,
                 }}
               />
             )}
           </>
         )}
         
-        {/* Dark background overlay when video is not mounted or not ready */}
-        {(!mounted || videoError || (!videoReady && !videoError)) && (
+        {/* Dark background overlay when video is not mounted or not ready - ALWAYS show until video is ready */}
+        {(!mounted || !videoMounted || videoError || (!videoReady && !videoError)) && (
           <div 
             className="absolute inset-0 z-[0] bg-[var(--space-black)]"
-            style={{ backgroundColor: '#1d1d1f' }}
+            style={{ 
+              backgroundColor: '#1d1d1f',
+              pointerEvents: 'none',
+            }}
           />
         )}
         
