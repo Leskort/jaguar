@@ -445,16 +445,17 @@ function TopOrdersSection() {
   if (loading) {
     return (
       <div className="relative">
-        <div id="top-orders-carousel" className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide px-[calc((100vw-85vw-3rem)/2)] sm:px-0">
+        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-4 sm:px-0">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="carousel-card w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center">
-              <div className="h-48 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
-              <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50">
-                <div className="h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3" />
-                <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-4 w-1/3" />
-                <div className="flex gap-2.5">
-                  <div className="flex-1 h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
-                  <div className="flex-1 h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+            <div key={i} className="carousel-card w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col">
+              <div className="h-40 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
+              <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1 min-h-[140px] sm:min-h-[160px]">
+                <div className="h-4 sm:h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3" />
+                <div className="h-3 sm:h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2 sm:mb-3 w-1/3" />
+                <div className="flex-1"></div>
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 mt-auto">
+                  <div className="flex-1 h-12 sm:h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
+                  <div className="flex-1 h-12 sm:h-11 bg-zinc-200 dark:bg-zinc-800 rounded-full animate-pulse" />
                 </div>
               </div>
             </div>
@@ -475,14 +476,14 @@ function TopOrdersSection() {
   return (
     <div className="relative w-full">
       {/* Carousel */}
-      <div id="top-orders-carousel" className="flex gap-4 sm:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-2 px-[calc((100vw-85vw-3rem)/2)] sm:px-0">
+      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 px-4 sm:px-0">
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
-            className="carousel-card group w-[85vw] min-w-[85vw] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col"
+            className="carousel-card group w-[calc(100vw-2rem)] min-w-[calc(100vw-2rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 hover:-translate-y-1 active:translate-y-0 transition-all duration-300 backdrop-blur-sm flex flex-col"
           >
             {/* Image container with overlay gradient */}
-            <div className="relative h-48 sm:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden flex-shrink-0">
+            <div className="relative h-40 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden flex-shrink-0">
               {service.image ? (
                 <>
                   <Image
@@ -505,22 +506,22 @@ function TopOrdersSection() {
                 </div>
               )}
               {service.status === "in-stock" && (
-                <div className="absolute top-3 right-3 bg-[var(--accent-gold)] text-black px-2.5 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold shadow-lg backdrop-blur-sm">
+                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-[var(--accent-gold)] text-black px-2 sm:px-2.5 md:px-3 py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-bold shadow-lg backdrop-blur-sm">
                   {t('inStock')}
                 </div>
               )}
             </div>
             
             {/* Content - flex-1 to push buttons to bottom */}
-            <div className="p-4 sm:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
-              <h3 className="font-semibold mb-3 sm:mb-4 text-sm sm:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300 flex-shrink-0">
+            <div className="p-3 sm:p-4 md:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1 min-h-[140px] sm:min-h-[160px]">
+              <h3 className="font-semibold mb-2 sm:mb-3 md:mb-4 text-xs sm:text-sm md:text-base text-zinc-900 dark:text-zinc-100 line-clamp-2 leading-snug group-hover:text-[var(--accent-gold)] dark:group-hover:text-[var(--accent-gold)] transition-colors duration-300 flex-shrink-0">
                 {service.title}
               </h3>
               
               {/* Price if available */}
               {service.price && (
-                <div className="mb-3 sm:mb-4 flex-shrink-0">
-                  <span className="text-lg sm:text-xl font-bold text-zinc-900 dark:text-zinc-100">
+                <div className="mb-2 sm:mb-3 md:mb-4 flex-shrink-0">
+                  <span className="text-base sm:text-lg md:text-xl font-bold text-zinc-900 dark:text-zinc-100">
                     {service.price}
                   </span>
                 </div>
@@ -530,16 +531,16 @@ function TopOrdersSection() {
               <div className="flex-1"></div>
               
               {/* Buttons - fixed height and width for uniformity */}
-              <div className="flex flex-col sm:flex-row gap-2.5 flex-shrink-0 mt-auto">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-2.5 flex-shrink-0 mt-auto">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)]"
+                  className="flex-1 h-12 sm:h-11 px-3 sm:px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-xs sm:text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)] touch-manipulation"
                 >
                   {t('addToCart')}
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 px-4 rounded-full border-2 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-sm font-semibold inline-flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] active:scale-95 transition-all duration-200"
+                  className="flex-1 h-12 sm:h-11 px-3 sm:px-4 rounded-full border-2 border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-900 dark:text-zinc-100 text-xs sm:text-sm font-semibold inline-flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-700 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] active:scale-95 transition-all duration-200 touch-manipulation"
                 >
                   {t('details')}
                 </Link>
@@ -549,19 +550,19 @@ function TopOrdersSection() {
         ))}
       </div>
 
-      {/* Navigation arrows */}
+      {/* Navigation arrows - hidden on mobile, visible on larger screens */}
       {topServices.length > 0 && (
         <>
           <button
             onClick={scrollLeft}
-            className="absolute left-2 sm:-left-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 min-h-[44px] sm:min-h-0 group"
+            className="hidden sm:flex absolute left-2 md:-left-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 group"
             aria-label="Previous"
           >
             <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">←</span>
           </button>
           <button
             onClick={scrollRight}
-            className="absolute right-2 sm:-right-4 top-1/2 -translate-y-1/2 w-12 h-12 sm:w-11 sm:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl flex items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 min-h-[44px] sm:min-h-0 group"
+            className="hidden sm:flex absolute right-2 md:-right-4 top-1/2 -translate-y-1/2 w-10 h-10 md:w-11 md:h-11 rounded-full bg-white/90 dark:bg-zinc-900/90 backdrop-blur-md border-2 border-zinc-300 dark:border-zinc-700 shadow-2xl items-center justify-center hover:bg-white dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] dark:hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/20 active:scale-95 transition-all duration-200 z-10 group"
             aria-label="Next"
           >
             <span className="text-xl text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors">→</span>
