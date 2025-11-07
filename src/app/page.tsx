@@ -116,9 +116,10 @@ function VehicleSelector() {
     <div className="flex flex-col space-y-6">
       <div className="text-2xl sm:text-3xl font-semibold text-left text-zinc-900 dark:text-white">{t('selectVehicleModel')}</div>
       
-      {/* Selectors Section - Centered */}
-      <div className="w-full max-w-4xl mx-auto">
-        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      {/* All elements with same width - Centered */}
+      <div className="w-full max-w-2xl lg:max-w-3xl xl:max-w-4xl mx-auto flex flex-col space-y-6">
+        {/* Selectors Section */}
+        <div className="flex flex-col sm:flex-row gap-3 w-full">
           <select
             value={selectedBrand}
             onChange={(e) => {
@@ -128,7 +129,7 @@ function VehicleSelector() {
               setSelectedModel("");
               setSelectedYear("");
             }}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1 w-full sm:w-auto"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] flex-1 w-full"
             required
           >
             <option value="">{t('selectBrand')}</option>
@@ -146,7 +147,7 @@ function VehicleSelector() {
               setSelectedModel(e.target.value);
               setSelectedYear("");
             }}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full sm:w-auto"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full"
             required
             disabled={!selectedBrand || availableModels.length === 0}
             key={selectedBrand} // Force re-render when brand changes
@@ -162,7 +163,7 @@ function VehicleSelector() {
           <select
             value={selectedYear}
             onChange={(e) => setSelectedYear(e.target.value)}
-            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full sm:w-auto"
+            className="h-12 sm:h-11 rounded-full border-2 border-[var(--border-color)] px-5 bg-white dark:bg-[var(--space-black)] text-base font-medium min-h-[44px] disabled:opacity-50 disabled:cursor-not-allowed flex-1 w-full"
             required
             disabled={!selectedModel || availableYears.length === 0}
             key={`${selectedBrand}-${selectedModel}`} // Force re-render when brand/model changes
@@ -175,45 +176,45 @@ function VehicleSelector() {
             ))}
           </select>
         </div>
-      </div>
-      
-      {/* Vehicle Image and Button - Centered */}
-      {selectedVehicle && selectedVehicle.image && (
-        <div className="flex flex-col items-center space-y-4 mx-auto">
-          <div className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
-            <Image
-              src={selectedVehicle.image}
-              alt={selectedVehicle.title}
-              fill
-              className="object-contain p-4"
-              unoptimized
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                const parent = (e.target as HTMLImageElement).parentElement;
-                if (parent && !parent.querySelector('.no-image-message')) {
-                  const errorMsg = document.createElement("div");
-                  errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
-                  errorMsg.textContent = "No image";
-                  parent.appendChild(errorMsg);
+        
+        {/* Vehicle Image and Button */}
+        {selectedVehicle && selectedVehicle.image && (
+          <>
+            <div className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
+              <Image
+                src={selectedVehicle.image}
+                alt={selectedVehicle.title}
+                fill
+                className="object-contain p-4"
+                unoptimized
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                  const parent = (e.target as HTMLImageElement).parentElement;
+                  if (parent && !parent.querySelector('.no-image-message')) {
+                    const errorMsg = document.createElement("div");
+                    errorMsg.className = "no-image-message absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm px-2 text-center";
+                    errorMsg.textContent = "No image";
+                    parent.appendChild(errorMsg);
+                  }
+                }}
+              />
+            </div>
+            
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                if (selectedBrand && selectedModel && selectedYear) {
+                  handleGoToServices(e);
                 }
               }}
-            />
-          </div>
-          
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              if (selectedBrand && selectedModel && selectedYear) {
-                handleGoToServices(e);
-              }
-            }}
-            disabled={!selectedBrand || !selectedModel || !selectedYear}
-            className="w-full sm:w-auto sm:max-w-md h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
-          >
-            {t('goToServices')}
-          </button>
-        </div>
-      )}
+              disabled={!selectedBrand || !selectedModel || !selectedYear}
+              className="w-full h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+            >
+              {t('goToServices')}
+            </button>
+          </>
+        )}
+      </div>
     </div>
   );
 }
@@ -332,18 +333,33 @@ function OurWorksSection() {
             {t('seeAll')}
           </Link>
         </div>
-        <div className="relative">
-          <div id="our-works-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+        
+        {/* Mobile/Tablet: Carousel skeleton */}
+        <div className="relative lg:hidden">
+          <div id="our-works-carousel" className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 pr-9 sm:pr-10">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="carousel-card w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] xl:min-w-[calc(25%-18px)] rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center bg-white dark:bg-zinc-900/50">
+              <div key={i} className="carousel-card w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center bg-white dark:bg-zinc-900/50">
                 <div className="aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
-                <div className="p-4 sm:p-4">
+                <div className="p-4">
                   <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-2" />
                   <div className="h-3 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
                 </div>
               </div>
             ))}
           </div>
+        </div>
+        
+        {/* Desktop: Grid skeleton */}
+        <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 xl:gap-8">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="rounded-2xl sm:rounded-3xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-white dark:bg-zinc-900/50 flex flex-col" style={{ minHeight: '380px' }}>
+              <div className="h-48 lg:h-56 xl:h-64 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
+              <div className="p-4 lg:p-5 flex flex-col flex-1">
+                <div className="h-5 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse mb-3" />
+                <div className="h-4 bg-zinc-200 dark:bg-zinc-800 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     );
@@ -361,16 +377,17 @@ function OurWorksSection() {
           {t('seeAll')}
         </Link>
       </div>
-      <div className="relative">
-        {/* Carousel */}
-        <div id="our-works-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+      
+      {/* Mobile/Tablet: Carousel */}
+      <div className="relative lg:hidden">
+        <div id="our-works-carousel" className="flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 pr-9 sm:pr-10">
           {works.map((work) => (
             <Link
               key={work.id}
               href={`/our-works/${work.id}`}
-              className="carousel-card group w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] xl:w-[calc(25%-18px)] xl:min-w-[calc(25%-18px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0"
+              className="carousel-card group w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] flex-shrink-0 snap-center rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0"
             >
-              <div className="relative aspect-video sm:aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
+              <div className="relative aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
                 {work.images && work.images.length > 0 && work.images[0] ? (
                   <>
                     <Image
@@ -378,10 +395,9 @@ function OurWorksSection() {
                       alt={language === 'ru' ? work.titleRu : work.titleEn}
                       fill
                       className="object-cover group-hover:scale-110 transition-transform duration-500"
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                      sizes="(max-width: 640px) 100vw, 50vw"
                       unoptimized
                     />
-                    {/* Gradient overlay on hover */}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     {work.images.length > 1 && (
                       <div className="absolute top-2 right-2 bg-black/70 text-white text-xs sm:text-[10px] px-2.5 py-1.5 rounded-full backdrop-blur-md font-semibold shadow-lg">
@@ -395,7 +411,7 @@ function OurWorksSection() {
                   </div>
                 )}
               </div>
-              <div className="p-4 sm:p-4 bg-white dark:bg-zinc-900/50">
+              <div className="p-4 bg-white dark:bg-zinc-900/50">
                 <h3 className="text-base sm:text-sm font-semibold line-clamp-2 mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-[var(--accent-gold)] transition-colors duration-300 leading-tight">
                   {language === 'ru' ? work.titleRu : work.titleEn}
                 </h3>
@@ -407,25 +423,70 @@ function OurWorksSection() {
           ))}
         </div>
 
-        {/* Navigation arrows */}
+        {/* Navigation arrows for mobile/tablet */}
         {works.length > 1 && (
           <>
             <button
               onClick={scrollLeft}
-              className="absolute left-2 sm:left-3 md:-left-4 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
+              className="absolute left-2 sm:left-3 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
               aria-label="Previous"
             >
-              <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">←</span>
+              <span className="text-base sm:text-lg text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">←</span>
             </button>
             <button
               onClick={scrollRight}
-              className="absolute right-2 sm:right-3 md:-right-4 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] md:top-1/2 md:-translate-y-1/2 w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
+              className="absolute right-2 sm:right-3 top-[calc(18px+108px)] sm:top-[calc(22px+144px)] w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-black/70 dark:bg-black/80 backdrop-blur-sm border-2 border-white/40 dark:border-zinc-300/40 shadow-2xl flex items-center justify-center hover:bg-black/90 dark:hover:bg-black/90 hover:border-[var(--accent-gold)] hover:shadow-[var(--accent-gold)]/50 active:scale-95 transition-all duration-200 z-30 group touch-manipulation"
               aria-label="Next"
             >
-              <span className="text-base sm:text-lg md:text-xl text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">→</span>
+              <span className="text-base sm:text-lg text-white group-hover:text-[var(--accent-gold)] transition-colors font-bold">→</span>
             </button>
           </>
         )}
+      </div>
+
+      {/* Desktop: Grid - Larger cards similar to Top Orders */}
+      <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-3 gap-5 lg:gap-6 xl:gap-8">
+        {works.map((work) => (
+          <Link
+            key={work.id}
+            href={`/our-works/${work.id}`}
+            className="group rounded-2xl sm:rounded-3xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-2xl hover:shadow-black/20 dark:hover:shadow-black/40 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0 backdrop-blur-sm flex flex-col"
+            style={{ minHeight: '380px' }}
+          >
+            <div className="relative h-48 lg:h-56 xl:h-64 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden flex-shrink-0">
+              {work.images && work.images.length > 0 && work.images[0] ? (
+                <>
+                  <Image
+                    src={work.images[0]}
+                    alt={language === 'ru' ? work.titleRu : work.titleEn}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 33vw"
+                    unoptimized
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  {work.images.length > 1 && (
+                    <div className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2.5 py-1.5 rounded-full backdrop-blur-md font-semibold shadow-lg">
+                      +{work.images.length - 1}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
+                  {language === 'ru' ? work.titleRu : work.titleEn}
+                </div>
+              )}
+            </div>
+            <div className="p-4 lg:p-5 bg-white dark:bg-zinc-900/50 flex flex-col flex-1">
+              <h3 className="text-base lg:text-lg font-semibold line-clamp-2 mb-2 lg:mb-3 text-zinc-900 dark:text-zinc-100 group-hover:text-[var(--accent-gold)] transition-colors duration-300 leading-tight">
+                {language === 'ru' ? work.titleRu : work.titleEn}
+              </h3>
+              <p className="text-sm lg:text-base text-zinc-600 dark:text-zinc-400 line-clamp-3 leading-relaxed">
+                {language === 'ru' ? work.descriptionRu : work.descriptionEn}
+              </p>
+            </div>
+          </Link>
+        ))}
       </div>
     </section>
   );
