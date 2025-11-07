@@ -891,9 +891,12 @@ export default function Home() {
     e.preventDefault();
     
     // On desktop (width >= 1024px), redirect to contact page
-    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-      router.push('/contact');
-      return;
+    if (typeof window !== 'undefined') {
+      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+      if (isDesktop) {
+        router.push('/contact');
+        return;
+      }
     }
     
     // On mobile/tablet, submit the form as usual
@@ -1385,12 +1388,25 @@ export default function Home() {
                 >
                   {submitting ? t('submitting') : t('submitRequest')}
                 </button>
-                <a
-                  href="tel:+447840000321"
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    // Check if device is desktop using matchMedia (more reliable)
+                    if (typeof window !== 'undefined') {
+                      const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+                      if (isDesktop) {
+                        router.push('/contact');
+                      } else {
+                        // On mobile/tablet, open phone dialer
+                        window.location.href = 'tel:+447840000321';
+                      }
+                    }
+                  }}
                   className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-semibold min-h-[44px] sm:min-h-0 flex items-center justify-center hover:bg-zinc-50 dark:hover:bg-zinc-800 hover:border-[var(--accent-gold)] active:scale-95 transition-all"
                 >
                   {t('callUs')}
-                </a>
+                </button>
                 <a
                   href="https://wa.me/447840000321"
                   target="_blank"
