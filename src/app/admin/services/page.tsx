@@ -647,12 +647,6 @@ export default function ServicesAdminPage() {
             >
               <option value="all">{t('allCategories')}</option>
               {filterCategories.map((category) => {
-                const categoryLabels: Record<string, string> = {
-                  "features-activation": "FEATURES ACTIVATION",
-                  "retrofits": "RETROFITS",
-                  "power-upgrade": "POWER UPGRADE",
-                  "accessories": "ACCESSORIES",
-                };
                 const displayName = categoryLabels[category] || category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 return (
                   <option key={category} value={category}>{displayName}</option>
@@ -1250,10 +1244,10 @@ export default function ServicesAdminPage() {
           className="h-12 sm:h-10 rounded-lg border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] sm:min-h-0 focus:border-[var(--accent-gold)] focus:outline-none"
         >
           <option value="">{t('selectCategory')}</option>
-          <option value="features-activation">Features Activation</option>
-          <option value="retrofits">Retrofits</option>
-          <option value="power-upgrade">Power Upgrade</option>
-          <option value="accessories">Accessories</option>
+          <option value="features-activation">{categoryLabels["features-activation"]}</option>
+          <option value="retrofits">{categoryLabels["retrofits"]}</option>
+          <option value="power-upgrade">{categoryLabels["power-upgrade"]}</option>
+          <option value="accessories">{categoryLabels["accessories"]}</option>
         </select>
 
         {selectedModel && selectedYear && selectedCategory && (
