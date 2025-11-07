@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -775,6 +775,7 @@ export default function Home() {
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
@@ -792,6 +793,81 @@ export default function Home() {
       }
     }
   }, []);
+
+  // Handle video playback for iOS
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && !videoError) {
+      // Set iOS-specific attributes
+      video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('x5-playsinline', 'true');
+      video.setAttribute('x5-video-player-type', 'h5');
+      video.setAttribute('x5-video-player-fullscreen', 'true');
+      video.setAttribute('x5-video-orientation', 'portraint');
+      
+      // Force muted for iOS
+      video.muted = true;
+      video.volume = 0;
+
+      // Function to attempt playing video
+      const attemptPlay = async () => {
+        try {
+          await video.play();
+        } catch (error) {
+          // Autoplay was prevented, wait for user interaction
+          const handleUserInteraction = async () => {
+            try {
+              await video.play();
+            } catch (e) {
+              // Ignore errors on user interaction
+            }
+          };
+          
+          // Listen for any user interaction to start video
+          const events = ['touchstart', 'touchend', 'click', 'scroll'];
+          events.forEach(eventType => {
+            document.addEventListener(eventType, handleUserInteraction, { 
+              once: true, 
+              passive: true,
+              capture: true 
+            });
+          });
+        }
+      };
+
+      // Try to play when video metadata is loaded
+      const handleCanPlay = () => {
+        attemptPlay();
+      };
+
+      const handleLoadedData = () => {
+        attemptPlay();
+      };
+
+      // Try immediately if video is already loaded
+      if (video.readyState >= 2) {
+        attemptPlay();
+      }
+
+      // Add event listeners
+      video.addEventListener('canplay', handleCanPlay, { once: true });
+      video.addEventListener('loadeddata', handleLoadedData, { once: true });
+      video.addEventListener('loadedmetadata', handleCanPlay, { once: true });
+
+      // Also try after a short delay for iOS
+      const timeoutId = setTimeout(() => {
+        attemptPlay();
+      }, 100);
+
+      return () => {
+        clearTimeout(timeoutId);
+        video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('loadeddata', handleLoadedData);
+        video.removeEventListener('loadedmetadata', handleCanPlay);
+      };
+    }
+  }, [videoError]);
 
   // Handle cookie acceptance
   const handleCookieAccept = () => {
@@ -846,16 +922,34 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
+      <section 
+        className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden"
+        onTouchStart={(e) => {
+          // Start video on touch for iOS
+          const video = videoRef.current;
+          if (video && video.paused) {
+            video.play().catch(() => {});
+          }
+        }}
+        onClick={(e) => {
+          // Start video on click for iOS
+          const video = videoRef.current;
+          if (video && video.paused) {
+            video.play().catch(() => {});
+          }
+        }}
+      >
         {/* Video Background */}
         {!videoError && (
           <video
+            ref={videoRef}
             autoPlay
             loop
             muted
             playsInline
+            preload="auto"
             className="absolute inset-0 w-full h-full object-cover"
-            style={{ zIndex: 0 }}
+            style={{ zIndex: 0, WebkitPlaysinline: true } as React.CSSProperties}
             onError={() => setVideoError(true)}
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
