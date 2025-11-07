@@ -7,6 +7,8 @@
 [build.environment]
   NODE_VERSION = "20"
   NODE_ENV = "production"
+  # Exclude ADMIN_PASSWORD from secrets scanning (it's expected in server-side code)
+  SECRETS_SCAN_OMIT_KEYS = "ADMIN_PASSWORD"
 
 # Headers for proper caching and security
 [[headers]]
