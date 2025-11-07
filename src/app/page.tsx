@@ -775,6 +775,7 @@ export default function Home() {
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [videoError, setVideoError] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -803,9 +804,10 @@ export default function Home() {
       video.setAttribute('playsinline', 'true');
       video.setAttribute('x5-playsinline', 'true');
       
-      // Hide controls completely - multiple methods for iOS
+      // Hide controls completely - AGGRESSIVE multiple methods for iOS
       video.controls = false;
       video.removeAttribute('controls');
+      video.setAttribute('controls', 'false');
       
       // Force muted and no controls
       video.muted = true;
@@ -815,11 +817,39 @@ export default function Home() {
       // Disable controls via style and attributes
       video.style.pointerEvents = 'none';
       video.style.webkitAppearance = 'none';
+      video.style.outline = 'none';
+      video.style.border = 'none';
       
-      // Remove controls attribute completely
+      // Set iOS-specific attributes to prevent controls
+      video.setAttribute('x-webkit-airplay', 'deny');
+      video.setAttribute('webkit-playsinline', 'true');
+      
+      // Remove controls attribute completely - multiple times
       if (video.hasAttribute('controls')) {
         video.removeAttribute('controls');
       }
+      
+      // Force hide controls via CSS
+      const hideControls = () => {
+        const style = document.createElement('style');
+        style.textContent = `
+          video::-webkit-media-controls,
+          video::-webkit-media-controls-enclosure,
+          video::-webkit-media-controls-panel,
+          video::-webkit-media-controls-play-button,
+          video::-webkit-media-controls-start-playback-button,
+          video::-webkit-media-controls-overlay-play-button {
+            display: none !important;
+            opacity: 0 !important;
+            visibility: hidden !important;
+            pointer-events: none !important;
+            width: 0 !important;
+            height: 0 !important;
+          }
+        `;
+        document.head.appendChild(style);
+      };
+      hideControls();
 
       // Aggressive play function
       const attemptPlay = async () => {
@@ -963,35 +993,62 @@ export default function Home() {
       <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
         {/* Video Background */}
         {!videoError && (
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            controls={false}
-            disablePictureInPicture
-            disableRemotePlayback
-            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-            style={{ 
-              zIndex: 0, 
-              WebkitPlaysinline: true,
-              // Hide all video controls including play button
-              outline: 'none',
-              border: 'none',
-            } as React.CSSProperties}
-            onError={() => setVideoError(true)}
-            onPlay={(e) => {
-              // Hide controls when video starts playing
-              const video = e.currentTarget;
-              video.controls = false;
-              video.setAttribute('controls', 'false');
-            }}
-          >
-            <source src="/videos/hero-video.mp4" type="video/mp4" />
-            <source src="/videos/hero-video.webm" type="video/webm" />
-          </video>
+          <>
+            <video
+              ref={videoRef}
+              autoPlay
+              loop
+              muted
+              playsInline
+              preload="auto"
+              controls={false}
+              disablePictureInPicture
+              disableRemotePlayback
+              x-webkit-airplay="deny"
+              webkit-playsinline="true"
+              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+              style={{ 
+                zIndex: videoReady ? 0 : -1,
+                WebkitPlaysinline: true,
+                outline: 'none',
+                border: 'none',
+                WebkitAppearance: 'none',
+                // Completely hide video until ready to prevent iOS controls flash
+                display: videoReady ? 'block' : 'none',
+              } as React.CSSProperties}
+              onError={() => setVideoError(true)}
+              onLoadedMetadata={(e) => {
+                // Immediately hide controls when metadata loads
+                const video = e.currentTarget;
+                video.controls = false;
+                video.removeAttribute('controls');
+                video.setAttribute('controls', 'false');
+                // Small delay to ensure controls are hidden before showing video
+                setTimeout(() => setVideoReady(true), 150);
+              }}
+              onPlay={(e) => {
+                // Hide controls when video starts playing
+                const video = e.currentTarget;
+                video.controls = false;
+                video.removeAttribute('controls');
+                video.setAttribute('controls', 'false');
+                setVideoReady(true);
+              }}
+            >
+              <source src="/videos/hero-video.mp4" type="video/mp4" />
+              <source src="/videos/hero-video.webm" type="video/webm" />
+            </video>
+            {/* Overlay to hide video controls on iOS until ready */}
+            {!videoReady && (
+              <div 
+                className="absolute inset-0 z-[1] bg-[var(--space-black)]"
+                style={{ 
+                  backgroundColor: '#1d1d1f',
+                  pointerEvents: 'none',
+                }}
+              />
+            )}
+          </>
         )}
         
         {/* Fallback background if video fails to load */}

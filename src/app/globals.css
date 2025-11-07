@@ -75,51 +75,115 @@ body {
   display: none;  /* Chrome, Safari and Opera */
 }
 
-/* Hide video controls including play button on iOS */
+/* Hide video controls including play button on iOS - AGGRESSIVE */
+video {
+  -webkit-appearance: none !important;
+  -webkit-user-select: none !important;
+  -webkit-tap-highlight-color: transparent !important;
+}
+
 video::-webkit-media-controls {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 video::-webkit-media-controls-enclosure {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 video::-webkit-media-controls-panel {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 video::-webkit-media-controls-play-button {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
   -webkit-appearance: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
 }
 
 video::-webkit-media-controls-start-playback-button {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
   -webkit-appearance: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
 }
 
 video::-webkit-media-controls-overlay-play-button {
   display: none !important;
   opacity: 0 !important;
   visibility: hidden !important;
+  pointer-events: none !important;
   -webkit-appearance: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
 }
 
-/* Hide video controls in hero section */
+video::-webkit-media-controls-timeline {
+  display: none !important;
+}
+
+video::-webkit-media-controls-current-time-display {
+  display: none !important;
+}
+
+video::-webkit-media-controls-time-remaining-display {
+  display: none !important;
+}
+
+video::-webkit-media-controls-mute-button {
+  display: none !important;
+}
+
+video::-webkit-media-controls-volume-slider {
+  display: none !important;
+}
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
+}
+
+/* Hide video controls in hero section - SPECIFIC */
 section video {
   -webkit-appearance: none !important;
 }
 
-section video::-webkit-media-controls {
+section video::-webkit-media-controls,
+section video::-webkit-media-controls-enclosure,
+section video::-webkit-media-controls-panel,
+section video::-webkit-media-controls-play-button,
+section video::-webkit-media-controls-start-playback-button,
+section video::-webkit-media-controls-overlay-play-button {
   display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
