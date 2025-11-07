@@ -180,12 +180,12 @@ function VehicleSelector() {
       {/* Vehicle Image and Button - Centered */}
       {selectedVehicle && selectedVehicle.image && (
         <div className="flex flex-col items-center space-y-4 mx-auto">
-          <div className="relative w-full max-w-lg h-72 sm:h-80 xl:h-96 rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
+          <div className="relative w-full max-w-lg aspect-[4/3] rounded-2xl overflow-hidden border-2 border-[var(--border-color)] bg-silver/20 dark:bg-zinc-800/30 shadow-xl">
             <Image
               src={selectedVehicle.image}
               alt={selectedVehicle.title}
               fill
-              className="object-cover"
+              className="object-contain p-4"
               unoptimized
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';
