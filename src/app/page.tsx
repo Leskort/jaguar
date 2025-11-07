@@ -775,6 +775,7 @@ function TopOrdersSection() {
 
 export default function Home() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [offerOpen, setOfferOpen] = useState(false);
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -888,6 +889,14 @@ export default function Home() {
 
   const handleOfferSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // On desktop (width >= 1024px), redirect to contact page
+    if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+      router.push('/contact');
+      return;
+    }
+    
+    // On mobile/tablet, submit the form as usual
     setSubmitting(true);
 
     try {
