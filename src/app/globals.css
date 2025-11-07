@@ -1,15 +1,5 @@
 @import "tailwindcss";
 
-/* Critical CSS - prevent white flash on load */
-html {
-  background-color: #1d1d1f;
-}
-
-body {
-  background-color: #1d1d1f;
-  /* Allow sections to override if needed */
-}
-
 :root {
   /* Color System */
   --space-black: #1d1d1f;
