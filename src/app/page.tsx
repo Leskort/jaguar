@@ -253,42 +253,49 @@ function OurWorksSection() {
 
   return (
     <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-3 sm:gap-0">
         <h2 className="text-2xl sm:text-3xl font-semibold text-zinc-900 dark:text-white">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</h2>
-        <Link href="/our-works" className="text-sm text-[var(--accent-gold)] hover:underline">
+        <Link href="/our-works" className="text-sm sm:text-base text-[var(--accent-gold)] hover:underline font-medium">
           {t('seeAll')}
         </Link>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5 lg:gap-6">
         {works.map((work) => (
           <Link
             key={work.id}
             href={`/our-works/${work.id}`}
-            className="group rounded-xl border border-[var(--border-color)] overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+            className="group rounded-2xl sm:rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden hover:shadow-xl hover:shadow-black/10 dark:hover:shadow-black/30 transition-all duration-300 cursor-pointer bg-white dark:bg-zinc-900/50 hover:-translate-y-1 active:translate-y-0"
           >
-            <div className="relative aspect-video bg-silver/20 dark:bg-zinc-800/30">
+            <div className="relative aspect-video sm:aspect-video bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 overflow-hidden">
               {work.images && work.images.length > 0 && work.images[0] ? (
                 <>
                   <Image
                     src={work.images[0]}
                     alt={language === 'ru' ? work.titleRu : work.titleEn}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                     unoptimized
                   />
+                  {/* Gradient overlay on hover */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   {work.images.length > 1 && (
-                    <div className="absolute top-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded backdrop-blur-sm">
+                    <div className="absolute top-2 right-2 bg-black/70 text-white text-xs sm:text-[10px] px-2.5 py-1.5 rounded-full backdrop-blur-md font-semibold shadow-lg">
                       +{work.images.length - 1}
                     </div>
                   )}
                 </>
-              ) : null}
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-zinc-400 dark:text-zinc-500 text-sm">
+                  {language === 'ru' ? work.titleRu : work.titleEn}
+                </div>
+              )}
             </div>
-            <div className="p-4">
-              <h3 className="text-sm font-medium line-clamp-2 mb-1">
+            <div className="p-4 sm:p-4 bg-white dark:bg-zinc-900/50">
+              <h3 className="text-base sm:text-sm font-semibold line-clamp-2 mb-2 text-zinc-900 dark:text-zinc-100 group-hover:text-[var(--accent-gold)] transition-colors duration-300 leading-tight">
                 {language === 'ru' ? work.titleRu : work.titleEn}
               </h3>
-              <p className="text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2">
+              <p className="text-sm sm:text-xs text-zinc-600 dark:text-zinc-400 line-clamp-2 leading-relaxed">
                 {language === 'ru' ? work.descriptionRu : work.descriptionEn}
               </p>
             </div>
