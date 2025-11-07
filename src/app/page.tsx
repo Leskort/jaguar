@@ -794,7 +794,7 @@ export default function Home() {
     }
   }, []);
 
-  // Simple video setup for iOS
+  // Enhanced video setup for iOS autoplay
   useEffect(() => {
     const video = videoRef.current;
     if (video && !videoError) {
@@ -802,27 +802,75 @@ export default function Home() {
       video.controls = false;
       video.removeAttribute('controls');
       
-      // Try to play video (iOS may require user interaction)
-      const tryPlay = () => {
-        if (video.paused) {
-          video.play().catch(() => {
-            // Autoplay failed, will play on user interaction
-          });
+      // Set iOS-specific attributes
+      video.setAttribute('webkit-playsinline', 'true');
+      video.setAttribute('playsinline', 'true');
+      video.muted = true;
+      video.volume = 0;
+      
+      // Enhanced play function with multiple attempts
+      const tryPlay = async () => {
+        if (!video || video.ended) return;
+        
+        try {
+          // Ensure video is ready
+          video.muted = true;
+          video.volume = 0;
+          video.playsInline = true;
+          
+          // Remove controls before play
+          video.controls = false;
+          video.removeAttribute('controls');
+          
+          // Attempt to play
+          const playPromise = video.play();
+          if (playPromise !== undefined) {
+            await playPromise;
+          }
+        } catch (error) {
+          // Autoplay failed, will try again or on user interaction
         }
       };
       
-      // Try on load
-      video.addEventListener('loadedmetadata', tryPlay, { once: true });
-      tryPlay();
+      // Try to play on multiple events
+      const events = ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'];
+      events.forEach(eventType => {
+        video.addEventListener(eventType, tryPlay, { once: true });
+      });
       
-      // Try on any user interaction
+      // Try immediately if video is already loaded
+      if (video.readyState >= 2) {
+        tryPlay();
+      }
+      
+      // Also try after a short delay
+      const timeoutId = setTimeout(() => {
+        tryPlay();
+      }, 100);
+      
+      // Try on any user interaction (for iOS)
       const handleInteraction = () => {
         tryPlay();
-        document.removeEventListener('touchstart', handleInteraction);
-        document.removeEventListener('click', handleInteraction);
       };
-      document.addEventListener('touchstart', handleInteraction, { once: true, passive: true });
-      document.addEventListener('click', handleInteraction, { once: true, passive: true });
+      
+      // Listen for various interaction events
+      const interactionEvents = ['touchstart', 'touchend', 'click', 'scroll', 'wheel'];
+      interactionEvents.forEach(eventType => {
+        document.addEventListener(eventType, handleInteraction, { 
+          once: false, 
+          passive: true 
+        });
+      });
+      
+      return () => {
+        clearTimeout(timeoutId);
+        events.forEach(eventType => {
+          video.removeEventListener(eventType, tryPlay);
+        });
+        interactionEvents.forEach(eventType => {
+          document.removeEventListener(eventType, handleInteraction);
+        });
+      };
     }
   }, [videoError]);
 
@@ -879,7 +927,23 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
+      <section 
+        className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden"
+        onTouchStart={(e) => {
+          // Start video on first touch for iOS
+          const video = videoRef.current;
+          if (video && video.paused) {
+            video.play().catch(() => {});
+          }
+        }}
+        onClick={(e) => {
+          // Start video on click for iOS
+          const video = videoRef.current;
+          if (video && video.paused) {
+            video.play().catch(() => {});
+          }
+        }}
+      >
         {/* Video Background */}
         {!videoError && (
           <video
@@ -892,9 +956,25 @@ export default function Home() {
             controls={false}
             disablePictureInPicture
             disableRemotePlayback
+            webkit-playsinline="true"
+            x-webkit-airplay="deny"
             className="absolute inset-0 w-full h-full object-cover pointer-events-none"
             style={{ zIndex: 0 }}
             onError={() => setVideoError(true)}
+            onLoadedMetadata={(e) => {
+              // Force play when metadata is loaded
+              const video = e.currentTarget;
+              if (video.paused) {
+                video.play().catch(() => {});
+              }
+            }}
+            onCanPlay={(e) => {
+              // Force play when video can play
+              const video = e.currentTarget;
+              if (video.paused) {
+                video.play().catch(() => {});
+              }
+            }}
           >
             <source src="/videos/hero-video.mp4" type="video/mp4" />
             <source src="/videos/hero-video.webm" type="video/webm" />
