@@ -775,11 +775,7 @@ export default function Home() {
   const [cookieAccepted, setCookieAccepted] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [videoError, setVideoError] = useState(false);
-  const [videoReady, setVideoReady] = useState(false);
-  const [isVideoVisible, setIsVideoVisible] = useState(false);
-  const [videoMounted, setVideoMounted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const heroSectionRef = useRef<HTMLDivElement>(null);
   const [formData, setFormData] = useState({
     name: "",
     vin: "",
@@ -795,206 +791,38 @@ export default function Home() {
       if (saved === 'true') {
         setCookieAccepted(true);
       }
-      
-      // Delay video mounting to prevent iOS controls flash
-      setTimeout(() => {
-        setVideoMounted(true);
-      }, 500); // Wait 500ms after page load
     }
   }, []);
 
-  // Simplified scroll handler - only hide controls, don't hide video
-  useEffect(() => {
-    const handleScroll = () => {
-      // Just ensure controls stay hidden during scroll
-      if (videoRef.current) {
-        const video = videoRef.current;
-        video.controls = false;
-        video.removeAttribute('controls');
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('touchmove', handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('touchmove', handleScroll);
-    };
-  }, []);
-
-  // Simplified Intersection Observer - show video when visible
-  useEffect(() => {
-    if (!heroSectionRef.current || typeof IntersectionObserver === 'undefined') {
-      // If no IntersectionObserver, show video by default
-      setIsVideoVisible(true);
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          // Show video when section is visible (50% threshold)
-          if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-            setIsVideoVisible(true);
-          } else if (!entry.isIntersecting) {
-            // Only hide when completely out of view
-            setIsVideoVisible(false);
-          }
-        });
-      },
-      {
-        threshold: [0, 0.5, 1],
-        rootMargin: '50px', // Show video slightly before it's fully visible
-      }
-    );
-
-    observer.observe(heroSectionRef.current);
-
-    return () => {
-      observer.disconnect();
-    };
-  }, []);
-
-  // Handle video playback for iOS - aggressive autoplay
+  // Simple video setup for iOS
   useEffect(() => {
     const video = videoRef.current;
     if (video && !videoError) {
-      // Set iOS-specific attributes via DOM
-      video.setAttribute('webkit-playsinline', 'true');
-      video.setAttribute('playsinline', 'true');
-      video.setAttribute('x5-playsinline', 'true');
-      
-      // Hide controls completely - AGGRESSIVE multiple methods for iOS
+      // Ensure controls are hidden
       video.controls = false;
       video.removeAttribute('controls');
-      video.setAttribute('controls', 'false');
       
-      // Force muted and no controls
-      video.muted = true;
-      video.volume = 0;
-      video.defaultMuted = true;
-      
-      // Disable controls via style and attributes
-      video.style.pointerEvents = 'none';
-      video.style.webkitAppearance = 'none';
-      video.style.outline = 'none';
-      video.style.border = 'none';
-      
-      // Set iOS-specific attributes to prevent controls
-      video.setAttribute('x-webkit-airplay', 'deny');
-      video.setAttribute('webkit-playsinline', 'true');
-      
-      // Remove controls attribute completely - multiple times
-      if (video.hasAttribute('controls')) {
-        video.removeAttribute('controls');
-      }
-      
-      // Force hide controls via CSS
-      const hideControls = () => {
-        const style = document.createElement('style');
-        style.textContent = `
-          video::-webkit-media-controls,
-          video::-webkit-media-controls-enclosure,
-          video::-webkit-media-controls-panel,
-          video::-webkit-media-controls-play-button,
-          video::-webkit-media-controls-start-playback-button,
-          video::-webkit-media-controls-overlay-play-button {
-            display: none !important;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            pointer-events: none !important;
-            width: 0 !important;
-            height: 0 !important;
-          }
-        `;
-        document.head.appendChild(style);
-      };
-      hideControls();
-
-      // Aggressive play function
-      const attemptPlay = async () => {
-        if (!video || video.ended) return;
-        
-        try {
-          // Ensure video properties are set
-          video.muted = true;
-          video.volume = 0;
-          video.playsInline = true;
-          
-          // Remove controls again before play
-          video.controls = false;
-          video.removeAttribute('controls');
-          
-          const playPromise = video.play();
-          
-          if (playPromise !== undefined) {
-            await playPromise;
-            // Video started playing - ensure controls stay hidden
-            video.controls = false;
-            video.removeAttribute('controls');
-          }
-        } catch (error) {
-          // Silently fail - will retry on user interaction
+      // Try to play video (iOS may require user interaction)
+      const tryPlay = () => {
+        if (video.paused) {
+          video.play().catch(() => {
+            // Autoplay failed, will play on user interaction
+          });
         }
       };
-
-      // Event handlers
-      const handleCanPlay = () => {
-        attemptPlay();
+      
+      // Try on load
+      video.addEventListener('loadedmetadata', tryPlay, { once: true });
+      tryPlay();
+      
+      // Try on any user interaction
+      const handleInteraction = () => {
+        tryPlay();
+        document.removeEventListener('touchstart', handleInteraction);
+        document.removeEventListener('click', handleInteraction);
       };
-
-      const handleLoadedData = () => {
-        attemptPlay();
-      };
-
-      const handleLoadedMetadata = () => {
-        attemptPlay();
-      };
-
-      // Try immediately and on multiple events
-      attemptPlay();
-      video.addEventListener('canplay', handleCanPlay, { once: true });
-      video.addEventListener('canplaythrough', handleCanPlay, { once: true });
-      video.addEventListener('loadeddata', handleLoadedData, { once: true });
-      video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true });
-
-      // Global user interaction handler - start video on ANY interaction
-      let userInteracted = false;
-      const handleUserInteraction = async () => {
-        if (!userInteracted && video && video.paused) {
-          userInteracted = true;
-          await attemptPlay();
-        }
-      };
-
-      // Listen for ANY user interaction on the page
-      const interactionEvents = ['touchstart', 'touchend', 'click', 'scroll', 'wheel', 'keydown'];
-      interactionEvents.forEach(eventType => {
-        document.addEventListener(eventType, handleUserInteraction, { 
-          once: false,
-          passive: true 
-        });
-      });
-
-      // Try when page becomes visible
-      const handleVisibilityChange = () => {
-        if (!document.hidden && video.paused) {
-          attemptPlay();
-        }
-      };
-      document.addEventListener('visibilitychange', handleVisibilityChange);
-
-      return () => {
-        video.removeEventListener('canplay', handleCanPlay);
-        video.removeEventListener('canplaythrough', handleCanPlay);
-        video.removeEventListener('loadeddata', handleLoadedData);
-        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-        document.removeEventListener('visibilitychange', handleVisibilityChange);
-        interactionEvents.forEach(eventType => {
-          document.removeEventListener(eventType, handleUserInteraction);
-        });
-      };
+      document.addEventListener('touchstart', handleInteraction, { once: true, passive: true });
+      document.addEventListener('click', handleInteraction, { once: true, passive: true });
     }
   }, [videoError]);
 
@@ -1051,145 +879,26 @@ export default function Home() {
   return (
     <div>
       {/* HERO */}
-      <section 
-        ref={heroSectionRef}
-        className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden"
-      >
+      <section className="relative min-h-[60dvh] sm:min-h-[80dvh] flex items-center bg-[var(--space-black)] text-white overflow-hidden">
         {/* Video Background */}
-        {!videoError && mounted && videoMounted && (
-          <>
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              preload="none"
-              controls={false}
-              disablePictureInPicture
-              disableRemotePlayback
-              x-webkit-airplay="deny"
-              webkit-playsinline="true"
-              className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-              style={{ 
-                zIndex: (videoReady && isVideoVisible) ? 0 : -1,
-                WebkitPlaysinline: true,
-                outline: 'none',
-                border: 'none',
-                WebkitAppearance: 'none',
-                appearance: 'none',
-                WebkitUserSelect: 'none',
-                WebkitTouchCallout: 'none',
-                // Show video when ready and visible (use opacity for smooth transition)
-                opacity: (videoReady && isVideoVisible) ? 1 : 0,
-                visibility: (videoReady && isVideoVisible) ? 'visible' : 'hidden',
-                transform: 'translateZ(0)',
-                transition: 'opacity 0.5s ease-in-out',
-              } as React.CSSProperties}
-              onError={() => setVideoError(true)}
-              onLoadedMetadata={(e) => {
-                // Immediately hide controls when metadata loads
-                const video = e.currentTarget;
-                
-                // Aggressively hide controls multiple times with DOM manipulation
-                const hideControls = () => {
-                  video.controls = false;
-                  video.removeAttribute('controls');
-                  video.setAttribute('controls', 'false');
-                  
-                  // Remove all possible control-related attributes
-                  video.removeAttribute('controlsList');
-                  
-                  // Force styles
-                  video.style.webkitAppearance = 'none';
-                  (video.style as any).appearance = 'none';
-                  (video.style as any).webkitUserSelect = 'none';
-                  (video.style as any).webkitTouchCallout = 'none';
-                  
-                  // Hide any shadow DOM controls (iOS Safari) - if accessible
-                  try {
-                    if (typeof (video as any).webkitGetShadowRoot === 'function') {
-                      const shadowRoot = (video as any).webkitGetShadowRoot();
-                      if (shadowRoot) {
-                        const controls = shadowRoot.querySelectorAll('*');
-                        controls.forEach((el: any) => {
-                          if (el && el.style) {
-                            el.style.display = 'none';
-                            el.style.visibility = 'hidden';
-                            el.style.opacity = '0';
-                            el.style.pointerEvents = 'none';
-                          }
-                        });
-                      }
-                    }
-                  } catch (e) {
-                    // Shadow DOM access may fail, ignore silently
-                  }
-                };
-                
-                // Hide controls immediately and repeatedly
-                hideControls();
-                requestAnimationFrame(() => {
-                  hideControls();
-                  requestAnimationFrame(() => {
-                    hideControls();
-                  });
-                });
-                
-                setTimeout(hideControls, 0);
-                setTimeout(hideControls, 50);
-                setTimeout(hideControls, 100);
-                setTimeout(hideControls, 200);
-                setTimeout(hideControls, 300);
-                
-                // Shorter delay to ensure controls are hidden, then show video
-                setTimeout(() => {
-                  hideControls();
-                  // Start loading video only after controls are hidden
-                  video.load();
-                  setVideoReady(true);
-                  // Show video after a short delay
-                  setTimeout(() => {
-                    setIsVideoVisible(true);
-                  }, 300); // Reduced delay for faster video appearance
-                }, 500); // Reduced initial delay
-              }}
-              onPlay={(e) => {
-                // Hide controls when video starts playing
-                const video = e.currentTarget;
-                video.controls = false;
-                video.removeAttribute('controls');
-                video.setAttribute('controls', 'false');
-                setVideoReady(true);
-                setIsVideoVisible(true);
-              }}
-            >
-              <source src="/videos/hero-video.mp4" type="video/mp4" />
-              <source src="/videos/hero-video.webm" type="video/webm" />
-            </video>
-            {/* Overlay to hide video controls on iOS when not ready */}
-            {(!videoReady || !mounted || !videoMounted) && (
-              <div 
-                className="absolute inset-0 z-[1] bg-[var(--space-black)] transition-opacity duration-500"
-                style={{ 
-                  backgroundColor: '#1d1d1f',
-                  pointerEvents: 'none',
-                  opacity: (!videoReady || !mounted || !videoMounted) ? 1 : 0,
-                }}
-              />
-            )}
-          </>
-        )}
-        
-        {/* Dark background overlay when video is not mounted or not ready */}
-        {(!mounted || !videoMounted || videoError || (!videoReady && !videoError)) && (
-          <div 
-            className="absolute inset-0 z-[0] bg-[var(--space-black)]"
-            style={{ 
-              backgroundColor: '#1d1d1f',
-              pointerEvents: 'none',
-            }}
-          />
+        {!videoError && (
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+            style={{ zIndex: 0 }}
+            onError={() => setVideoError(true)}
+          >
+            <source src="/videos/hero-video.mp4" type="video/mp4" />
+            <source src="/videos/hero-video.webm" type="video/webm" />
+          </video>
         )}
         
         {/* Fallback background if video fails to load */}
