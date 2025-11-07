@@ -1437,10 +1437,10 @@ export default function Home() {
 
       {/* COOKIE BAR */}
       {mounted && !cookieAccepted && (
-        <div className="fixed bottom-0 inset-x-0 z-50 bg-[var(--accent-gold)] text-black shadow-lg">
+        <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-[10px] sm:text-xs flex-1">{t('cookieMessage')}</div>
-            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-black text-[var(--accent-gold)] text-xs font-medium hover:bg-zinc-800 transition-colors" onClick={handleCookieAccept}>{t('accept')}</button>
+            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[var(--accent-gold)] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={handleCookieAccept}>{t('accept')}</button>
           </div>
         </div>
       )}
