@@ -720,6 +720,24 @@ export default function Home() {
   });
   const [submitting, setSubmitting] = useState(false);
 
+  // Load cookie acceptance status from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('lr-chip-cookie-accepted');
+      if (saved === 'true') {
+        setCookieAccepted(true);
+      }
+    }
+  }, []);
+
+  // Handle cookie acceptance
+  const handleCookieAccept = () => {
+    setCookieAccepted(true);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('lr-chip-cookie-accepted', 'true');
+    }
+  };
+
   const handleOfferSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -1172,7 +1190,7 @@ export default function Home() {
         <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-[10px] sm:text-xs flex-1">{t('cookieMessage')}</div>
-            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={() => setCookieAccepted(true)}>{t('accept')}</button>
+            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[#ffd000] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={handleCookieAccept}>{t('accept')}</button>
           </div>
         </div>
       )}
