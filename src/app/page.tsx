@@ -35,6 +35,46 @@ type ServiceOption = {
   status?: "in-stock" | "unavailable" | "coming-soon";
 };
 
+type TeamMember = {
+  name: string;
+  role: string;
+  details: string;
+  image: string;
+};
+
+function TeamMemberCard({ member }: { member: TeamMember }) {
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <div className="text-center group">
+      <div className="mx-auto h-24 w-24 sm:h-32 sm:w-32 lg:h-40 lg:w-40 xl:h-44 xl:w-44 rounded-full bg-silver/20 dark:bg-zinc-800/30 mb-4 lg:mb-6 overflow-hidden border-4 border-[var(--accent-gold)]/20 group-hover:border-[var(--accent-gold)] transition-all duration-300 shadow-lg group-hover:shadow-xl group-hover:shadow-[var(--accent-gold)]/20 relative">
+        {member.image && !imageError ? (
+          <Image
+            src={member.image}
+            alt={member.name}
+            fill
+            className="object-cover group-hover:scale-110 transition-transform duration-300"
+            sizes="(max-width: 640px) 96px, (max-width: 1024px) 128px, 176px"
+            unoptimized
+            onError={() => {
+              setImageError(true);
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <svg className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24 text-zinc-400 dark:text-zinc-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+        )}
+      </div>
+      <div className="font-medium text-sm lg:text-base mb-1 lg:mb-2 text-zinc-900 dark:text-white">{member.name}</div>
+      <div className="text-xs lg:text-sm text-zinc-600 dark:text-zinc-400 mb-1 lg:mb-2">{member.role}</div>
+      <div className="text-xs lg:text-sm text-zinc-500 dark:text-zinc-500">{member.details}</div>
+    </div>
+  );
+}
+
 function VehicleSelector() {
   const router = useRouter();
   const { t } = useLanguage();
@@ -1197,70 +1237,67 @@ export default function Home() {
       </section>
 
       {/* CONTACT FORM */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <div className="rounded-2xl border border-[var(--border-color)] p-6 sm:p-8 bg-white dark:bg-[var(--space-black)]">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4">{t('retrofittingSpecialist')}</h2>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-            {t('anyFactorySystem')}
-          </p>
-          <form onSubmit={handleOfferSubmit} className="grid gap-4 max-w-md">
-            <input
-              type="hidden"
-              name="honeypot"
-              value=""
-            />
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('yourName')}
-              required
-            />
-            <input
-              type="text"
-              value={formData.vin}
-              onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('vehicleVINNumber')}
-              required
-            />
-            <input
-              type="text"
-              value={formData.contact}
-              onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              className="h-12 sm:h-12 rounded-md border-2 border-[var(--border-color)] px-4 bg-white dark:bg-[var(--space-black)] text-base sm:text-sm font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none"
-              placeholder={t('mobileNumberOrEmail')}
-              required
-            />
-            <button
-              type="submit"
-              disabled={submitting}
-              className="h-12 sm:h-12 rounded-md bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
-            >
-              {submitting ? t('submitting') : t('getAListOfServices')}
-            </button>
-          </form>
+      <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 lg:py-20 px-4">
+        <div className="rounded-2xl lg:rounded-3xl border-2 border-[var(--border-color)] p-6 sm:p-8 lg:p-12 xl:p-16 bg-white dark:bg-[var(--space-black)] shadow-lg lg:shadow-xl">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-semibold mb-4 lg:mb-6 text-zinc-900 dark:text-white">{t('retrofittingSpecialist')}</h2>
+            <p className="text-sm sm:text-base lg:text-lg xl:text-xl text-zinc-600 dark:text-zinc-400 mb-6 lg:mb-10">
+              {t('anyFactorySystem')}
+            </p>
+            <form onSubmit={handleOfferSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+              <input
+                type="hidden"
+                name="honeypot"
+                value=""
+              />
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors"
+                placeholder={t('yourName')}
+                required
+              />
+              <input
+                type="text"
+                value={formData.vin}
+                onChange={(e) => setFormData({ ...formData, vin: e.target.value })}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors"
+                placeholder={t('vehicleVINNumber')}
+                required
+              />
+              <input
+                type="text"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg border-2 border-[var(--border-color)] px-4 lg:px-6 xl:px-8 bg-white dark:bg-[var(--space-black)] text-base lg:text-lg xl:text-xl font-medium min-h-[44px] focus:border-[var(--accent-gold)] focus:outline-none transition-colors md:col-span-2"
+                placeholder={t('mobileNumberOrEmail')}
+                required
+              />
+              <button
+                type="submit"
+                disabled={submitting}
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-black text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all md:col-span-2"
+              >
+                {submitting ? t('submitting') : t('getAListOfServices')}
+              </button>
+            </form>
+          </div>
         </div>
       </section>
 
       {/* TEAM */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('ourTeam')}</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+      <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 lg:py-20 px-4">
+        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-8 lg:mb-12 text-zinc-900 dark:text-white">{t('ourTeam')}</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 lg:gap-8">
           {[
-            { name: "Jenya (UK Branch)", role: "Certified Master Technician", details: "JLR Level‑4, 7+ years" },
-            { name: "Jenya (UK, UA)", role: "Retrofitting Specialist", details: "8+ years with JLR" },
-            { name: "Chief Electrician", role: "Car security systems", details: "10+ years, JLR 7+ years" },
-            { name: "Serhiy (UA)", role: "Chief Technician", details: "Dealer 5 yrs, JLR 10+ yrs" },
-            { name: "Ihor (UA)", role: "Parts Specialist", details: "JLR 4+ years" }
+            { name: "Jenya (UK Branch)", role: "Certified Master Technician", details: "JLR Level‑4, 7+ years", image: "/team/jenya-uk.jpg" },
+            { name: "Jenya (UK, UA)", role: "Retrofitting Specialist", details: "8+ years with JLR", image: "/team/jenya-uk-ua.jpg" },
+            { name: "Chief Electrician", role: "Car security systems", details: "10+ years, JLR 7+ years", image: "/team/chief-electrician.jpg" },
+            { name: "Serhiy (UA)", role: "Chief Technician", details: "Dealer 5 yrs, JLR 10+ yrs", image: "/team/serhiy-ua.jpg" },
+            { name: "Ihor (UA)", role: "Parts Specialist", details: "JLR 4+ years", image: "/team/ihor-ua.jpg" }
           ].map((member, i) => (
-            <div key={i} className="text-center">
-              <div className="mx-auto h-24 w-24 sm:h-32 sm:w-32 rounded-full bg-silver/20 mb-4" />
-              <div className="font-medium text-sm mb-1">{member.name}</div>
-              <div className="text-xs text-zinc-600 dark:text-zinc-400 mb-1">{member.role}</div>
-              <div className="text-xs text-zinc-500">{member.details}</div>
-            </div>
+            <TeamMemberCard key={i} member={member} />
           ))}
         </div>
       </section>
