@@ -170,7 +170,7 @@ body {
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       color: transparent;
-      animation: starGlow 3s ease-in-out infinite, starShimmer 2.5s linear infinite;
+      animation: starGlow 3s ease-in-out infinite, starShimmer 5s linear infinite;
     }
     
     .logo-glow::before {
@@ -196,7 +196,7 @@ body {
       background-size: 300% auto;
       opacity: 1;
       mix-blend-mode: screen;
-      animation: starShimmer 2.5s linear infinite;
+      animation: starShimmer 5s linear infinite;
     }
   }
 }
@@ -205,7 +205,7 @@ body {
 /* Градиент применяется через псевдоэлемент, чтобы базовый текст оставался видимым */
 
 .logo-glow:hover {
-  animation: starGlow 1.5s ease-in-out infinite, starShimmer 2s linear infinite;
+  animation: starGlow 1.5s ease-in-out infinite, starShimmer 3.5s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -253,6 +253,7 @@ body {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         color: transparent;
+        animation: starGlow 3s ease-in-out infinite, starShimmer 5s linear infinite;
       }
       
       .logo-glow::before {
@@ -278,7 +279,7 @@ body {
         background-size: 300% auto;
         opacity: 1;
         mix-blend-mode: screen;
-        animation: starShimmer 2.5s linear infinite;
+        animation: starShimmer 5s linear infinite;
       }
     }
   }
