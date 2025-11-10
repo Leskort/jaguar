@@ -99,6 +99,13 @@ export default function MobileMenu() {
             <div className="container-padded mx-auto py-4">
               <div className="flex flex-col gap-4">
                 <Link
+                  href="/about"
+                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {t('aboutUs')}
+                </Link>
+                <Link
                   href="/vehicles"
                   className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
                   onClick={() => setIsOpen(false)}

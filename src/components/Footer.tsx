@@ -19,7 +19,9 @@ export default function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="font-semibold mb-4 text-sm">{t('aboutUs')}</h3>
+            <h3 className="font-semibold mb-4 text-sm">
+              <Link href="/about" className="hover:text-[var(--accent-gold)] transition-colors">{t('aboutUs').replace('ABOUT US', 'About us').replace('О НАС', 'О нас')}</Link>
+            </h3>
             <ul className="space-y-2 text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
               <li><Link href="/our-works" className="hover:text-[var(--accent-gold)]">{t('ourWorks').replace('OUR WORKS', 'Our works').replace('НАШИ РАБОТЫ', 'Наши работы')}</Link></li>
               <li><Link href="/retrofits" className="hover:text-[var(--accent-gold)]">{t('retrofits').replace('RETROFITS', 'Retrofits').replace('РЕТРОФИТЫ', 'Ретрофиты')}</Link></li>
@@ -82,7 +84,7 @@ export default function Footer() {
               </a>
             </div>
             <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
-              <Link href="/" className="font-semibold">LR‑Chip</Link>
+              <Link href="/" className="font-semibold">Britline JLR</Link>
             </div>
             <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">
               © {t('allRightsReserved')}
