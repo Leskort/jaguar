@@ -1,6 +1,6 @@
 {
-  "name": "LR-CHIP",
-  "short_name": "LR-CHIP",
+  "name": "BRITLINE JLR",
+  "short_name": "BRITLINE JLR",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
@@ -10,6 +10,7 @@
     { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ]
 }
+
 
 
 

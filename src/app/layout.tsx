@@ -9,7 +9,7 @@ import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIc
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "LR-CHIP — Apple-Level Premium Security",
+  title: "BRITLINE JLR — Apple-Level Premium Security",
   description:
     "Exclusive retrofit service for Land Rover & Jaguar. Any factory system installed post-production.",
   metadataBase: new URL("https://www.lr-chip.example"),
@@ -28,7 +28,7 @@ export default function RootLayout({
         <LanguageProvider>
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-16 items-center justify-between px-4 sm:px-6">
-              <Link href="/" className="font-medium tracking-tight text-sm sm:text-base shrink-0">LR-CHIP</Link>
+              <Link href="/" className="font-medium tracking-tight text-sm sm:text-base shrink-0 logo-glow">BRITLINE JLR</Link>
               <div className="hidden md:flex items-center gap-3 xl:gap-6 lg:gap-8 text-xs lg:text-sm">
                 <NavLinksClient />
               </div>

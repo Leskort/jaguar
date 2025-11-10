@@ -65,7 +65,7 @@ lr-chip/
 │   ├── components/        # React components
 │   ├── data/             # JSON data files
 │   ├── store/            # Zustand stores
-│   └── middleware.ts     # Auth middleware
+│   └── proxy.ts          # Auth proxy
 ├── public/               # Static assets
 └── netlify.toml          # Netlify configuration
 ```

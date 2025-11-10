@@ -26,3 +26,4 @@ Place team member photos in this directory.
 - Pexels (search: "auto mechanic", "car repair")
 - Use professional team photos if available
 
+

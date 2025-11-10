@@ -64,3 +64,76 @@ body {
   padding-left: clamp(16px, 5vw, 48px);
   padding-right: clamp(16px, 5vw, 48px);
 }
+
+/* Logo Star Glow Effect */
+@keyframes starGlow {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
+            drop-shadow(0 0 20px rgba(255, 255, 255, 0.6))
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))
+            drop-shadow(0 0 40px rgba(0, 255, 65, 0.6))
+            drop-shadow(0 0 70px rgba(0, 255, 65, 0.4))
+            drop-shadow(0 0 100px rgba(0, 255, 65, 0.2));
+    opacity: 1;
+  }
+  50% {
+    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1))
+            drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
+            drop-shadow(0 0 45px rgba(255, 255, 255, 0.6))
+            drop-shadow(0 0 60px rgba(0, 255, 65, 0.8))
+            drop-shadow(0 0 90px rgba(0, 255, 65, 0.6))
+            drop-shadow(0 0 120px rgba(0, 255, 65, 0.4));
+    opacity: 1.2;
+  }
+}
+
+@keyframes starShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.logo-glow {
+  position: relative;
+  display: inline-block;
+  background: linear-gradient(
+    90deg,
+    var(--foreground) 0%,
+    var(--foreground) 45%,
+    rgba(0, 255, 65, 0.9) 50%,
+    rgba(0, 255, 65, 0.9) 55%,
+    var(--foreground) 60%,
+    var(--foreground) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
+  transition: all 0.3s ease;
+}
+
+.logo-glow:hover {
+  animation: starGlow 1.5s ease-in-out infinite, starShimmer 2s linear infinite;
+}
+
+@media (prefers-color-scheme: dark) {
+  .logo-glow {
+    background: linear-gradient(
+      90deg,
+      var(--foreground) 0%,
+      var(--foreground) 45%,
+      rgba(0, 255, 65, 1) 50%,
+      rgba(0, 255, 65, 1) 55%,
+      var(--foreground) 60%,
+      var(--foreground) 100%
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
