@@ -68,22 +68,24 @@ body {
 /* Logo Star Glow Effect */
 @keyframes starGlow {
   0%, 100% {
-    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8))
-            drop-shadow(0 0 20px rgba(255, 255, 255, 0.6))
-            drop-shadow(0 0 30px rgba(255, 255, 255, 0.4))
-            drop-shadow(0 0 40px rgba(0, 255, 65, 0.6))
-            drop-shadow(0 0 70px rgba(0, 255, 65, 0.4))
-            drop-shadow(0 0 100px rgba(0, 255, 65, 0.2));
-    opacity: 1;
+    text-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.8),
+      0 0 20px rgba(255, 255, 255, 0.6),
+      0 0 30px rgba(255, 255, 255, 0.4),
+      0 0 40px rgba(0, 255, 65, 0.6),
+      0 0 70px rgba(0, 255, 65, 0.4),
+      0 0 100px rgba(0, 255, 65, 0.2);
+    filter: brightness(1.2);
   }
   50% {
-    filter: drop-shadow(0 0 15px rgba(255, 255, 255, 1))
-            drop-shadow(0 0 30px rgba(255, 255, 255, 0.8))
-            drop-shadow(0 0 45px rgba(255, 255, 255, 0.6))
-            drop-shadow(0 0 60px rgba(0, 255, 65, 0.8))
-            drop-shadow(0 0 90px rgba(0, 255, 65, 0.6))
-            drop-shadow(0 0 120px rgba(0, 255, 65, 0.4));
-    opacity: 1.2;
+    text-shadow: 
+      0 0 15px rgba(255, 255, 255, 1),
+      0 0 30px rgba(255, 255, 255, 0.8),
+      0 0 45px rgba(255, 255, 255, 0.6),
+      0 0 60px rgba(0, 255, 65, 0.8),
+      0 0 90px rgba(0, 255, 65, 0.6),
+      0 0 120px rgba(0, 255, 65, 0.4);
+    filter: brightness(1.5);
   }
 }
 
@@ -99,21 +101,47 @@ body {
 .logo-glow {
   position: relative;
   display: inline-block;
-  background: linear-gradient(
-    90deg,
-    var(--foreground) 0%,
-    var(--foreground) 45%,
-    rgba(0, 255, 65, 0.9) 50%,
-    rgba(0, 255, 65, 0.9) 55%,
-    var(--foreground) 60%,
-    var(--foreground) 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
+  color: var(--foreground);
+  /* Всегда видимый текст - основной цвет */
+  -webkit-text-fill-color: var(--foreground);
+  animation: starGlow 3s ease-in-out infinite;
   transition: all 0.3s ease;
+  /* Убеждаемся, что текст виден на всех устройствах */
+  -webkit-text-stroke: 0;
+  text-stroke: 0;
+}
+
+/* Градиент применяется только для браузеров с полной поддержкой и на десктопе */
+@supports (-webkit-background-clip: text) {
+  @media (min-width: 769px) {
+    .logo-glow {
+      background: linear-gradient(
+        90deg,
+        var(--foreground) 0%,
+        var(--foreground) 45%,
+        rgba(0, 255, 65, 0.9) 50%,
+        rgba(0, 255, 65, 0.9) 55%,
+        var(--foreground) 60%,
+        var(--foreground) 100%
+      );
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
+    }
+  }
+}
+
+/* Для мобильных устройств и iOS - всегда показываем текст без прозрачности */
+@media (max-width: 768px) {
+  .logo-glow {
+    -webkit-text-fill-color: var(--foreground) !important;
+    color: var(--foreground) !important;
+    background: none !important;
+    -webkit-background-clip: unset !important;
+    background-clip: unset !important;
+  }
 }
 
 .logo-glow:hover {
@@ -122,18 +150,38 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .logo-glow {
-    background: linear-gradient(
-      90deg,
-      var(--foreground) 0%,
-      var(--foreground) 45%,
-      rgba(0, 255, 65, 1) 50%,
-      rgba(0, 255, 65, 1) 55%,
-      var(--foreground) 60%,
-      var(--foreground) 100%
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--foreground);
+    -webkit-text-fill-color: var(--foreground);
+  }
+  
+  @supports (-webkit-background-clip: text) {
+    @media (min-width: 769px) {
+      .logo-glow {
+        background: linear-gradient(
+          90deg,
+          var(--foreground) 0%,
+          var(--foreground) 45%,
+          rgba(0, 255, 65, 1) 50%,
+          rgba(0, 255, 65, 1) 55%,
+          var(--foreground) 60%,
+          var(--foreground) 100%
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  }
+  
+  /* Для мобильных в темной теме тоже всегда видимый текст */
+  @media (max-width: 768px) {
+    .logo-glow {
+      -webkit-text-fill-color: var(--foreground) !important;
+      color: var(--foreground) !important;
+      background: none !important;
+      -webkit-background-clip: unset !important;
+      background-clip: unset !important;
+    }
   }
 }
