@@ -101,42 +101,54 @@ body {
 .logo-glow {
   position: relative;
   display: inline-block;
+  /* Текст ВСЕГДА видимый - базовый цвет */
   color: var(--foreground);
+  -webkit-text-fill-color: var(--foreground);
   transition: all 0.3s ease;
-  /* Градиент с переливающимся эффектом для всех устройств, включая iOS */
-  background-image: linear-gradient(
-    90deg,
-    var(--foreground) 0%,
-    var(--foreground) 45%,
-    rgba(0, 255, 65, 0.9) 50%,
-    rgba(0, 255, 65, 0.9) 55%,
-    var(--foreground) 60%,
-    var(--foreground) 100%
-  );
-  background-size: 200% auto;
-  background-clip: text;
-  -webkit-background-clip: text;
-  background-repeat: no-repeat;
-  /* Прозрачный текст для показа градиента */
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-  /* Анимации свечения и переливания */
-  animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
+  /* Анимация свечения */
+  animation: starGlow 3s ease-in-out infinite;
   /* Для лучшей поддержки на iOS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Fallback для браузеров без поддержки background-clip: text */
-@supports not (background-clip: text) and not (-webkit-background-clip: text) {
-  .logo-glow {
-    -webkit-text-fill-color: var(--foreground);
-    color: var(--foreground);
-    background: none;
-    background-image: none;
-    animation: starGlow 3s ease-in-out infinite;
-  }
+/* Слой с градиентом поверх текста для эффекта переливания */
+.logo-glow::before {
+  content: 'Britline JLR';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    transparent 40%,
+    rgba(0, 255, 65, 0.5) 48%,
+    rgba(0, 255, 65, 0.8) 50%,
+    rgba(0, 255, 65, 0.8) 52%,
+    rgba(0, 255, 65, 0.5) 60%,
+    transparent 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-repeat: no-repeat;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  animation: starShimmer 4s linear infinite;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  z-index: 1;
+  opacity: 0.6;
+  font-weight: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  font-family: inherit;
 }
+
+/* Для всех браузеров используем подход с видимым текстом и градиентом поверх */
+/* Градиент применяется через псевдоэлемент, чтобы базовый текст оставался видимым */
 
 .logo-glow:hover {
   animation: starGlow 1.5s ease-in-out infinite, starShimmer 2s linear infinite;
@@ -144,28 +156,22 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .logo-glow {
-    background-image: linear-gradient(
-      90deg,
-      var(--foreground) 0%,
-      var(--foreground) 45%,
-      rgba(0, 255, 65, 1) 50%,
-      rgba(0, 255, 65, 1) 55%,
-      var(--foreground) 60%,
-      var(--foreground) 100%
-    );
-    background-size: 200% auto;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    color: transparent;
+    color: var(--foreground);
+    -webkit-text-fill-color: var(--foreground);
   }
   
-  @supports not (background-clip: text) and not (-webkit-background-clip: text) {
-    .logo-glow {
-      -webkit-text-fill-color: var(--foreground);
-      color: var(--foreground);
-      background: none;
-      background-image: none;
-    }
+  .logo-glow::before {
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      transparent 40%,
+      rgba(0, 255, 65, 0.7) 48%,
+      rgba(0, 255, 65, 1) 50%,
+      rgba(0, 255, 65, 1) 52%,
+      rgba(0, 255, 65, 0.7) 60%,
+      transparent 100%
+    );
+    mix-blend-mode: screen;
+    opacity: 0.8;
   }
 }
