@@ -102,45 +102,39 @@ body {
   position: relative;
   display: inline-block;
   color: var(--foreground);
-  /* Всегда видимый текст - основной цвет */
-  -webkit-text-fill-color: var(--foreground);
-  animation: starGlow 3s ease-in-out infinite;
   transition: all 0.3s ease;
-  /* Убеждаемся, что текст виден на всех устройствах */
-  -webkit-text-stroke: 0;
-  text-stroke: 0;
+  /* Градиент с переливающимся эффектом для всех устройств, включая iOS */
+  background-image: linear-gradient(
+    90deg,
+    var(--foreground) 0%,
+    var(--foreground) 45%,
+    rgba(0, 255, 65, 0.9) 50%,
+    rgba(0, 255, 65, 0.9) 55%,
+    var(--foreground) 60%,
+    var(--foreground) 100%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  background-repeat: no-repeat;
+  /* Прозрачный текст для показа градиента */
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  /* Анимации свечения и переливания */
+  animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
+  /* Для лучшей поддержки на iOS */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Градиент применяется только для браузеров с полной поддержкой и на десктопе */
-@supports (-webkit-background-clip: text) {
-  @media (min-width: 769px) {
-    .logo-glow {
-      background: linear-gradient(
-        90deg,
-        var(--foreground) 0%,
-        var(--foreground) 45%,
-        rgba(0, 255, 65, 0.9) 50%,
-        rgba(0, 255, 65, 0.9) 55%,
-        var(--foreground) 60%,
-        var(--foreground) 100%
-      );
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: starGlow 3s ease-in-out infinite, starShimmer 4s linear infinite;
-    }
-  }
-}
-
-/* Для мобильных устройств и iOS - всегда показываем текст без прозрачности */
-@media (max-width: 768px) {
+/* Fallback для браузеров без поддержки background-clip: text */
+@supports not (background-clip: text) and not (-webkit-background-clip: text) {
   .logo-glow {
-    -webkit-text-fill-color: var(--foreground) !important;
-    color: var(--foreground) !important;
-    background: none !important;
-    -webkit-background-clip: unset !important;
-    background-clip: unset !important;
+    -webkit-text-fill-color: var(--foreground);
+    color: var(--foreground);
+    background: none;
+    background-image: none;
+    animation: starGlow 3s ease-in-out infinite;
   }
 }
 
@@ -150,38 +144,28 @@ body {
 
 @media (prefers-color-scheme: dark) {
   .logo-glow {
-    color: var(--foreground);
-    -webkit-text-fill-color: var(--foreground);
+    background-image: linear-gradient(
+      90deg,
+      var(--foreground) 0%,
+      var(--foreground) 45%,
+      rgba(0, 255, 65, 1) 50%,
+      rgba(0, 255, 65, 1) 55%,
+      var(--foreground) 60%,
+      var(--foreground) 100%
+    );
+    background-size: 200% auto;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
   }
   
-  @supports (-webkit-background-clip: text) {
-    @media (min-width: 769px) {
-      .logo-glow {
-        background: linear-gradient(
-          90deg,
-          var(--foreground) 0%,
-          var(--foreground) 45%,
-          rgba(0, 255, 65, 1) 50%,
-          rgba(0, 255, 65, 1) 55%,
-          var(--foreground) 60%,
-          var(--foreground) 100%
-        );
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-    }
-  }
-  
-  /* Для мобильных в темной теме тоже всегда видимый текст */
-  @media (max-width: 768px) {
+  @supports not (background-clip: text) and not (-webkit-background-clip: text) {
     .logo-glow {
-      -webkit-text-fill-color: var(--foreground) !important;
-      color: var(--foreground) !important;
-      background: none !important;
-      -webkit-background-clip: unset !important;
-      background-clip: unset !important;
+      -webkit-text-fill-color: var(--foreground);
+      color: var(--foreground);
+      background: none;
+      background-image: none;
     }
   }
 }
