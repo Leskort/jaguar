@@ -112,7 +112,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Слой с градиентом поверх текста для эффекта переливания */
+/* Слой с градиентом поверх текста для эффекта переливания - одинаковый для всех устройств */
 .logo-glow::before {
   content: 'Britline JLR';
   position: absolute;
@@ -148,64 +148,11 @@ body {
   font-family: inherit;
 }
 
-/* Для десктопов с поддержкой background-clip - используем прямой градиент для максимальной видимости */
-@media (min-width: 768px) {
-  @supports (background-clip: text) or (-webkit-background-clip: text) {
-    .logo-glow {
-      background-image: linear-gradient(
-        90deg,
-        var(--foreground) 0%,
-        var(--foreground) 35%,
-        rgba(127, 255, 159, 0.9) 40%,
-        rgba(0, 255, 65, 1) 45%,
-        #00ff41 50%,
-        #00ff41 55%,
-        rgba(0, 255, 65, 1) 60%,
-        rgba(127, 255, 159, 0.9) 65%,
-        var(--foreground) 70%,
-        var(--foreground) 100%
-      );
-      background-size: 300% auto;
-      background-clip: text;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      color: transparent;
-      animation: starGlow 3s ease-in-out infinite, starShimmer 5s linear infinite;
-    }
-    
-    .logo-glow::before {
-      display: none;
-    }
-  }
-  
-  /* Если градиент не поддерживается, используем усиленный псевдоэлемент */
-  @supports not (background-clip: text) and not (-webkit-background-clip: text) {
-    .logo-glow::before {
-      background-image: linear-gradient(
-        90deg,
-        transparent 0%,
-        rgba(127, 255, 159, 0.5) 25%,
-        rgba(0, 255, 65, 0.9) 42%,
-        rgba(0, 255, 65, 1) 48%,
-        #00ff41 50%,
-        rgba(0, 255, 65, 1) 52%,
-        rgba(0, 255, 65, 0.9) 58%,
-        rgba(127, 255, 159, 0.5) 75%,
-        transparent 100%
-      );
-      background-size: 300% auto;
-      opacity: 1;
-      mix-blend-mode: screen;
-      animation: starShimmer 5s linear infinite;
-    }
-  }
-}
-
 /* Для всех браузеров используем подход с видимым текстом и градиентом поверх */
 /* Градиент применяется через псевдоэлемент, чтобы базовый текст оставался видимым */
 
 .logo-glow:hover {
-  animation: starGlow 1.5s ease-in-out infinite, starShimmer 3.5s linear infinite;
+  animation: starGlow 1.5s ease-in-out infinite, starShimmer 2s linear infinite;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -218,69 +165,15 @@ body {
     background-image: linear-gradient(
       90deg,
       transparent 0%,
-      rgba(127, 255, 159, 0.5) 30%,
-      rgba(0, 255, 65, 0.9) 45%,
+      rgba(0, 255, 65, 0.3) 30%,
+      rgba(0, 255, 65, 0.7) 45%,
       rgba(0, 255, 65, 1) 50%,
       rgba(0, 255, 65, 1) 55%,
-      rgba(0, 255, 65, 0.9) 65%,
-      rgba(127, 255, 159, 0.5) 80%,
+      rgba(0, 255, 65, 0.7) 65%,
+      rgba(0, 255, 65, 0.3) 80%,
       transparent 100%
     );
     mix-blend-mode: screen;
     opacity: 1;
-  }
-  
-  /* Для десктопов в темной теме с поддержкой градиента */
-  @media (min-width: 768px) {
-    @supports (background-clip: text) or (-webkit-background-clip: text) {
-      .logo-glow {
-        background-image: linear-gradient(
-          90deg,
-          var(--foreground) 0%,
-          var(--foreground) 35%,
-          rgba(159, 255, 191, 1) 40%,
-          rgba(0, 255, 65, 1) 45%,
-          #00ff41 48%,
-          #00ff41 50%,
-          #00ff41 52%,
-          rgba(0, 255, 65, 1) 55%,
-          rgba(159, 255, 191, 1) 60%,
-          var(--foreground) 65%,
-          var(--foreground) 100%
-        );
-        background-size: 300% auto;
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        color: transparent;
-        animation: starGlow 3s ease-in-out infinite, starShimmer 5s linear infinite;
-      }
-      
-      .logo-glow::before {
-        display: none;
-      }
-    }
-    
-    /* Если градиент не поддерживается */
-    @supports not (background-clip: text) and not (-webkit-background-clip: text) {
-      .logo-glow::before {
-        background-image: linear-gradient(
-          90deg,
-          transparent 0%,
-          rgba(159, 255, 191, 0.7) 25%,
-          rgba(0, 255, 65, 1) 42%,
-          #00ff41 48%,
-          #00ff41 50%,
-          #00ff41 52%,
-          rgba(0, 255, 65, 1) 58%,
-          rgba(159, 255, 191, 0.7) 75%,
-          transparent 100%
-        );
-        background-size: 300% auto;
-        opacity: 1;
-        mix-blend-mode: screen;
-        animation: starShimmer 5s linear infinite;
-      }
-    }
   }
 }
