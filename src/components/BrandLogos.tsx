@@ -61,26 +61,12 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
           </div>
           
           {/* Brand name */}
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
             {brand}
           </h3>
           
-          {/* Accent line - между названием и описанием */}
-          <div 
-            className="mb-3 sm:mb-4 mx-auto"
-            style={{
-              width: 'clamp(64px, 20vw, 112px)',
-              height: '2px',
-            }}
-          >
-            <div 
-              className="w-full h-full mx-auto"
-              style={{
-                background: 'linear-gradient(to right, transparent 0%, #00ff41 20%, #00ff41 80%, transparent 100%)',
-                opacity: 1,
-              }}
-            />
-          </div>
+          {/* Accent line - простая зеленая полоска */}
+          <div className="w-20 h-0.5 sm:w-24 sm:h-[1px] lg:w-28 mb-4 bg-[#00ff41]" />
           
           {/* Description */}
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-xs">
@@ -102,7 +88,7 @@ function LandRoverLogo() {
         height={224}
         className="object-contain"
         unoptimized
-        priority={false}
+        loading="lazy"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
@@ -122,7 +108,7 @@ function JaguarLogo() {
         height={224}
         className="object-contain"
         unoptimized
-        priority={false}
+        loading="lazy"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
