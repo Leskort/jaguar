@@ -56,11 +56,11 @@ async function getNetlifyStore() {
         // Try simple call first
         let store;
         try {
-          store = netlifyBlobs.getStore({ name: "lr-chip-data" });
+          store = netlifyBlobs.getStore({ name: "britline-jlr-data" });
         } catch (e1) {
           console.log("[getNetlifyStore] Simple getStore failed, trying with consistency...");
           // @ts-ignore
-          store = netlifyBlobs.getStore({ name: "lr-chip-data", consistency: "strong" });
+          store = netlifyBlobs.getStore({ name: "britline-jlr-data", consistency: "strong" });
         }
         
         if (store && typeof store === 'object') {
@@ -92,7 +92,7 @@ async function getNetlifyStore() {
       console.log("[getNetlifyStore] Trying getBlobStore API (alternative)...");
       try {
         // @ts-ignore - alternative API
-        const store = (netlifyBlobs as any).getBlobStore({ name: "lr-chip-data" });
+        const store = (netlifyBlobs as any).getBlobStore({ name: "britline-jlr-data" });
         if (store) {
           console.log("[getNetlifyStore] ✅ Store created successfully with getBlobStore");
           console.log("[getNetlifyStore] Store methods:", Object.keys(store));

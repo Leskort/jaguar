@@ -59,10 +59,10 @@ export default function MobileMenu() {
 
   return (
     <>
-      {/* Burger Button */}
+      {/* Burger Button - показывается до lg (1024px) */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="md:hidden flex flex-col gap-1.5 p-2"
+        className="lg:hidden flex flex-col gap-1.5 p-2 min-w-[44px] min-h-[44px] items-center justify-center"
         aria-label="Toggle menu"
         aria-expanded={isOpen}
       >
@@ -87,48 +87,48 @@ export default function MobileMenu() {
       {isOpen && (
         <>
           <div
-            className="fixed inset-0 bg-black/60 z-40 md:hidden"
+            className="fixed inset-0 bg-black/60 z-40 lg:hidden"
             onClick={() => setIsOpen(false)}
           />
           <nav
-            className={`fixed top-16 left-0 right-0 bg-white dark:bg-[var(--space-black)] border-b border-[var(--border-color)] z-50 md:hidden transition-transform duration-300 ${
+            className={`fixed top-14 sm:top-16 left-0 right-0 bg-white dark:bg-[var(--space-black)] border-b border-[var(--border-color)] z-50 lg:hidden transition-transform duration-300 ${
               isOpen ? "translate-y-0" : "-translate-y-full"
             }`}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="container-padded mx-auto py-4">
-              <div className="flex flex-col gap-4">
+            <div className="container-padded mx-auto py-4 sm:py-5">
+              <div className="flex flex-col gap-3 sm:gap-4">
                 <Link
                   href="/about"
-                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2.5 sm:py-2 min-h-[44px] flex items-center"
                   onClick={() => setIsOpen(false)}
                 >
                   {t('aboutUs')}
                 </Link>
                 <Link
                   href="/vehicles"
-                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2.5 sm:py-2 min-h-[44px] flex items-center"
                   onClick={() => setIsOpen(false)}
                 >
                   {t('vehicles')}
                 </Link>
                 <Link
                   href="/our-works"
-                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2.5 sm:py-2 min-h-[44px] flex items-center"
                   onClick={() => setIsOpen(false)}
                 >
                   {t('ourWorks')}
                 </Link>
                 <Link
                   href="/car-projects"
-                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2.5 sm:py-2 min-h-[44px] flex items-center"
                   onClick={() => setIsOpen(false)}
                 >
                   {t('carProjects')}
                 </Link>
                 <Link
                   href="/contact"
-                  className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2"
+                  className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2.5 sm:py-2 min-h-[44px] flex items-center"
                   onClick={() => setIsOpen(false)}
                 >
                   {t('contacts')}
@@ -137,23 +137,23 @@ export default function MobileMenu() {
                   <LanguageSwitcher fullWidth={true} />
                 </div>
                 <div className="border-t border-[var(--border-color)] pt-4 mt-2">
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-2.5 sm:gap-2">
                     <a
                       href="tel:+447840000321"
-                      className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors"
+                      className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2 min-h-[44px] flex items-center"
                       onClick={() => setIsOpen(false)}
                     >
                       0784 0000 321
                     </a>
                     <a
                       href="tel:+441622801501"
-                      className="text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors"
+                      className="text-base sm:text-sm font-medium text-[var(--foreground)] hover:text-[var(--accent-gold)] transition-colors py-2 min-h-[44px] flex items-center"
                       onClick={() => setIsOpen(false)}
                     >
                       01622 801 501
                     </a>
                   </div>
-                  <div className="flex items-center gap-4 mt-4">
+                  <div className="flex items-center gap-4 sm:gap-5 mt-4 sm:mt-5">
                     <a
                       href="https://t.me/lr_chip"
                       target="_blank"

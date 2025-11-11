@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIcons";
 
 type Work = {
   id: string;
@@ -792,7 +793,7 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('lr-chip-cookie-accepted');
+      const saved = localStorage.getItem('britline-jlr-cookie-accepted');
       if (saved === 'true') {
         setCookieAccepted(true);
       }
@@ -883,7 +884,7 @@ export default function Home() {
   const handleCookieAccept = () => {
     setCookieAccepted(true);
     if (typeof window !== 'undefined') {
-      localStorage.setItem('lr-chip-cookie-accepted', 'true');
+      localStorage.setItem('britline-jlr-cookie-accepted', 'true');
     }
   };
 
@@ -1147,22 +1148,197 @@ export default function Home() {
 
       <OurWorksSection />
 
-      {/* CONTACTS UK */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('contactsInUK')}</h2>
-        <div className="space-y-2 text-sm text-zinc-600 dark:text-zinc-400 mb-6">
-          <p>Unit 29 Integra:ME, Parkwood Industrial Estate, Bircholt Road, Maidstone, ME15 9GQ</p>
-          <p>
-            <a href="tel:+447840000321" className="hover:text-[var(--accent-gold)]">+44 784 0000 321</a>
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold mb-3">{t('schedule')}</h3>
-          <ul className="space-y-1 text-sm text-zinc-600 dark:text-zinc-400">
-            <li>* {t('monFri')}</li>
-            <li>* {t('satWorking')}</li>
-            <li>* {t('sunDayOff')}</li>
-          </ul>
+      {/* PREMIUM CONTACTS SECTION */}
+      <section className="container-padded mx-auto max-w-7xl py-16 sm:py-20 lg:py-24 px-4">
+        <div className="relative">
+          {/* Premium Card with Glass Effect */}
+          <div className="relative rounded-3xl lg:rounded-[2rem] xl:rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 bg-gradient-to-br from-white/80 via-white/60 to-zinc-50/40 dark:from-[var(--space-black)]/90 dark:via-[var(--space-black)]/80 dark:to-zinc-900/60 backdrop-blur-xl shadow-2xl overflow-hidden">
+            {/* Subtle gradient overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-gold)]/5 via-transparent to-[var(--accent-gold)]/5 pointer-events-none" />
+            
+            {/* Content */}
+            <div className="relative p-8 sm:p-10 lg:p-12 xl:p-16">
+              {/* Header */}
+              <div className="mb-10 lg:mb-12">
+                <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-light tracking-tight mb-2 text-zinc-900 dark:text-white">
+                  {t('contacts')}
+                </h2>
+                <div className="h-px w-20 bg-gradient-to-r from-[var(--accent-gold)] to-transparent mt-4" />
+              </div>
+
+              {/* Grid Layout */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 xl:gap-16">
+                {/* Left Column - Address & Phone */}
+                <div className="space-y-8">
+                  {/* Address */}
+                  <div className="group">
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 flex-shrink-0">
+                        <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-1 uppercase tracking-wider">
+                          Address
+                        </p>
+                        <p className="text-base lg:text-lg text-zinc-900 dark:text-white leading-relaxed font-light">
+                          Unit 29 Integra:ME, Parkwood Industrial Estate<br />
+                          Bircholt Road, Maidstone, ME15 9GQ
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Phone Numbers */}
+                  <div className="space-y-4">
+                    <div className="group">
+                      <div className="flex items-start gap-4">
+                        <div className="mt-1 flex-shrink-0">
+                          <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-2 uppercase tracking-wider">
+                            Phone
+                          </p>
+                          <div className="space-y-2">
+                            <a 
+                              href="tel:+447840000321" 
+                              className="block text-lg lg:text-xl text-zinc-900 dark:text-white hover:text-[var(--accent-gold)] transition-colors duration-300 font-light tracking-wide"
+                            >
+                              +44 784 0000 321
+                            </a>
+                            <a 
+                              href="tel:+441622801501" 
+                              className="block text-lg lg:text-xl text-zinc-900 dark:text-white hover:text-[var(--accent-gold)] transition-colors duration-300 font-light tracking-wide"
+                            >
+                              +44 1622 801 501
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Schedule */}
+                  <div className="group pt-4 border-t border-zinc-200/50 dark:border-zinc-800/50">
+                    <div className="flex items-start gap-4">
+                      <div className="mt-1 flex-shrink-0">
+                        <svg className="w-5 h-5 text-[var(--accent-gold)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </div>
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-3 uppercase tracking-wider">
+                          {t('schedule')}
+                        </p>
+                        <ul className="space-y-2 text-base lg:text-lg text-zinc-700 dark:text-zinc-300 font-light">
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-[var(--accent-gold)]" />
+                            {t('monFri')}
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-[var(--accent-gold)]" />
+                            {t('satWorking')}
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="w-1 h-1 rounded-full bg-[var(--accent-gold)]" />
+                            {t('sunDayOff')}
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column - Social Media */}
+                <div className="lg:border-l lg:border-zinc-200/50 dark:lg:border-zinc-800/50 lg:pl-12 xl:pl-16">
+                  <div className="space-y-8">
+                    <div>
+                      <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 mb-6 uppercase tracking-wider">
+                        Connect With Us
+                      </p>
+                      
+                      {/* Premium Social Icons */}
+                      <div className="flex flex-col sm:flex-row lg:flex-col gap-4 sm:gap-6">
+                        <a
+                          href="https://t.me/britlinejlr"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-4 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/30 hover:bg-[var(--accent-gold)]/10 hover:border-[var(--accent-gold)]/30 transition-all duration-300 hover:shadow-lg"
+                          aria-label="Telegram"
+                        >
+                          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
+                            <TelegramIcon size={24} className="text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider">
+                              Telegram
+                            </p>
+                            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
+                              Britline JLR
+                            </p>
+                          </div>
+                          <svg className="w-5 h-5 text-zinc-400 dark:text-zinc-600 group-hover:text-[var(--accent-gold)] group-hover:translate-x-1 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+
+                        <a
+                          href="https://instagram.com/britlinejlr"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-4 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/30 hover:bg-[var(--accent-gold)]/10 hover:border-[var(--accent-gold)]/30 transition-all duration-300 hover:shadow-lg"
+                          aria-label="Instagram"
+                        >
+                          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
+                            <InstagramIcon size={24} className="text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider">
+                              Instagram
+                            </p>
+                            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
+                              Britline JLR
+                            </p>
+                          </div>
+                          <svg className="w-5 h-5 text-zinc-400 dark:text-zinc-600 group-hover:text-[var(--accent-gold)] group-hover:translate-x-1 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+
+                        <a
+                          href="https://wa.me/britlinejlr"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-4 p-4 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white/50 dark:bg-zinc-900/30 hover:bg-[var(--accent-gold)]/10 hover:border-[var(--accent-gold)]/30 transition-all duration-300 hover:shadow-lg"
+                          aria-label="WhatsApp"
+                        >
+                          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
+                            <WhatsAppIcon size={24} className="text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider">
+                              WhatsApp
+                            </p>
+                            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">
+                              Britline JLR
+                            </p>
+                          </div>
+                          <svg className="w-5 h-5 text-zinc-400 dark:text-zinc-600 group-hover:text-[var(--accent-gold)] group-hover:translate-x-1 transition-all duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -1261,32 +1437,6 @@ export default function Home() {
               <h3 className="font-semibold mb-2">{step.title}</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-400">{step.desc}</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* MODELS */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('modelsTitle')}</h2>
-        <div className="space-y-4 text-sm text-zinc-600 dark:text-zinc-400">
-          <p><strong>Land Rover:</strong> {t('modelsLandRover').replace('Land Rover: ', '')}</p>
-          <p><strong>Jaguar:</strong> {t('modelsJaguar').replace('Jaguar: ', '')}</p>
-          <p><strong>{t('engines')}:</strong> {t('enginesDescription')}</p>
-        </div>
-      </section>
-
-      {/* EXPERTISE */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-6">{t('advantagesTitle')}</h2>
-        <div className="space-y-3 text-sm text-zinc-600 dark:text-zinc-400">
-          {[
-            t('narrowSpecialization'),
-            t('individualMaps'),
-            t('professionalTools'),
-            t('guarantees'),
-            t('freeReturn')
-          ].map((item, i) => (
-            <div key={i}>* {item}</div>
           ))}
         </div>
       </section>

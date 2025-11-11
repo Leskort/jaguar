@@ -81,7 +81,7 @@ export const useCartStore = create<CartStore>()(
       },
     }),
     {
-      name: 'lr-chip-cart',
+      name: 'britline-jlr-cart',
     }
   )
 );

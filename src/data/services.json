@@ -185,6 +185,33 @@
       "2007-2016": {
         "features-activation": []
       }
+    },
+    "discovery-4-l316": {
+      "2010-2016": {
+        "power-upgrade": [
+          {
+            "title": "ads",
+            "image": "/services/power-upgrade/2.2L-TD4-122hp-chip-tuning-Stage-1-367x218.jpg",
+            "price": "128",
+            "requirements": "Yes",
+            "description": "",
+            "descriptionEn": "hero",
+            "descriptionRu": "рус ",
+            "status": "in-stock"
+          }
+        ],
+        "retrofits": [
+          {
+            "title": "выф",
+            "image": "/services/retrofits/ClearSight-interior-rear-view-mirror-8.jpg",
+            "price": "170",
+            "requirements": "Yes",
+            "description": "",
+            "descriptionEn": "gey",
+            "descriptionRu": "пку"
+          }
+        ]
+      }
     }
   },
   "jaguar": {
