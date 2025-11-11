@@ -9,12 +9,27 @@ import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIc
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Britline JLR — Apple-Level Premium Security",
+  title: "Britline JLR",
   description:
-    "Exclusive retrofit service for Land Rover & Jaguar. Any factory system installed post-production.",
+    "Britline JLR — премиальный сервис чип-тюнинга и ретрофитинга для Land Rover и Jaguar. Специализируемся на установке заводских систем, активации скрытых функций, индивидуальном чип-тюнинге и оригинальных аксессуарах. Раскройте истинный потенциал вашего премиального автомобиля.",
   metadataBase: new URL("https://www.britline-jlr.com"),
   icons: { icon: "/favicon.ico" },
   manifest: "/manifest.webmanifest",
+  openGraph: {
+    title: "Britline JLR",
+    description:
+      "Britline JLR — премиальный сервис чип-тюнинга и ретрофитинга для Land Rover и Jaguar. Специализируемся на установке заводских систем, активации скрытых функций, индивидуальном чип-тюнинге и оригинальных аксессуарах. Раскройте истинный потенциал вашего премиального автомобиля.",
+    url: "https://www.britline-jlr.com",
+    siteName: "Britline JLR",
+    locale: "ru_RU",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Britline JLR",
+    description:
+      "Britline JLR — премиальный сервис чип-тюнинга и ретрофитинга для Land Rover и Jaguar. Специализируемся на установке заводских систем, активации скрытых функций, индивидуальном чип-тюнинге и оригинальных аксессуарах.",
+  },
 };
 
 export default function RootLayout({
