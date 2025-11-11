@@ -47,32 +47,17 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
       transition={{ duration: 0.6, delay, ease: "easeOut" }}
       className="relative w-full max-w-sm lg:max-w-md"
     >
-      {/* Main card - упрощенный, без тяжелых эффектов */}
+      {/* Main card */}
       <div className="relative h-72 sm:h-80 lg:h-96 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white dark:bg-zinc-900 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
-        {/* Subtle background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-transparent via-zinc-50/30 dark:via-zinc-800/20 to-transparent pointer-events-none" />
-        
-        {/* Decorative corner accents */}
-        <div className="absolute top-0 left-0 w-20 h-20 bg-gradient-to-br from-[var(--accent-gold)]/5 to-transparent rounded-br-3xl" />
-        <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-tl from-[var(--accent-gold)]/5 to-transparent rounded-tl-3xl" />
-        
         {/* Content */}
-        <div className="relative h-full flex flex-col items-center justify-center p-6 sm:p-8 z-10">
-          {/* Logo Container with decorative frame */}
-          <div className="mb-6 sm:mb-8 flex items-center justify-center w-full relative">
-            {/* Decorative circle around logo */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-48 h-48 sm:w-56 sm:h-56 lg:w-64 lg:h-64 rounded-full border border-zinc-200/30 dark:border-zinc-700/30" />
-            </div>
-            
-            {/* Logo */}
-            <div className="relative z-10">
-              {brand === "Land Rover" ? (
-                <LandRoverLogo />
-              ) : (
-                <JaguarLogo />
-              )}
-            </div>
+        <div className="relative h-full flex flex-col items-center justify-center p-6 sm:p-8">
+          {/* Logo Container */}
+          <div className="mb-6 sm:mb-8 flex items-center justify-center w-full">
+            {brand === "Land Rover" ? (
+              <LandRoverLogo />
+            ) : (
+              <JaguarLogo />
+            )}
           </div>
           
           {/* Brand name */}
