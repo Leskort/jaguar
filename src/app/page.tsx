@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIcons";
+import BrandLogos from "@/components/BrandLogos";
 
 type Work = {
   id: string;
@@ -1342,36 +1343,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WHY CHOOSE */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('whyChooseTitle')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {[
-            {
-              title: t('powerAndTorque'),
-              description: t('powerAndTorqueDesc')
-            },
-            {
-              title: t('fuelSavings'),
-              description: t('fuelSavingsDesc')
-            },
-            {
-              title: t('safetyAndReliability'),
-              description: t('safetyAndReliabilityDesc')
-            },
-            {
-              title: t('comfortAndEase'),
-              description: t('comfortAndEaseDesc')
-            }
-          ].map((item) => (
-            <div key={item.title} className="rounded-2xl border border-[var(--border-color)] p-6">
-              <h3 className="font-semibold mb-3">{item.title}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">{item.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* CONTACT FORM */}
       <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 lg:py-20 px-4">
         <div className="rounded-2xl lg:rounded-3xl border-2 border-[var(--border-color)] p-6 sm:p-8 lg:p-12 xl:p-16 bg-white dark:bg-[var(--space-black)] shadow-lg lg:shadow-xl">
@@ -1422,54 +1393,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* PROCESS */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('processTitle')}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {[
-            { num: "1", title: t('diagnostics'), desc: t('diagnosticsDesc') },
-            { num: "2", title: t('readingSetup'), desc: t('readingSetupDesc') },
-            { num: "3", title: t('flashing'), desc: t('flashingDesc') },
-            { num: "4", title: t('testDrive'), desc: t('testDriveDesc') }
-          ].map((step) => (
-            <div key={step.num} className="rounded-2xl border border-[var(--border-color)] p-6">
-              <div className="text-2xl font-bold text-[var(--accent-gold)] mb-2">{step.num}.</div>
-              <h3 className="font-semibold mb-2">{step.title}</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400">{step.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ */}
-      <section className="container-padded mx-auto max-w-6xl py-12 sm:py-16 px-4">
-        <h2 className="text-2xl sm:text-3xl font-semibold mb-8">{t('faqTitle')}</h2>
-        <div className="space-y-6">
-          {[
-            {
-              q: t('faq1Question'),
-              a: t('faq1Answer')
-            },
-            {
-              q: t('faq2Question'),
-              a: t('faq2Answer')
-            },
-            {
-              q: t('faq3Question'),
-              a: t('faq3Answer')
-            },
-            {
-              q: t('faq4Question'),
-              a: t('faq4Answer')
-            }
-          ].map((faq, i) => (
-            <details key={i} className="rounded-xl border border-[var(--border-color)] p-4">
-              <summary className="font-semibold cursor-pointer">{faq.q}</summary>
-              <p className="mt-3 text-sm text-zinc-600 dark:text-zinc-400">{faq.a}</p>
-            </details>
-          ))}
-        </div>
-      </section>
+      {/* BRAND LOGOS - Premium 3D Display */}
+      <BrandLogos />
 
       {/* FINAL CTA */}
       <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 lg:py-20 px-4">
