@@ -15,6 +15,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.britline-jlr.com"),
   icons: { icon: "/favicon.ico" },
   manifest: "/manifest.webmanifest",
+  alternates: {
+    canonical: "https://www.britline-jlr.com",
+  },
   openGraph: {
     title: "Britline JLR",
     description:
@@ -23,12 +26,32 @@ export const metadata: Metadata = {
     siteName: "Britline JLR",
     locale: "ru_RU",
     type: "website",
+    images: [
+      {
+        url: "https://www.britline-jlr.com/logos/land-rover.png",
+        width: 1200,
+        height: 630,
+        alt: "Britline JLR",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Britline JLR",
     description:
       "Britline JLR — премиальный сервис чип-тюнинга и ретрофитинга для Land Rover и Jaguar. Специализируемся на установке заводских систем, активации скрытых функций, индивидуальном чип-тюнинге и оригинальных аксессуарах.",
+    images: ["https://www.britline-jlr.com/logos/land-rover.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 
