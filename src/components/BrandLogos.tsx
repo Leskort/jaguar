@@ -1,20 +1,15 @@
 "use client";
-import { motion } from "framer-motion";
 import Image from "next/image";
 
 export default function BrandLogos() {
   return (
     <section className="relative w-full py-12 sm:py-16 lg:py-20 overflow-hidden">
-      {/* Background gradient effect */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--accent-gold)]/5 to-transparent pointer-events-none" />
-      
       <div className="container-padded mx-auto max-w-7xl px-4">
         <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-24">
           {/* Land Rover Logo */}
           <BrandLogoCard
             brand="Land Rover"
             description="British Excellence"
-            delay={0}
           />
           
           {/* Divider */}
@@ -24,7 +19,6 @@ export default function BrandLogos() {
           <BrandLogoCard
             brand="Jaguar"
             description="Pure Performance"
-            delay={0.2}
           />
         </div>
       </div>
@@ -35,20 +29,13 @@ export default function BrandLogos() {
 interface BrandLogoCardProps {
   brand: string;
   description: string;
-  delay: number;
 }
 
-function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
+function BrandLogoCard({ brand, description }: BrandLogoCardProps) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
-      className="relative w-full max-w-sm lg:max-w-md"
-    >
+    <div className="relative w-full max-w-sm lg:max-w-md">
       {/* Main card */}
-      <div className="relative h-72 sm:h-80 lg:h-96 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white dark:bg-zinc-900 shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-200">
+      <div className="relative h-72 sm:h-80 lg:h-96 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white dark:bg-zinc-900 shadow-lg overflow-hidden">
         {/* Content */}
         <div className="relative h-full flex flex-col items-center justify-center p-6 sm:p-8">
           {/* Logo Container */}
@@ -65,8 +52,21 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
             {brand}
           </h3>
           
-          {/* Accent line - простая зеленая полоска */}
-          <div className="w-20 h-0.5 sm:w-24 sm:h-[1px] lg:w-28 mb-4 bg-[#00ff41]" />
+          {/* Accent line - элегантная полоска с градиентом */}
+          <div 
+            className="mb-4 mx-auto"
+            style={{
+              width: '140px',
+              height: '4px',
+              background: 'linear-gradient(to right, rgba(0, 255, 65, 0.2) 0%, rgba(0, 255, 65, 0.7) 15%, #00ff41 35%, #00ff41 65%, rgba(0, 255, 65, 0.7) 85%, rgba(0, 255, 65, 0.2) 100%)',
+              borderRadius: '2px',
+              boxShadow: '0 0 15px rgba(0, 255, 65, 0.9), 0 0 8px rgba(0, 255, 65, 0.5)',
+              display: 'block',
+              position: 'relative',
+              zIndex: 1,
+              minHeight: '4px',
+            }}
+          />
           
           {/* Description */}
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-xs">
@@ -74,7 +74,7 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
           </p>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
