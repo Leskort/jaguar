@@ -61,17 +61,17 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
           </div>
           
           {/* Brand name */}
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-zinc-900 dark:text-white text-center tracking-tight">
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 sm:mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
             {brand}
           </h3>
+          
+          {/* Accent line - между названием и описанием */}
+          <div className="h-[1px] sm:h-0.5 w-12 sm:w-16 lg:w-20 mb-3 sm:mb-4 bg-gradient-to-r from-transparent via-[var(--accent-gold)] to-transparent" />
           
           {/* Description */}
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-xs">
             {description}
           </p>
-          
-          {/* Accent line */}
-          <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 h-0.5 w-16 bg-gradient-to-r from-transparent via-[var(--accent-gold)] to-transparent" />
         </div>
       </div>
     </motion.div>
