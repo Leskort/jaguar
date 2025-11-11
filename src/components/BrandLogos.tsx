@@ -3,17 +3,21 @@ import Image from "next/image";
 
 export default function BrandLogos() {
   return (
-    <section className="relative w-full py-12 sm:py-16 lg:py-20 overflow-hidden">
-      <div className="container-padded mx-auto max-w-7xl px-4">
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-16 xl:gap-24">
+    <section className="relative w-full py-8 sm:py-12 md:py-16 lg:py-20 xl:py-24 overflow-hidden">
+      <div className="container-padded mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
+        {/* flex-col до 767px (мобильные), flex-row с 768px (планшеты и десктопы) */}
+        <div className="flex flex-col md:flex-row items-center justify-center gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 2xl:gap-24">
           {/* Land Rover Logo */}
           <BrandLogoCard
             brand="Land Rover"
             description="British Excellence"
           />
           
-          {/* Divider */}
-          <div className="hidden lg:block w-px h-32 bg-gradient-to-b from-transparent via-[var(--accent-gold)]/30 to-transparent" />
+          {/* Vertical Divider - показывается только на экранах 768px+ (md и выше) */}
+          <div className="hidden md:block w-px h-32 lg:h-36 xl:h-40 bg-gradient-to-b from-transparent via-[var(--accent-gold)]/30 to-transparent" />
+          
+          {/* Horizontal Divider - показывается только до 767px (мобильные) */}
+          <div className="md:hidden w-full max-w-xs h-px bg-gradient-to-r from-transparent via-[var(--accent-gold)]/30 to-transparent" />
           
           {/* Jaguar Logo */}
           <BrandLogoCard
@@ -33,13 +37,13 @@ interface BrandLogoCardProps {
 
 function BrandLogoCard({ brand, description }: BrandLogoCardProps) {
   return (
-    <div className="relative w-full max-w-sm lg:max-w-md">
+    <div className="relative w-full max-w-[280px] sm:max-w-sm md:max-w-md lg:max-w-md xl:max-w-lg 2xl:max-w-xl">
       {/* Main card */}
-      <div className="relative h-72 sm:h-80 lg:h-96 rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white dark:bg-zinc-900 shadow-lg overflow-hidden">
+      <div className="relative h-[280px] sm:h-80 md:h-[360px] lg:h-96 xl:h-[420px] 2xl:h-[480px] rounded-2xl sm:rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 bg-white dark:bg-zinc-900 shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
         {/* Content */}
-        <div className="relative h-full flex flex-col items-center justify-center p-6 sm:p-8">
+        <div className="relative h-full flex flex-col items-center justify-center p-4 sm:p-6 md:p-8 lg:p-10">
           {/* Logo Container */}
-          <div className="mb-6 sm:mb-8 flex items-center justify-center w-full">
+          <div className="mb-4 sm:mb-6 md:mb-8 flex items-center justify-center w-full flex-shrink-0">
             {brand === "Land Rover" ? (
               <LandRoverLogo />
             ) : (
@@ -48,28 +52,29 @@ function BrandLogoCard({ brand, description }: BrandLogoCardProps) {
           </div>
           
           {/* Brand name */}
-          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
+          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
             {brand}
           </h3>
           
           {/* Accent line - элегантная полоска с градиентом */}
           <div 
-            className="mb-4 mx-auto"
+            className="mb-3 sm:mb-4 mx-auto flex-shrink-0"
             style={{
-              width: '140px',
-              height: '4px',
+              width: 'clamp(100px, 25vw, 160px)',
+              height: 'clamp(3px, 0.8vw, 4px)',
+              maxWidth: '160px',
+              minWidth: '100px',
               background: 'linear-gradient(to right, rgba(0, 255, 65, 0.2) 0%, rgba(0, 255, 65, 0.7) 15%, #00ff41 35%, #00ff41 65%, rgba(0, 255, 65, 0.7) 85%, rgba(0, 255, 65, 0.2) 100%)',
               borderRadius: '2px',
               boxShadow: '0 0 15px rgba(0, 255, 65, 0.9), 0 0 8px rgba(0, 255, 65, 0.5)',
               display: 'block',
               position: 'relative',
               zIndex: 1,
-              minHeight: '4px',
             }}
           />
           
           {/* Description */}
-          <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-xs">
+          <p className="text-xs sm:text-sm md:text-base lg:text-lg text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-[200px] sm:max-w-xs md:max-w-sm px-2">
             {description}
           </p>
         </div>
@@ -80,13 +85,13 @@ function BrandLogoCard({ brand, description }: BrandLogoCardProps) {
 
 function LandRoverLogo() {
   return (
-    <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 flex items-center justify-center">
+    <div className="relative w-32 h-32 sm:w-44 sm:h-44 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 2xl:w-72 2xl:h-72 flex items-center justify-center">
       <Image
         src="/logos/land-rover.png"
         alt="Land Rover Logo"
-        width={224}
-        height={224}
-        className="object-contain"
+        width={288}
+        height={288}
+        className="object-contain w-full h-full"
         unoptimized
         loading="lazy"
         onError={(e) => {
@@ -100,13 +105,13 @@ function LandRoverLogo() {
 
 function JaguarLogo() {
   return (
-    <div className="relative w-40 h-40 sm:w-48 sm:h-48 lg:w-56 lg:h-56 flex items-center justify-center">
+    <div className="relative w-32 h-32 sm:w-44 sm:h-44 md:w-48 md:h-48 lg:w-56 lg:h-56 xl:w-64 xl:h-64 2xl:w-72 2xl:h-72 flex items-center justify-center">
       <Image
         src="/logos/jaguar.png"
         alt="Jaguar Logo"
-        width={224}
-        height={224}
-        className="object-contain"
+        width={288}
+        height={288}
+        className="object-contain w-full h-full"
         unoptimized
         loading="lazy"
         onError={(e) => {
