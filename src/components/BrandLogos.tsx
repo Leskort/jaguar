@@ -66,7 +66,7 @@ function BrandLogoCard({ brand, description, delay }: BrandLogoCardProps) {
           </h3>
           
           {/* Accent line - между названием и описанием */}
-          <div className="h-[1px] sm:h-0.5 w-12 sm:w-16 lg:w-20 mb-3 sm:mb-4 bg-gradient-to-r from-transparent via-[var(--accent-gold)] to-transparent" />
+          <div className="h-[2px] sm:h-[1.5px] w-20 sm:w-24 lg:w-28 mb-3 sm:mb-4 mx-auto bg-gradient-to-r from-transparent via-[#00ff41] via-[#00ff41] to-transparent" />
           
           {/* Description */}
           <p className="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 font-light tracking-wide text-center max-w-xs">
