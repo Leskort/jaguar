@@ -644,7 +644,7 @@ function TopOrdersSection() {
   if (loading) {
     return (
       <div className="relative">
-        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+        <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
           {Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="carousel-card w-[calc(100vw-3.5rem)] min-w-[calc(100vw-3.5rem)] sm:w-[calc(50%-12px)] sm:min-w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] lg:min-w-[calc(33.333%-16px)] rounded-2xl sm:rounded-3xl bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-hidden flex-shrink-0 snap-center flex flex-col h-full" style={{ minHeight: '380px' }}>
               <div className="h-36 sm:h-48 md:h-56 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 animate-pulse" />
@@ -675,7 +675,7 @@ function TopOrdersSection() {
   return (
     <div className="relative w-full">
       {/* Carousel */}
-      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
+      <div id="top-orders-carousel" className="flex gap-3 sm:gap-4 md:gap-6 overflow-x-auto snap-x snap-mandatory pb-3 sm:pb-2 pl-9 sm:pl-10 md:pl-0 pr-9 sm:pr-10 md:pr-0">
         {topServices.map((service, index) => (
           <div 
             key={`${service.brand}-${service.model}-${service.year}-${service.category}-${index}`} 
@@ -1016,6 +1016,7 @@ export default function Home() {
             <p>{t('heroPoint1')}</p>
             <p>{t('heroPoint2')}</p>
             <p>{t('heroPoint3')}</p>
+            <p>{t('heroPoint4')}</p>
           </div>
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <button 
@@ -1058,6 +1059,11 @@ export default function Home() {
               title: t('accessories'),
               description: t('accessoriesDescription'),
               link: "/accessories"
+            },
+            {
+              title: t('carRepair'),
+              description: t('carRepairDescription'),
+              link: "/contact"
             }
           ].map((service) => (
             <Link

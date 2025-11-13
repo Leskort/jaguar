@@ -28,6 +28,7 @@ export default function Footer() {
               <li><Link href="/features-activation" className="hover:text-[var(--accent-gold)]">{t('featuresActivation').replace('FEATURES ACTIVATION', 'Features activation').replace('АКТИВАЦИЯ ФУНКЦИЙ', 'Активация функций')}</Link></li>
               <li><Link href="/power-upgrade" className="hover:text-[var(--accent-gold)]">{t('powerUpgrade').replace('POWER UPGRADE', 'Power upgrade').replace('УСИЛЕНИЕ МОЩНОСТИ', 'Усиление мощности')}</Link></li>
               <li><Link href="/accessories" className="hover:text-[var(--accent-gold)]">{t('accessories').replace('ACCESSORIES', 'Accessories').replace('АКСЕССУАРЫ', 'Аксессуары')}</Link></li>
+              <li><Link href="/contact" className="hover:text-[var(--accent-gold)]">{t('carRepair').replace('CAR REPAIR', 'Car repair').replace('РЕМОНТ АВТО', 'Ремонт авто')}</Link></li>
             </ul>
           </div>
           <div>
