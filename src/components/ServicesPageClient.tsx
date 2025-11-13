@@ -257,7 +257,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                   <div className="flex gap-3">
                     <button
                       onClick={clearCart}
-                      className="flex-1 px-4 py-3 sm:py-2 rounded-full border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900 text-sm sm:text-sm font-semibold min-h-[44px] sm:min-h-0 transition-colors"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-full border-2 border-zinc-300 dark:border-zinc-600 bg-white dark:bg-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-700 text-zinc-900 dark:text-zinc-100 text-sm sm:text-sm font-semibold min-h-[44px] sm:min-h-0 transition-colors"
                     >
                       {t('clearCart')}
                     </button>
