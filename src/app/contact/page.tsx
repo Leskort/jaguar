@@ -19,7 +19,6 @@ export default function ContactPage() {
           <a href="tel:+380670000321" className="mt-3 inline-block text-sm lg:text-base xl:text-lg font-medium text-[var(--accent-gold)] hover:opacity-80 transition-opacity">+38 067 0000 321</a>
         </div>
       </div>
-      <p className="mt-8 lg:mt-12 text-sm lg:text-base xl:text-lg text-zinc-600 dark:text-zinc-400 text-center">{t('callbackFormComingSoon')}</p>
     </section>
   );
 }
