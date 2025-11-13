@@ -130,7 +130,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
               onClick={() => setActiveCategory(catKey)}
               className={`px-4 sm:px-5 py-2.5 sm:py-2 rounded-full text-sm sm:text-xs font-semibold transition-colors min-h-[44px] sm:min-h-0 ${
                 activeCategory === catKey
-                  ? "bg-[var(--accent-gold)] text-black shadow-lg"
+                  ? "bg-[var(--accent-gold)] text-white shadow-lg"
                   : "border-2 border-[var(--border-color)] bg-white dark:bg-[var(--space-black)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
               }`}
             >
@@ -148,7 +148,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
               <path d="M7 18C5.9 18 5.01 18.9 5.01 20C5.01 21.1 5.9 22 7 22C8.1 22 9 21.1 9 20C9 18.9 8.1 18 7 18ZM1 2V4H3L6.6 11.59L5.25 14.04C5.09 14.32 5 14.65 5 15C5 16.1 5.9 17 7 17H19V15H7.42C7.28 15 7.17 14.89 7.17 14.75L7.2 14.63L8.1 13H16.55C17.3 13 17.96 12.59 18.3 11.97L21.88 6H5.21L4.27 4H1V2ZM17 18C15.9 18 15.01 18.9 15.01 20C15.01 21.1 15.9 22 17 22C18.1 22 19 21.1 19 20C19 18.9 18.1 18 17 18Z" fill="currentColor"/>
             </svg>
             {itemCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-black text-xs sm:text-[10px] font-bold rounded-full w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center border-2 border-white dark:border-[var(--space-black)]">
+              <span className="absolute -top-1 -right-1 bg-[var(--accent-gold)] text-white text-xs sm:text-[10px] font-bold rounded-full w-6 h-6 sm:w-5 sm:h-5 flex items-center justify-center border-2 border-white dark:border-[var(--space-black)]">
                 {itemCount}
               </span>
             )}
@@ -198,7 +198,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                 setShowCart(false);
                 setShowOrderForm(true);
               }}
-              className="px-8 py-4 sm:py-3 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
+              className="px-8 py-4 sm:py-3 rounded-full bg-[var(--accent-gold)] text-white font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
             >
               {t('getAnOffer')}
             </button>
@@ -266,7 +266,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
                         setShowCart(false);
                         setShowOrderForm(true);
                       }}
-                      className="flex-1 px-4 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-sm sm:text-sm"
+                      className="flex-1 px-4 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-sm sm:text-sm"
                     >
                       {t('getAnOffer')}
                     </button>
@@ -333,7 +333,7 @@ export default function ServicesPageClient({ brand, model, year, categoriesData 
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-black font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
+                className="w-full h-12 sm:h-11 rounded-full bg-[var(--accent-gold)] text-white font-semibold hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl transition-all text-base sm:text-sm"
               >
                 {submitting ? t('submitting') : t('getAnOffer')}
               </button>

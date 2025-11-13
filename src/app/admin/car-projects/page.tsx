@@ -253,7 +253,7 @@ export default function CarProjectsAdminPage() {
               images: [],
             });
           }}
-          className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-sm sm:text-base md:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+          className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-sm sm:text-base md:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
         >
           + {t('addCarProject')}
         </button>
@@ -326,7 +326,7 @@ export default function CarProjectsAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full px-4 sm:px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-sm sm:text-base md:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all disabled:opacity-50"
+                className="w-full px-4 sm:px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-sm sm:text-base md:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all disabled:opacity-50"
               >
                 {saving ? t('saving') : editingId ? t('updateCarProject') : t('addCarProject')}
               </button>

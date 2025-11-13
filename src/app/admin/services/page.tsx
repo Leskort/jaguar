@@ -549,7 +549,7 @@ export default function ServicesAdminPage() {
           onClick={() => setViewMode("all")}
           className={`px-4 py-3 sm:py-2 rounded-lg border-2 text-sm sm:text-base font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all ${
             viewMode === "all"
-              ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+              ? "bg-[var(--accent-gold)] text-white border-[var(--accent-gold)]"
               : "border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
           }`}
         >
@@ -559,7 +559,7 @@ export default function ServicesAdminPage() {
           onClick={() => setViewMode("filtered")}
           className={`px-4 py-3 sm:py-2 rounded-lg border-2 text-sm sm:text-base font-medium min-h-[44px] sm:min-h-0 shadow-sm active:scale-95 transition-all ${
             viewMode === "filtered"
-              ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+              ? "bg-[var(--accent-gold)] text-white border-[var(--accent-gold)]"
               : "border-[var(--border-color)] hover:bg-zinc-50 dark:hover:bg-zinc-900"
           }`}
         >
@@ -1266,7 +1266,7 @@ export default function ServicesAdminPage() {
                 status: "in-stock",
               });
             }}
-            className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+            className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
           >
             + {t('add')} {t('title')}
           </button>
@@ -1473,7 +1473,7 @@ export default function ServicesAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+                className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
               >
                 {saving ? t('saving') : editingIndex !== null ? t('updateService') : t('addService')}
               </button>
@@ -1529,7 +1529,7 @@ export default function ServicesAdminPage() {
                   {service.status && (
                     <>
                       {service.status === "in-stock" && (
-                        <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-2 py-1 rounded text-xs font-bold">
+                        <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-white px-2 py-1 rounded text-xs font-bold">
                           IN STOCK
                         </div>
                       )}

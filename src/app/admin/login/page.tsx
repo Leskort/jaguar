@@ -65,7 +65,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-14 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:bg-[var(--accent-gold)]/90 disabled:opacity-50 text-base sm:text-sm"
+            className="w-full h-14 sm:h-12 rounded-full bg-[var(--accent-gold)] text-white font-medium hover:bg-[var(--accent-gold)]/90 disabled:opacity-50 text-base sm:text-sm"
           >
             {loading ? t('loggingIn') : t('login')}
           </button>

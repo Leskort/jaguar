@@ -233,7 +233,7 @@ export default function WorkDetailPage() {
           <div className="pt-4">
             <button
               onClick={() => setShowOrderForm(true)}
-              className="h-12 px-6 rounded-full bg-[var(--accent-gold)] text-black font-medium hover:opacity-90 transition-opacity"
+              className="h-12 px-6 rounded-full bg-[var(--accent-gold)] text-white font-medium hover:opacity-90 transition-opacity"
             >
               {t('getAnOffer')}
             </button>
@@ -282,7 +282,7 @@ export default function WorkDetailPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-white text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
                 {submitting ? t('submitting') : t('submitOrder')}
               </button>

@@ -14,7 +14,7 @@ export default function CartPage() {
       <div className="container-padded mx-auto max-w-6xl py-24 text-center">
         <h1 className="text-3xl font-semibold mb-4">Your Cart is Empty</h1>
         <p className="text-zinc-600 mb-8">Add items to your cart to continue.</p>
-        <Link href="/" className="inline-block px-6 py-3 rounded-full bg-[var(--accent-gold)] text-black font-medium">
+        <Link href="/" className="inline-block px-6 py-3 rounded-full bg-[var(--accent-gold)] text-white font-medium">
           Continue Shopping
         </Link>
       </div>
@@ -75,7 +75,7 @@ export default function CartPage() {
           </button>
           <Link
             href="/contact"
-            className="block w-full px-4 py-3 rounded-full bg-[var(--accent-gold)] text-black font-medium text-center hover:bg-[var(--accent-gold)]/90"
+            className="block w-full px-4 py-3 rounded-full bg-[var(--accent-gold)] text-white font-medium text-center hover:bg-[var(--accent-gold)]/90"
           >
             Proceed to Checkout
           </Link>

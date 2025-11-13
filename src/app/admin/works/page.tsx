@@ -273,7 +273,7 @@ export default function WorksAdminPage() {
               descriptionRu: "",
             });
           }}
-          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
         >
           + {t('addWork')}
         </button>
@@ -390,7 +390,7 @@ export default function WorksAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all disabled:opacity-50"
+                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-base sm:text-sm min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all disabled:opacity-50"
               >
                 {saving ? t('saving') : editingId ? t('updateWork') : t('addWork')}
               </button>

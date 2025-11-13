@@ -9,7 +9,7 @@ export default function FeaturesActivationPage() {
             <div className="mt-2 text-sm text-zinc-500">£150</div>
             <div className="mt-3 flex items-center justify-between text-sm">
               <button className="px-3 py-1 rounded-full border border-[var(--border-color)]">Details</button>
-              <button className="px-3 py-1 rounded-full bg-[var(--accent-gold)] text-black">Add</button>
+              <button className="px-3 py-1 rounded-full bg-[var(--accent-gold)] text-white">Add</button>
             </div>
           </div>
         </div>

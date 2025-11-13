@@ -143,7 +143,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
         )}
         {/* Status Badge */}
         {status === "in-stock" && (
-          <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-black px-3 py-1 rounded text-xs font-bold">
+          <div className="absolute bottom-2 right-2 bg-[var(--accent-gold)] text-white px-3 py-1 rounded text-xs font-bold">
             {t('inStock')}
           </div>
         )}
@@ -174,7 +174,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             <button
               onClick={handleRemoveFromCart}
               disabled={isUnavailable}
-              className="h-10 sm:h-8 px-4 sm:px-3 rounded-full bg-[var(--accent-gold)] text-black text-sm font-semibold flex items-center gap-2 hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg transition-all"
+              className="h-10 sm:h-8 px-4 sm:px-3 rounded-full bg-[var(--accent-gold)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg transition-all"
             >
               <span className="w-5 h-5 sm:w-4 sm:h-4 bg-black/10 rounded flex items-center justify-center text-xs font-bold">
                 ✓
@@ -185,7 +185,7 @@ function ServiceCard({ option, brand, model, year, uniqueId }: ServiceCardProps)
             <button
               onClick={handleAddToCart}
               disabled={isUnavailable}
-              className="h-10 sm:h-8 px-4 sm:px-3 rounded-full bg-[var(--accent-gold)] text-black text-sm font-semibold flex items-center gap-2 hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg transition-all"
+              className="h-10 sm:h-8 px-4 sm:px-3 rounded-full bg-[var(--accent-gold)] text-white text-sm font-semibold flex items-center gap-2 hover:bg-[var(--accent-gold)]/90 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-md hover:shadow-lg transition-all"
             >
               <span className="w-5 h-5 sm:w-4 sm:h-4 border-2 border-black/30 rounded"></span>
               <span>{t('add')}</span>

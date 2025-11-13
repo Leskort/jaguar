@@ -148,7 +148,7 @@ export default function AboutPage() {
           <div className="flex flex-wrap gap-4">
             <Link
               href="/contact"
-              className="inline-flex items-center justify-center px-6 lg:px-8 py-3 lg:py-4 rounded-full bg-[var(--accent-gold)] text-black text-base lg:text-lg font-semibold hover:opacity-90 transition-opacity shadow-lg hover:shadow-xl"
+              className="inline-flex items-center justify-center px-6 lg:px-8 py-3 lg:py-4 rounded-full bg-[var(--accent-gold)] text-white text-base lg:text-lg font-semibold hover:opacity-90 transition-opacity shadow-lg hover:shadow-xl"
             >
               {t('contacts')}
             </Link>

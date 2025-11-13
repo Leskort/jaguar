@@ -214,7 +214,7 @@ function VehicleSelector() {
                 }
               }}
               disabled={!selectedBrand || !selectedModel || !selectedYear}
-              className="w-full h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-black text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              className="w-full h-12 sm:h-11 px-8 rounded-full bg-[var(--accent-gold)] text-white text-base font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
               {t('goToServices')}
             </button>
@@ -706,7 +706,7 @@ function TopOrdersSection() {
                 </div>
               )}
               {service.status === "in-stock" && (
-                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-[var(--accent-gold)] text-black px-2 sm:px-2.5 md:px-3 py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-bold shadow-lg backdrop-blur-sm">
+                <div className="absolute top-2 right-2 sm:top-3 sm:right-3 bg-[var(--accent-gold)] text-white px-2 sm:px-2.5 md:px-3 py-1 rounded-full text-[9px] sm:text-[10px] md:text-xs font-bold shadow-lg backdrop-blur-sm">
                   {t('inStock')}
                 </div>
               )}
@@ -736,7 +736,7 @@ function TopOrdersSection() {
               <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2.5 flex-shrink-0 mt-auto">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 sm:h-11 px-3 sm:px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[#f5c842] text-black text-sm sm:text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[#f5c842] hover:to-[var(--accent-gold)] touch-manipulation"
+                  className="flex-1 h-11 sm:h-11 px-3 sm:px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-gold-light)] text-black text-sm sm:text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[var(--accent-gold-light)] hover:to-[var(--accent-gold)] touch-manipulation"
                 >
                   {t('addToCart')}
                 </Link>
@@ -1021,7 +1021,7 @@ export default function Home() {
           <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <button 
               onClick={(e) => { e.stopPropagation(); setOfferOpen(true); }} 
-              className="h-12 sm:h-11 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
+              className="h-12 sm:h-11 px-6 sm:px-5 rounded-full bg-[var(--accent-gold)] text-white text-base sm:text-sm font-semibold inline-flex items-center justify-center min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl active:scale-95 transition-all"
             >
               {t('getAnOffer')}
             </button>
@@ -1074,7 +1074,7 @@ export default function Home() {
               <h3 className="text-lg font-semibold mb-3">{service.title}</h3>
               <p className="text-sm text-zinc-600 dark:text-zinc-400 mb-4 flex-1">{service.description}</p>
               <div className="mt-auto pt-4">
-                <span className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-[var(--accent-gold)] text-black text-sm font-semibold hover:opacity-90 transition-opacity">
+                <span className="inline-block w-full text-center px-4 py-2.5 rounded-full bg-[var(--accent-gold)] text-white text-sm font-semibold hover:opacity-90 transition-opacity">
                   {t('goToServices')}
                 </span>
               </div>
@@ -1390,7 +1390,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-black text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all md:col-span-2"
+                className="h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-white text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all md:col-span-2"
               >
                 {submitting ? t('submitting') : t('getAListOfServices')}
               </button>
@@ -1446,7 +1446,7 @@ export default function Home() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-black text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all"
+                  className="flex-1 h-12 sm:h-12 lg:h-14 xl:h-16 rounded-lg bg-[var(--accent-gold)] text-white text-base lg:text-lg xl:text-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] sm:min-h-0 shadow-lg hover:shadow-xl hover:bg-[var(--accent-gold)]/90 active:scale-95 transition-all"
                 >
                   {submitting ? t('submitting') : t('submitRequest')}
                 </button>
@@ -1518,7 +1518,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-white text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
                 {submitting ? t('submitting') : t('getAListOfServices')}
               </button>
@@ -1532,7 +1532,7 @@ export default function Home() {
         <div className="fixed bottom-0 inset-x-0 z-50 bg-[#3b3b3b] text-white/90 shadow-lg">
           <div className="container-padded mx-auto max-w-6xl py-3 px-4 flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
             <div className="text-[10px] sm:text-xs flex-1">{t('cookieMessage')}</div>
-            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[var(--accent-gold)] text-black text-xs font-medium hover:opacity-90 transition-opacity" onClick={handleCookieAccept}>{t('accept')}</button>
+            <button className="w-full sm:w-auto sm:ml-auto h-8 px-4 rounded bg-[var(--accent-gold)] text-white text-xs font-medium hover:opacity-90 transition-opacity" onClick={handleCookieAccept}>{t('accept')}</button>
           </div>
         </div>
       )}

@@ -42,7 +42,7 @@ export default function AccessoriesPage() {
             <div className="mt-8">
               <Link
                 href="/contact"
-                className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-black font-semibold text-lg hover:opacity-90 transition-opacity"
+                className="inline-block px-8 py-4 rounded-lg bg-[var(--accent-gold)] text-white font-semibold text-lg hover:opacity-90 transition-opacity"
               >
                 {t('getAnOffer')}
               </Link>

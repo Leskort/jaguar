@@ -173,7 +173,7 @@ export default function OrdersAdminPage() {
           onClick={() => setStatusFilter("all")}
           className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
             statusFilter === "all"
-              ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+              ? "bg-[var(--accent-gold)] text-white border-[var(--accent-gold)]"
               : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
           }`}
         >

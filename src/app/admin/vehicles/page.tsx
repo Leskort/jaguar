@@ -286,7 +286,7 @@ export default function VehiclesAdminPage() {
             onClick={() => setSelectedBrand("all")}
                   className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
                     selectedBrand === "all"
-                      ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+                      ? "bg-[var(--accent-gold)] text-white border-[var(--accent-gold)]"
                       : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
                   }`}
           >
@@ -310,7 +310,7 @@ export default function VehiclesAdminPage() {
                   onClick={() => setSelectedBrand(brand)}
                   className={`px-3 sm:px-4 py-3 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 border-2 shadow-sm active:scale-95 ${
                     selectedBrand === brand
-                      ? "bg-[var(--accent-gold)] text-black border-[var(--accent-gold)]"
+                      ? "bg-[var(--accent-gold)] text-white border-[var(--accent-gold)]"
                       : "border-[var(--border-color)] hover:bg-white/5 dark:hover:bg-zinc-800"
                   }`}
                 >
@@ -331,7 +331,7 @@ export default function VehiclesAdminPage() {
               years: [{ value: "", label: "" }],
             });
           }}
-          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
+          className="px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium text-base sm:text-sm w-full sm:w-auto min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all"
         >
           + {t('addVehicle')}
         </button>
@@ -505,7 +505,7 @@ export default function VehiclesAdminPage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-black font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all text-base sm:text-sm"
+                className="w-full sm:w-auto px-6 py-3 sm:py-2 rounded-full bg-[var(--accent-gold)] text-white font-medium disabled:opacity-50 min-h-[44px] sm:min-h-0 shadow-lg active:scale-95 transition-all text-base sm:text-sm"
               >
                 {saving ? t('saving') : editingIndex !== null ? t('save') : t('addVehicle')}
               </button>

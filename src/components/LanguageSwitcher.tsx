@@ -14,7 +14,7 @@ export default function LanguageSwitcher({ fullWidth = false }: LanguageSwitcher
         onClick={() => setLanguage('en')}
         className={`flex-1 px-4 py-2.5 sm:px-2 lg:px-3 sm:py-1 rounded-full text-sm sm:text-xs font-medium transition-colors min-h-[44px] sm:min-h-0 active:scale-95 ${
           language === 'en'
-            ? 'bg-[var(--accent-gold)] text-black shadow-sm'
+            ? 'bg-[var(--accent-gold)] text-white shadow-sm'
             : 'text-[var(--foreground)] hover:bg-zinc-100 dark:hover:bg-zinc-800'
         }`}
       >
@@ -24,7 +24,7 @@ export default function LanguageSwitcher({ fullWidth = false }: LanguageSwitcher
         onClick={() => setLanguage('ru')}
         className={`flex-1 px-4 py-2.5 sm:px-2 lg:px-3 sm:py-1 rounded-full text-sm sm:text-xs font-medium transition-colors min-h-[44px] sm:min-h-0 active:scale-95 ${
           language === 'ru'
-            ? 'bg-[var(--accent-gold)] text-black shadow-sm'
+            ? 'bg-[var(--accent-gold)] text-white shadow-sm'
             : 'text-[var(--foreground)] hover:bg-zinc-100 dark:hover:bg-zinc-800'
         }`}
       >

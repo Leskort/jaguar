@@ -192,7 +192,7 @@ export default function MobileMenu() {
                       setIsOpen(false);
                       setOfferOpen(true);
                     }}
-                    className="block w-full text-center px-6 py-3 rounded-lg bg-[var(--accent-gold)] text-black font-semibold hover:opacity-90 transition-opacity min-h-[44px]"
+                    className="block w-full text-center px-6 py-3 rounded-lg bg-[var(--accent-gold)] text-white font-semibold hover:opacity-90 transition-opacity min-h-[44px]"
                   >
                     {t('getAnOffer')}
                   </button>
@@ -238,7 +238,7 @@ export default function MobileMenu() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-black text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
+                className="h-12 sm:h-12 rounded-full bg-[var(--accent-gold)] text-white text-base sm:text-sm font-semibold disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] shadow-lg hover:shadow-xl active:scale-95 transition-all"
               >
                 {submitting ? t('submitting') : t('getAListOfServices')}
               </button>
