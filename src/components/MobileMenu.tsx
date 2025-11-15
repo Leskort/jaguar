@@ -91,9 +91,13 @@ export default function MobileMenu() {
             onClick={() => setIsOpen(false)}
           />
           <nav
-            className={`fixed top-14 sm:top-16 left-0 right-0 bg-white dark:bg-[var(--space-black)] border-b border-[var(--border-color)] z-50 lg:hidden transition-transform duration-300 ${
+            className={`fixed top-14 sm:top-16 left-0 right-0 bg-white/80 dark:bg-[var(--space-black)]/80 backdrop-blur-xl border-b border-[var(--border-color)] z-50 lg:hidden transition-transform duration-300 ${
               isOpen ? "translate-y-0" : "-translate-y-full"
             }`}
+            style={{
+              WebkitBackdropFilter: 'saturate(180%) blur(24px)',
+              backdropFilter: 'saturate(180%) blur(24px)',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="container-padded mx-auto py-4 sm:py-5">
