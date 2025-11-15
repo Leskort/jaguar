@@ -1,66 +1,77 @@
 "use client";
 import Link from "next/link";
 
+// Компонент колеса для переиспользования
+function WheelIcon({ className = "" }: { className?: string }) {
+  return (
+    <svg 
+      className={className}
+      width="1em" 
+      height="1em" 
+      viewBox="0 0 50 50" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Внешний обод колеса (серый металлик) */}
+      <circle 
+        cx="25" 
+        cy="25" 
+        r="24" 
+        fill="none" 
+        stroke="#888888" 
+        strokeWidth="2"
+        className="wheel-rim"
+      />
+      {/* Шина (British Racing Green) */}
+      <circle 
+        cx="25" 
+        cy="25" 
+        r="20" 
+        fill="#004225"
+        className="wheel-tire"
+      />
+      {/* Спицы диска (серый металлик) */}
+      <g className="wheel-spokes">
+        <line x1="25" y1="5" x2="25" y2="15" stroke="#888888" strokeWidth="1.5" />
+        <line x1="25" y1="35" x2="25" y2="45" stroke="#888888" strokeWidth="1.5" />
+        <line x1="5" y1="25" x2="15" y2="25" stroke="#888888" strokeWidth="1.5" />
+        <line x1="35" y1="25" x2="45" y2="25" stroke="#888888" strokeWidth="1.5" />
+        <line x1="10.86" y1="10.86" x2="17.07" y2="17.07" stroke="#888888" strokeWidth="1.5" />
+        <line x1="32.93" y1="32.93" x2="39.14" y2="39.14" stroke="#888888" strokeWidth="1.5" />
+        <line x1="10.86" y1="39.14" x2="17.07" y2="32.93" stroke="#888888" strokeWidth="1.5" />
+        <line x1="32.93" y1="17.07" x2="39.14" y2="10.86" stroke="#888888" strokeWidth="1.5" />
+      </g>
+      {/* Центральная ступица */}
+      <circle 
+        cx="25" 
+        cy="25" 
+        r="8" 
+        fill="#666666"
+        className="wheel-hub"
+      />
+      <circle 
+        cx="25" 
+        cy="25" 
+        r="5" 
+        fill="#888888"
+        className="wheel-center"
+      />
+    </svg>
+  );
+}
+
 export default function Logo() {
   return (
     <Link href="/" className="logo-container">
       <span className="logo-text">
         Brit<span className="wheel-wrapper">
-          <svg 
-            className="wheel" 
-            width="1em" 
-            height="1em" 
-            viewBox="0 0 50 50" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            {/* Внешний обод колеса (серый металлик) */}
-            <circle 
-              cx="25" 
-              cy="25" 
-              r="24" 
-              fill="none" 
-              stroke="#888888" 
-              strokeWidth="2"
-              className="wheel-rim"
-            />
-            {/* Шина (British Racing Green) */}
-            <circle 
-              cx="25" 
-              cy="25" 
-              r="20" 
-              fill="#004225"
-              className="wheel-tire"
-            />
-            {/* Спицы диска (серый металлик) */}
-            <g className="wheel-spokes">
-              <line x1="25" y1="5" x2="25" y2="15" stroke="#888888" strokeWidth="1.5" />
-              <line x1="25" y1="35" x2="25" y2="45" stroke="#888888" strokeWidth="1.5" />
-              <line x1="5" y1="25" x2="15" y2="25" stroke="#888888" strokeWidth="1.5" />
-              <line x1="35" y1="25" x2="45" y2="25" stroke="#888888" strokeWidth="1.5" />
-              <line x1="10.86" y1="10.86" x2="17.07" y2="17.07" stroke="#888888" strokeWidth="1.5" />
-              <line x1="32.93" y1="32.93" x2="39.14" y2="39.14" stroke="#888888" strokeWidth="1.5" />
-              <line x1="10.86" y1="39.14" x2="17.07" y2="32.93" stroke="#888888" strokeWidth="1.5" />
-              <line x1="32.93" y1="17.07" x2="39.14" y2="10.86" stroke="#888888" strokeWidth="1.5" />
-            </g>
-            {/* Центральная ступица */}
-            <circle 
-              cx="25" 
-              cy="25" 
-              r="8" 
-              fill="#666666"
-              className="wheel-hub"
-            />
-            <circle 
-              cx="25" 
-              cy="25" 
-              r="5" 
-              fill="#888888"
-              className="wheel-center"
-            />
-          </svg>
+          <WheelIcon className="wheel" />
         </span>line
       </span>
-      <span className="jlr-text">JLR</span>
+      <span className="jlr-text">
+        J<span className="wheel-wrapper">
+          <WheelIcon className="wheel wheel-small" />
+        </span>LR
+      </span>
     </Link>
   );
 }
