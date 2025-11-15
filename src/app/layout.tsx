@@ -66,7 +66,25 @@ export default function RootLayout({
         <LanguageProvider>
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-4 md:px-6 lg:px-8">
-              <Link href="/" className="shrink-0 logo-glow">Britline JLR</Link>
+              <div className="shrink-0 flex flex-col items-center">
+                <Link href="/" className="logo-glow">Britline JLR</Link>
+                {/* Зеленая декоративная полоска с свечением */}
+                <div 
+                  className="mt-1 mx-auto flex-shrink-0"
+                  style={{
+                    width: 'clamp(80px, 20vw, 140px)',
+                    height: 'clamp(2px, 0.6vw, 3px)',
+                    maxWidth: '140px',
+                    minWidth: '80px',
+                    background: 'linear-gradient(to right, rgba(0, 66, 37, 0.2) 0%, rgba(0, 66, 37, 0.7) 15%, #004225 35%, #004225 65%, rgba(0, 66, 37, 0.7) 85%, rgba(0, 66, 37, 0.2) 100%)',
+                    borderRadius: '2px',
+                    boxShadow: '0 0 15px rgba(0, 66, 37, 0.9), 0 0 8px rgba(0, 66, 37, 0.5)',
+                    display: 'block',
+                    position: 'relative',
+                    zIndex: 1,
+                  }}
+                />
+              </div>
               
               {/* Desktop Navigation - показывается на lg и выше (1024px+) */}
               <div className="hidden lg:flex items-center gap-1.5 lg:gap-2 xl:gap-3 2xl:gap-4 text-xs lg:text-sm xl:text-base">

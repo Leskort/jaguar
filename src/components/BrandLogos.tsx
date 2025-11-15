@@ -51,11 +51,6 @@ function BrandLogoCard({ brand, description }: BrandLogoCardProps) {
             )}
           </div>
           
-          {/* Brand name */}
-          <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold mb-3 sm:mb-4 text-zinc-900 dark:text-white text-center tracking-tight">
-            {brand}
-          </h3>
-          
           {/* Accent line - элегантная полоска с градиентом */}
           <div 
             className="mb-3 sm:mb-4 mx-auto flex-shrink-0"
