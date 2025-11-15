@@ -6,6 +6,7 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import NavLinks from "@/components/NavLinks";
 import Footer from "@/components/Footer";
 import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIcons";
+import Logo from "@/components/Logo";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -67,7 +68,7 @@ export default function RootLayout({
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-4 md:px-6 lg:px-8">
               <div className="shrink-0 flex flex-col items-center">
-                <Link href="/" className="logo-glow">Britline JLR</Link>
+                <Logo />
                 {/* Зеленая декоративная полоска с свечением */}
                 <div 
                   className="mt-1 mx-auto flex-shrink-0"

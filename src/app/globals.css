@@ -101,19 +101,196 @@ body {
 @keyframes ledFlicker {
   0%, 100% {
     opacity: 1;
-    filter: brightness(1) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+    filter: brightness(1) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25));
   }
   25% {
     opacity: 0.88;
-    filter: brightness(0.92) contrast(1.02) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+    filter: brightness(0.92) contrast(1.02) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25));
   }
   50% {
     opacity: 1;
-    filter: brightness(1.08) contrast(1.05) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+    filter: brightness(1.08) contrast(1.05) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25));
   }
   75% {
     opacity: 0.93;
-    filter: brightness(0.96) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+    filter: brightness(0.96) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25));
+  }
+}
+
+/* Анимация вращения колеса */
+@keyframes wheelRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Новый премиальный логотип с колесом - британский премиум стиль */
+.logo-container {
+  display: inline-flex;
+  align-items: baseline;
+  font-family: "Gill Sans Bold Italic", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-weight: bold;
+  font-style: italic;
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-decoration: none;
+  position: relative;
+  font-size: clamp(1rem, 2.8vw, 1.15rem);
+  letter-spacing: 0.12em;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Премиальное изысканное свечение - британский стиль */
+  text-shadow: 
+    0 0 2px rgba(0, 66, 37, 0.5),
+    0 0 4px rgba(0, 66, 37, 0.4),
+    0 0 6px rgba(0, 66, 37, 0.35),
+    0 0 10px rgba(0, 66, 37, 0.3),
+    0 0 15px rgba(0, 66, 37, 0.25),
+    0 0 20px rgba(0, 66, 37, 0.15),
+    0 1px 2px rgba(0, 0, 0, 0.3);
+  /* Анимация мерцания */
+  animation: ledFlicker 3s ease-in-out infinite;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  will-change: filter, transform;
+  font-stretch: condensed;
+  line-height: 1.2;
+  /* Выравнивание всех элементов по baseline */
+  vertical-align: baseline;
+}
+
+.logo-text {
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1.2;
+  position: relative;
+}
+
+.wheel-wrapper {
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+  margin: 0 0.05em;
+  vertical-align: baseline;
+  position: relative;
+  /* Выравнивание на уровне JLR */
+  align-self: baseline;
+}
+
+.wheel {
+  display: inline-block;
+  /* Размер как у буквы T - используем высоту строки */
+  width: 0.85em;
+  height: 0.85em;
+  animation: wheelRotate 3s linear infinite;
+  filter: 
+    drop-shadow(0 0 2px rgba(0, 66, 37, 0.6)) 
+    drop-shadow(0 0 4px rgba(0, 66, 37, 0.4))
+    drop-shadow(0 0 1px rgba(136, 136, 136, 0.5));
+  transform-origin: center center;
+  transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  vertical-align: baseline;
+  /* Выравнивание на уровне JLR */
+  position: relative;
+  top: 0;
+}
+
+.wheel-rim {
+  filter: drop-shadow(0 0 1px rgba(136, 136, 136, 0.8));
+}
+
+.wheel-tire {
+  filter: drop-shadow(0 0 2px rgba(0, 66, 37, 0.8));
+}
+
+.wheel-spokes {
+  filter: drop-shadow(0 0 1px rgba(136, 136, 136, 0.6));
+}
+
+.wheel-hub {
+  filter: drop-shadow(0 0 1px rgba(102, 102, 102, 0.6));
+}
+
+.jlr-text {
+  font-size: 0.5em;
+  margin-left: 0.3em;
+  align-self: baseline;
+  line-height: 1;
+  vertical-align: baseline;
+  opacity: 0.98;
+  letter-spacing: 0.15em;
+  font-weight: bold;
+  text-shadow: 
+    0 0 2px rgba(0, 66, 37, 0.4),
+    0 0 4px rgba(0, 66, 37, 0.3);
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Выравнивание на уровне с колесом */
+  position: relative;
+  top: 0;
+}
+
+.logo-container:hover {
+  text-shadow: 
+    0 0 3px rgba(0, 66, 37, 0.7),
+    0 0 6px rgba(0, 66, 37, 0.6),
+    0 0 9px rgba(0, 66, 37, 0.5),
+    0 0 14px rgba(0, 66, 37, 0.4),
+    0 0 20px rgba(0, 66, 37, 0.3),
+    0 0 28px rgba(0, 66, 37, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.4);
+  transform: scale(1.008);
+  letter-spacing: 0.13em;
+}
+
+.logo-container:hover .wheel {
+  filter: 
+    drop-shadow(0 0 3px rgba(0, 66, 37, 0.9)) 
+    drop-shadow(0 0 6px rgba(0, 66, 37, 0.7)) 
+    drop-shadow(0 0 9px rgba(0, 66, 37, 0.5))
+    drop-shadow(0 0 1px rgba(136, 136, 136, 0.7));
+  animation: wheelRotate 2s linear infinite;
+}
+
+.logo-container:hover .jlr-text {
+  opacity: 1;
+  text-shadow: 
+    0 0 3px rgba(0, 66, 37, 0.6),
+    0 0 6px rgba(0, 66, 37, 0.4);
+}
+
+/* Для светлой темы */
+@media (prefers-color-scheme: light) {
+  .logo-container {
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    text-shadow: 
+      -0.5px -0.5px 1px rgba(0, 0, 0, 0.7),
+      0.5px -0.5px 1px rgba(0, 0, 0, 0.7),
+      -0.5px 0.5px 1px rgba(0, 0, 0, 0.7),
+      0.5px 0.5px 1px rgba(0, 0, 0, 0.7),
+      0 0 1.5px rgba(0, 0, 0, 0.8),
+      0 0 2px rgba(0, 66, 37, 0.4),
+      0 0 4px rgba(0, 66, 37, 0.35),
+      0 0 6px rgba(0, 66, 37, 0.3),
+      0 0 10px rgba(0, 66, 37, 0.25),
+      0 0 15px rgba(0, 66, 37, 0.15);
+  }
+  
+  .logo-container:hover {
+    text-shadow: 
+      -0.5px -0.5px 1px rgba(0, 0, 0, 0.8),
+      0.5px -0.5px 1px rgba(0, 0, 0, 0.8),
+      -0.5px 0.5px 1px rgba(0, 0, 0, 0.8),
+      0.5px 0.5px 1px rgba(0, 0, 0, 0.8),
+      0 0 2px rgba(0, 0, 0, 0.9),
+      0 0 3px rgba(0, 66, 37, 0.6),
+      0 0 6px rgba(0, 66, 37, 0.5),
+      0 0 9px rgba(0, 66, 37, 0.4),
+      0 0 14px rgba(0, 66, 37, 0.3),
+      0 0 20px rgba(0, 66, 37, 0.2);
   }
 }
 
