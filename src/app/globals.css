@@ -331,3 +331,57 @@ body {
     background: rgba(255, 255, 255, 0.6);
   }
 }
+
+/* Исправление проблемы с рендерингом текста на macOS/iMac в секции контактов */
+/* Решает проблему "рассыпающихся" букв при использовании backdrop-blur */
+.contacts-section {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.contacts-section * {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Специальные исправления для текста в карточке контактов */
+.contacts-section p,
+.contacts-section a,
+.contacts-section li,
+.contacts-section h2,
+.contacts-section h3 {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: auto;
+  isolation: isolate;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Дополнительное исправление для карточки с backdrop-blur */
+.contacts-section .backdrop-blur-xl {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Исправление для текста внутри карточки */
+.contacts-section .backdrop-blur-xl p,
+.contacts-section .backdrop-blur-xl a,
+.contacts-section .backdrop-blur-xl li,
+.contacts-section .backdrop-blur-xl h2,
+.contacts-section .backdrop-blur-xl h3,
+.contacts-section .backdrop-blur-xl span {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}

@@ -1156,7 +1156,7 @@ export default function Home() {
       <OurWorksSection />
 
       {/* PREMIUM CONTACTS SECTION */}
-      <section className="container-padded mx-auto max-w-7xl py-12 sm:py-16 md:py-20 lg:py-24 px-4">
+      <section className="contacts-section container-padded mx-auto max-w-7xl py-12 sm:py-16 md:py-20 lg:py-24 px-4">
         <div className="relative">
           {/* Premium Card with Glass Effect */}
           <div className="relative rounded-2xl sm:rounded-3xl lg:rounded-[2rem] xl:rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 bg-gradient-to-br from-white/80 via-white/60 to-zinc-50/40 dark:from-[var(--space-black)]/90 dark:via-[var(--space-black)]/80 dark:to-zinc-900/60 backdrop-blur-xl shadow-2xl overflow-hidden">
