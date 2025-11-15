@@ -97,6 +97,26 @@ body {
   }
 }
 
+/* Анимация мерцания светодиодов для белых букв */
+@keyframes ledFlicker {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
+  }
+  25% {
+    opacity: 0.88;
+    filter: brightness(0.92) contrast(1.02) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 1px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.2));
+  }
+  50% {
+    opacity: 1;
+    filter: brightness(1.08) contrast(1.05) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 3px rgba(255, 255, 255, 0.9)) drop-shadow(0 0 6px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+  }
+  75% {
+    opacity: 0.93;
+    filter: brightness(0.96) contrast(1.03) drop-shadow(0 0 2px rgba(0, 66, 37, 0.4)) drop-shadow(0 0 4px rgba(0, 66, 37, 0.25)) drop-shadow(0 0 2px rgba(255, 255, 255, 0.5)) drop-shadow(0 0 4px rgba(255, 255, 255, 0.3));
+  }
+}
+
 .logo-glow {
   position: relative;
   display: inline-block;
@@ -107,6 +127,8 @@ body {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Анимация мерцания светодиодов */
+  animation: ledFlicker 3s ease-in-out infinite;
   /* Изысканное тонкое свечение - премиальный вид */
   text-shadow: 
     0 0 2px rgba(0, 66, 37, 0.4),
@@ -115,11 +137,7 @@ body {
     0 0 10px rgba(0, 66, 37, 0.25),
     0 0 15px rgba(0, 66, 37, 0.15),
     0 1px 1px rgba(0, 0, 0, 0.2);
-  filter: 
-    brightness(1.01) 
-    contrast(1.03)
-    drop-shadow(0 0 2px rgba(0, 66, 37, 0.4))
-    drop-shadow(0 0 4px rgba(0, 66, 37, 0.25));
+  /* Filter будет управляться анимацией ledFlicker */
   /* Для лучшей поддержки на iOS */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
