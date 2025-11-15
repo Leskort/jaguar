@@ -95,7 +95,6 @@ body {
   display: inline-block;
   /* Премиальный стиль Rolex/Bentley - изысканный и элегантный */
   font-size: clamp(1rem, 2.8vw, 1.15rem);
-  font-weight: 800;
   letter-spacing: 0.12em;
   /* Единый цвет для обеих тем */
   color: #ffffff;
@@ -118,7 +117,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Премиальная типографика */
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: "Gill Sans Bold Italic", "Gill Sans", "Gill Sans MT", Calibri, sans-serif;
+  font-weight: bold;
+  font-style: italic;
   /* VIP эффекты */
   text-rendering: optimizeLegibility;
   will-change: filter, transform;
