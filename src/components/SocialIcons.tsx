@@ -11,7 +11,7 @@ export function TelegramIcon({ size = 24, className = "" }: SocialIconsProps) {
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#0088cc"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -26,7 +26,7 @@ export function InstagramIcon({ size = 24, className = "" }: SocialIconsProps) {
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#E4405F"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >
@@ -41,7 +41,7 @@ export function WhatsAppIcon({ size = 24, className = "" }: SocialIconsProps) {
       width={size}
       height={size}
       viewBox="0 0 24 24"
-      fill="currentColor"
+      fill="#25D366"
       className={className}
       xmlns="http://www.w3.org/2000/svg"
     >

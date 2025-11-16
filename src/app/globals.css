@@ -32,6 +32,7 @@
   --body-mobile: 17px;
 }
 
+/* stylelint-disable-next-line unknownAtRules */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

@@ -7,6 +7,7 @@ import NavLinks from "@/components/NavLinks";
 import Footer from "@/components/Footer";
 import { TelegramIcon, InstagramIcon, WhatsAppIcon } from "@/components/SocialIcons";
 import Logo from "@/components/Logo";
+import AnimatedFavicon from "@/components/AnimatedFavicon";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +15,15 @@ export const metadata: Metadata = {
   description:
     "Britline JLR — премиальный сервис чип-тюнинга, ретрофитинга и ремонта для Land Rover и Jaguar. Специализируемся на установке заводских систем, активации скрытых функций, индивидуальном чип-тюнинге, оригинальных аксессуарах и профессиональном ремонте. Раскройте истинный потенциал вашего премиального автомобиля.",
   metadataBase: new URL("https://www.britline-jlr.com"),
-  icons: { icon: "/favicon.ico" },
+  icons: { 
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml", sizes: "any" },
+      { url: "/favicon.ico", sizes: "32x32" }
+    ],
+    apple: [
+      { url: "/icon.svg", type: "image/svg+xml" }
+    ]
+  },
   manifest: "/manifest.webmanifest",
   alternates: {
     canonical: "https://www.britline-jlr.com",
@@ -64,6 +73,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-[var(--background)] text-[var(--foreground)]">
+        <AnimatedFavicon />
         <LanguageProvider>
           <header className="sticky top-0 z-50 glass">
             <nav className="container-padded mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-4 md:px-6 lg:px-8">
@@ -101,7 +111,7 @@ export default function RootLayout({
                     className="hover:opacity-80 transition-opacity"
                     aria-label="Telegram"
                   >
-                    <TelegramIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#0088cc]" />
+                    <TelegramIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
                   </a>
                   <a
                     href="https://instagram.com/ir_chip"
@@ -110,7 +120,7 @@ export default function RootLayout({
                     className="hover:opacity-80 transition-opacity"
                     aria-label="Instagram"
                   >
-                    <InstagramIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#E4405F]" />
+                    <InstagramIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
                   </a>
                   <a
                     href="https://wa.me/447840000321"
@@ -119,7 +129,7 @@ export default function RootLayout({
                     className="hover:opacity-80 transition-opacity"
                     aria-label="WhatsApp"
                   >
-                    <WhatsAppIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#25D366]" />
+                    <WhatsAppIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
                   </a>
                 </div>
                 {/* Телефоны - показываются только на xl и выше (1280px+) */}

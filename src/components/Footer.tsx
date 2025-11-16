@@ -63,7 +63,7 @@ export default function Footer() {
                 className="hover:opacity-80 transition-opacity"
                 aria-label="Telegram"
               >
-                <TelegramIcon size={24} className="text-[#0088cc]" />
+                <TelegramIcon size={24} />
               </a>
               <a
                 href="https://instagram.com/ir_chip"
@@ -72,7 +72,7 @@ export default function Footer() {
                 className="hover:opacity-80 transition-opacity"
                 aria-label="Instagram"
               >
-                <InstagramIcon size={24} className="text-[#E4405F]" />
+                <InstagramIcon size={24} />
               </a>
               <a
                 href="https://wa.me/447840000321"
@@ -81,7 +81,7 @@ export default function Footer() {
                 className="hover:opacity-80 transition-opacity"
                 aria-label="WhatsApp"
               >
-                <WhatsAppIcon size={24} className="text-[#25D366]" />
+                <WhatsAppIcon size={24} />
               </a>
             </div>
             <div className="text-xs sm:text-sm text-zinc-600 dark:text-zinc-400">

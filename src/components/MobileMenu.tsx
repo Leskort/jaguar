@@ -166,7 +166,7 @@ export default function MobileMenu() {
                       aria-label="Telegram"
                       onClick={() => setIsOpen(false)}
                     >
-                      <TelegramIcon size={24} className="text-[#0088cc]" />
+                      <TelegramIcon size={24} />
                     </a>
                     <a
                       href="https://instagram.com/ir_chip"
@@ -176,7 +176,7 @@ export default function MobileMenu() {
                       aria-label="Instagram"
                       onClick={() => setIsOpen(false)}
                     >
-                      <InstagramIcon size={24} className="text-[#E4405F]" />
+                      <InstagramIcon size={24} />
                     </a>
                     <a
                       href="https://wa.me/447840000321"
@@ -186,7 +186,7 @@ export default function MobileMenu() {
                       aria-label="WhatsApp"
                       onClick={() => setIsOpen(false)}
                     >
-                      <WhatsAppIcon size={24} className="text-[#25D366]" />
+                      <WhatsAppIcon size={24} />
                     </a>
                   </div>
                 </div>
