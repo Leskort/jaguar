@@ -736,7 +736,7 @@ function TopOrdersSection() {
               <div className="flex flex-col sm:flex-row gap-2.5 sm:gap-2.5 flex-shrink-0 mt-auto">
                 <Link
                   href="/vehicles"
-                  className="flex-1 h-11 sm:h-11 px-3 sm:px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-gold-light)] text-black text-sm sm:text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[var(--accent-gold-light)] hover:to-[var(--accent-gold)] touch-manipulation"
+                  className="flex-1 h-11 sm:h-11 px-3 sm:px-4 rounded-full bg-gradient-to-r from-[var(--accent-gold)] to-[var(--accent-gold-light)] text-white text-sm sm:text-sm font-bold inline-flex items-center justify-center shadow-lg hover:shadow-xl hover:shadow-[var(--accent-gold)]/30 active:scale-95 transition-all duration-200 hover:from-[var(--accent-gold-light)] hover:to-[var(--accent-gold)] touch-manipulation"
                 >
                   {t('addToCart')}
                 </Link>
