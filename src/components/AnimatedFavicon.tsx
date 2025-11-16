@@ -4,6 +4,13 @@ import { useEffect } from "react";
 
 export default function AnimatedFavicon() {
   useEffect(() => {
+    // Skip animation on iOS/Safari - they don't support animated favicons well
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if (isIOS || isSafari) {
+      return; // Don't animate on iOS/Safari
+    }
     // Создаем SVG колеса с анимацией
     const createWheelSVG = (rotation: number) => {
       return `data:image/svg+xml,${encodeURIComponent(`
