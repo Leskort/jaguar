@@ -98,28 +98,28 @@ export default function RootLayout({
                     href="https://t.me/lr_chip"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                    className="hover:opacity-80 transition-opacity"
                     aria-label="Telegram"
                   >
-                    <TelegramIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
+                    <TelegramIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#0088cc]" />
                   </a>
                   <a
                     href="https://instagram.com/ir_chip"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                    className="hover:opacity-80 transition-opacity"
                     aria-label="Instagram"
                   >
-                    <InstagramIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
+                    <InstagramIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#E4405F]" />
                   </a>
                   <a
                     href="https://wa.me/447840000321"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                    className="hover:opacity-80 transition-opacity"
                     aria-label="WhatsApp"
                   >
-                    <WhatsAppIcon size={16} className="lg:w-[18px] lg:h-[18px]" />
+                    <WhatsAppIcon size={16} className="lg:w-[18px] lg:h-[18px] text-[#25D366]" />
                   </a>
                 </div>
                 {/* Телефоны - показываются только на xl и выше (1280px+) */}

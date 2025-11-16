@@ -162,31 +162,31 @@ export default function MobileMenu() {
                       href="https://t.me/lr_chip"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                      className="hover:opacity-80 transition-opacity"
                       aria-label="Telegram"
                       onClick={() => setIsOpen(false)}
                     >
-                      <TelegramIcon size={24} />
+                      <TelegramIcon size={24} className="text-[#0088cc]" />
                     </a>
                     <a
                       href="https://instagram.com/ir_chip"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                      className="hover:opacity-80 transition-opacity"
                       aria-label="Instagram"
                       onClick={() => setIsOpen(false)}
                     >
-                      <InstagramIcon size={24} />
+                      <InstagramIcon size={24} className="text-[#E4405F]" />
                     </a>
                     <a
                       href="https://wa.me/447840000321"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-zinc-600 dark:text-zinc-200 hover:text-[var(--accent-gold)] dark:hover:text-[var(--accent-gold)] transition-colors"
+                      className="hover:opacity-80 transition-opacity"
                       aria-label="WhatsApp"
                       onClick={() => setIsOpen(false)}
                     >
-                      <WhatsAppIcon size={24} />
+                      <WhatsAppIcon size={24} className="text-[#25D366]" />
                     </a>
                   </div>
                 </div>

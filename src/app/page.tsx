@@ -1279,7 +1279,7 @@ export default function Home() {
                           aria-label="Telegram"
                         >
                           <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
-                            <TelegramIcon size={20} className="sm:w-6 sm:h-6 text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                            <TelegramIcon size={20} className="sm:w-6 sm:h-6 text-[#0088cc] group-hover:opacity-80 transition-opacity duration-300" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider truncate">
@@ -1302,7 +1302,7 @@ export default function Home() {
                           aria-label="Instagram"
                         >
                           <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
-                            <InstagramIcon size={20} className="sm:w-6 sm:h-6 text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                            <InstagramIcon size={20} className="sm:w-6 sm:h-6 text-[#E4405F] group-hover:opacity-80 transition-opacity duration-300" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider truncate">
@@ -1325,7 +1325,7 @@ export default function Home() {
                           aria-label="WhatsApp"
                         >
                           <div className="flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-[var(--accent-gold)]/20 to-[var(--accent-gold)]/5 flex items-center justify-center group-hover:from-[var(--accent-gold)]/30 group-hover:to-[var(--accent-gold)]/10 transition-all duration-300">
-                            <WhatsAppIcon size={20} className="sm:w-6 sm:h-6 text-zinc-700 dark:text-zinc-300 group-hover:text-[var(--accent-gold)] transition-colors duration-300" />
+                            <WhatsAppIcon size={20} className="sm:w-6 sm:h-6 text-[#25D366] group-hover:opacity-80 transition-opacity duration-300" />
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className="text-xs sm:text-sm font-medium text-zinc-500 dark:text-zinc-400 group-hover:text-[var(--accent-gold)] transition-colors duration-300 uppercase tracking-wider truncate">
