@@ -5,11 +5,19 @@ import { useEffect } from "react";
 export default function AnimatedFavicon() {
   useEffect(() => {
     // Skip animation on iOS/Safari - they don't support animated favicons well
+    // Also check for mobile devices
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
     
-    if (isIOS || isSafari) {
-      return; // Don't animate on iOS/Safari
+    if (isIOS || isSafari || isMobile) {
+      // Don't animate on iOS/Safari/Mobile - use static icon from metadata
+      // Find and ensure apple-icon is used
+      const appleIcon = document.querySelector('link[rel="apple-touch-icon"]') as HTMLLinkElement;
+      if (appleIcon && !appleIcon.href.includes('apple-icon')) {
+        appleIcon.href = '/apple-icon.svg';
+      }
+      return; // Don't animate on iOS/Safari/Mobile
     }
     // Создаем SVG колеса с анимацией
     const createWheelSVG = (rotation: number) => {
