@@ -63,9 +63,7 @@ export default function Logo() {
   return (
     <Link href="/" className="logo-container">
       <span className="logo-text">
-        Brit<span className="wheel-wrapper">
-          <WheelIcon className="wheel" />
-        </span>line
+        Britline
       </span>
       <span className="jlr-text">
         J<span className="wheel-wrapper">
